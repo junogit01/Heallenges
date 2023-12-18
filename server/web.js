@@ -8,8 +8,7 @@ const cors = require('cors');
 // 라우터 정의해야 추가가 가능하다
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const boardsRouter = require('./routes/board');
-const marketRouter = require('./routes/market');
+
 const app = express();
 const PORT = 8001;
 // view engine setup
@@ -38,7 +37,6 @@ app.use(cors());
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/boards', boardsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
