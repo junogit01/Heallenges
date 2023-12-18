@@ -9,7 +9,7 @@ const cors = require('cors');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const boardsRouter = require('./routes/board');
-const marketRouter = require('./routes/market');
+
 const app = express();
 const PORT = 8001;
 // view engine setup
