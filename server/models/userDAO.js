@@ -10,11 +10,11 @@ const sql = {
   checkEmail: `select *
               from User
               where email = ?`,
-  signup: `INSERT INTO User(email, password, name) VALUES(?, ?, ?)`,
+  signup: `INSERT INTO User(name, nickname, email, password, phoneNumber, aboutMe, blogUrl, createdAt, profileImage, zipcode, address1, address2) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   login: `SELECT *
           FROM User
           WHERE email= ? and password = ?`,
-  update: `UPDATE User SET password = ? WHERE email = ?`,
+  update: `UPDATE User SET nickname = ?, phoneNumber = ?, aboutMe = ?, password = ?, blogUrl = ?, profileImage = ?, zipcode = ?, address1 = ?, address2 = ?  WHERE email = ?`,
   delete: `DELETE FROM User where email = ?`,
   userList: `SELECT * from User ORDER BY User_id DESC 
             LIMIT ?, ?`,
@@ -148,7 +148,7 @@ const userDAO = {
     }
   },
   update: async (item, callback) => {
-    const { email, password } = item;
+    const { email, nickname, phoneNumber, aboutMe, password } = item;
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
@@ -160,8 +160,13 @@ const userDAO = {
         if (error) {
           callback({ status: 500, message: '비밀번호 변경 실패', error: error });
         } else {
-          const [resp] = await conn.query(sql.update, [hash, email]);
-          await pool.query(sql.updatedAt, [email]);
+          const [resp] = await conn.query(sql.update, [
+            nickname,
+            phoneNumber,
+            aboutMe,
+            hash,
+            email,
+          ]);
           conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
           return callback({ status: 200, message: 'ok', data: resp });
         }
