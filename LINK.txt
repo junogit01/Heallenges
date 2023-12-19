@@ -1,0 +1,21 @@
+(테스트 중)
+
+localhost:8001/
+communitys/
+list 		= 전체게시판 목록 - postmon 확인 (totalCount랑 같이 사용) 
+show 	  = 1개 게시물 조회
+insert	= 게시물 작성     - postmon 확인
+update	= 게시물 수정     - postmon 확인
+delete	= 게시물 삭제     - postmon 확인 (delete/3 이러고 써야됨)
+like		= 좋아요
+view 	  = 조회수 
+search  = 검색
+
+카테고리 구별을 해서 list(전체) / Qnalist(질문게) 이런식이면 되는건가?
+  <<< 내일(수) 찾아보기
+
+comments/
+insert	= 게시물 작성
+update	= 게시물 수정
+delete	= 게시물 삭제
+
