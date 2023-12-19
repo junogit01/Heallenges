@@ -1,6 +1,7 @@
 const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
+const indexDAO = require('./../models/indexDAO');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -10,7 +11,7 @@ router.get('/', function (req, res, next) {
 // 회원가입
 router.post('/signup', function (req, res, next) {
   const data = req.body;
-  userDAO.signup(data, (resp) => {
+  indexDAO.signup(data, (resp) => {
     res.json(resp);
   });
 });
@@ -19,7 +20,7 @@ router.post('/signup', function (req, res, next) {
 router.post('/checkEmail', async (req, res, next) => {
   const data = req.body;
   // const user = await userDAO.checkEmail(data);
-  userDAO.checkEmail(data, (resp) => {
+  indexDAO.checkEmail(data, (resp) => {
     res.json(resp);
   });
 });
@@ -28,7 +29,7 @@ router.post('/checkEmail', async (req, res, next) => {
 router.post('/login', function (req, res, next) {
   const data = req.body;
   // console.log(data);
-  userDAO.login(data, (resp) => {
+  indexDAO.login(data, (resp) => {
     res.json(resp);
   });
 });
