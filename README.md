@@ -4,7 +4,7 @@ Read Me
 
 
 ##commit message rule
-feat	새로운 기능에 대한 커밋
+feat	새로운 기능에 대한 커밋 \n
 fix	버그 수정에 대한 커밋
 build	빌드 관련 파일 수정 / 모듈 설치 또는 삭제에 대한 커밋
 chore	그 외 자잘한 수정에 대한 커밋
