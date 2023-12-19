@@ -16,7 +16,7 @@ const sql = {
           WHERE email= ? and password = ?`,
   update: `UPDATE User SET nickname = ?, phoneNumber = ?, aboutMe = ?, password = ?, blogUrl = ?, profileImage = ?, zipcode = ?, address1 = ?, address2 = ?  WHERE email = ?`,
   delete: `DELETE FROM User where email = ?`,
-  userList: `SELECT * from User ORDER BY User_id DESC 
+  userList: `SELECT * from User ORDER BY id DESC 
             LIMIT ?, ?`,
   totalCount: `SELECT COUNT(*) as cnt FROM User`,
   userDetail: `SELECT *
