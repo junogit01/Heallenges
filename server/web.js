@@ -10,7 +10,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 const app = express();
-const PORT = 8001;
+const PORT = 8000;
 // view engine setup
 app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname, 'build')));
@@ -36,7 +36,7 @@ app.use(cors());
 
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/mypage', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

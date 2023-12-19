@@ -1,7 +1,6 @@
 const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
-
 const userDAO = require('./../models/userDAO');
 
 /**
@@ -11,12 +10,35 @@ const userDAO = require('./../models/userDAO');
  */
 /* GET users listing. */
 
+// 회원가입
+router.post('/signup', function (req, res, next) {
+  const data = req.body;
+  userDAO.signup(data, (resp) => {
+    res.json(resp);
+  });
+});
+
+// 이메일 중복체크
 router.post('/checkEmail', async (req, res, next) => {
   const data = req.body;
   // const user = await userDAO.checkEmail(data);
   userDAO.checkEmail(data, (resp) => {
-    res.send(resp);
+    res.json(resp);
   });
+});
+
+// 로그인
+router.post('/login', function (req, res, next) {
+  const data = req.body;
+  // console.log(data);
+  userDAO.login(data, (resp) => {
+    res.json(resp);
+  });
+});
+
+// 로그아웃
+router.get('/logout', function (req, res, next) {
+  res.json('로그아웃');
 });
 
 router.get('/userList', async (req, res, next) => {
@@ -28,58 +50,42 @@ router.get('/userList', async (req, res, next) => {
   });
 });
 
-// ejs를 쓸게 아니면 update엔 put을 쓴다.
-router.put('/', async (req, res, next) => {
-  const data = req.body;
-  userDAO.update(data, (resp) => {
-    res.send(resp);
+// 마이페이지
+router.get('/mypage/:id', async (req, res, next) => {
+  const params = req.params; // 이건 get용
+  userDAO.mypage(params, (resp) => {
+    console.log(resp);
+    res.json(resp);
   });
 });
 
-router.delete('/delete/:email', async (req, res, next) => {
+// 회원정보 수정
+router.put('/mypage/:id', async (req, res, next) => {
+  const data = req.body;
+  userDAO.update(data, (resp) => {
+    res.json(resp);
+  });
+});
+
+// 회원정보 삭제
+router.delete('/mypage/:id', async (req, res, next) => {
   const params = req.params;
   console.log(params);
 
   userDAO.delete(params, (resp) => {
-    res.send(resp);
+    res.json(resp);
   });
 });
 
-router.post('/signup', function (req, res, next) {
-  const data = req.body;
-  // console.log(data);
-
-  userDAO.signup(data, (resp) => {
-    res.send(resp);
-    // key:value값으로 보낼떈 json
-    // express는 send로 보내도 json으로 묶어서 보낸다. 그냥 json으로 작성해서 보내라
-  });
-
-  /* 
-  이건 리턴으로 할 때 이렇게 작성한다.
-  router.post('/signup', async (Req,res, next) => {
-    const data = req.body;
-    try {
-      const user =  await userDAO.signup(data);
-      res.json(user)
-    } catch (error) {
-      console.error(error)
-    }
-  })
-  
-  */
-  // console.log(user);
-});
-router.post('/login', function (req, res, next) {
-  const data = req.body;
-  // console.log(data);
-
-  userDAO.login(data, (resp) => {
-    res.send(resp);
+// 참여하는 도전
+router.get('/mypage/challenges/:id', async (req, res, next) => {
+  const params = req.params; // 이건 get용
+  userDAO.myChallenge(params, (resp) => {
+    console.log(resp);
+    res.json(resp);
   });
 });
-router.get('/logout', function (req, res, next) {
-  res.send('로그아웃');
-});
+
+// ejs를 쓸게 아니면 update엔 put을 쓴다.
 
 module.exports = router;
