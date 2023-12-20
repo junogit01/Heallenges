@@ -39,6 +39,8 @@ app.use(cors());
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
 app.use('/mypage', usersRouter);
+app.use('/rank', rankRouter);
+app.use('/community', communitysRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
