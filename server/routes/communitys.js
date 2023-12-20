@@ -21,16 +21,25 @@ router.put('/update', async (req, res, next) => {
 });
 
 // 게시물 삭제
-router.delete('/delete/:postID', async (req, res, next) => {
+router.delete('/delete/:id', async (req, res, next) => {
   const params = req.params;
   communityDAO.delete(params, (resp) => {
     res.json(resp);
   });
 });
 
+// 게시물 리스트 조회
 router.get('/list', async (req, res, next) => {
   const query = req.query; // get용
   communityDAO.boardList(query, (resp) => {
+    res.json(resp);
+  });
+});
+
+// 게시물 상세 조회
+router.get('/board/:id', function (req, res, next) {
+  const params = req.params;
+  communityDAO.board(params, (resp) => {
     res.json(resp);
   });
 });

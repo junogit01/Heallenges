@@ -2,7 +2,6 @@
 // npm i mysql2
 // get the client
 const bcrypt = require('bcrypt');
-
 // Create the connection pool. The pool-specific settings are the defaults
 const pool = require('./pool');
 
@@ -10,18 +9,23 @@ const sql = {
   checkEmail: `select *
               from User
               where email = ?`,
-  signup: `INSERT INTO User(name, nickname, email, password, phoneNumber, aboutMe, blogUrl, createdAt, profileImage, zipcode, address1, address2) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  signup: `INSERT INTO User(name, nickname, email, password, phoneNumber, aboutMe, blogUrl, createdAt, profileImage, zipcode, address1) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   login: `SELECT *
           FROM User
           WHERE email= ? and password = ?`,
-  update: `UPDATE User SET nickname = ?, phoneNumber = ?, aboutMe = ?, password = ?, blogUrl = ?, profileImage = ?, zipcode = ?, address1 = ?, address2 = ?  WHERE email = ?`,
-  delete: `DELETE FROM User where email = ?`,
+  update: `UPDATE User SET nickname = ?, password = ?, phoneNumber = ?, aboutMe = ?, blogUrl = ?, profileImage = ?, zipcode = ?, address1 = ?  WHERE id = ?`,
+  delete: `DELETE FROM User where id = ?`,
   userList: `SELECT * from User ORDER BY User_id DESC 
             LIMIT ?, ?`,
-  totalCount: `SELECT COUNT(*) as cnt FROM User`,
-  userDetail: `SELECT *
+  mypage: `SELECT *
                FROM User
-               WHERE email = ?`,
+               WHERE id = ?`,
+  myChallenge: `SELECT u.*, c.title, c.type
+                FROM User u
+                JOIN ChallengeParticipants p ON u.id = p.memberId
+                JOIN Challenges c ON p.challengeId = c.id
+                WHERE u.id = ?;
+  `,
 };
 
 const userDAO = {
@@ -124,8 +128,6 @@ const userDAO = {
     }
   },
   userList: async (item, callback) => {
-    // const { limits, limite } = item;
-    // console.log('userDAO=>',);
     const no = Number(item.no) - 1 || 0;
     const size = Number(item.size) || 10;
     let conn = null;
@@ -148,48 +150,81 @@ const userDAO = {
     }
   },
   update: async (item, callback) => {
-    const { email, nickname, phoneNumber, aboutMe, password } = item;
+    const { nickname, password, phoneNumber, aboutMe, blogUrl, profileImage, zipcode, address1 } =
+      item;
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
       await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
 
       const salt = await bcrypt.genSalt();
-
       bcrypt.hash(password, salt, async (error, hash) => {
         if (error) {
-          callback({ status: 500, message: '비밀번호 변경 실패', error: error });
+          callback({ status: 500, message: '회원정보 수정 실패', error: error });
         } else {
           const [resp] = await conn.query(sql.update, [
             nickname,
+            hash,
             phoneNumber,
             aboutMe,
-            hash,
-            email,
+            blogUrl,
+            profileImage,
+            zipcode,
+            address1,
           ]);
           conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
-          return callback({ status: 200, message: 'ok', data: resp });
+          return callback({ status: 200, message: '회원정보 수정 완료', data: resp });
         }
       });
     } catch (error) {
       conn.rollback(); // 커밋 이전 상태로 돌려야한다.
-      callback({ status: 500, message: '비밀번호 변경 실패', error: error });
+      callback({ status: 500, message: '회원정보 수정 실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
     }
   },
   delete: async (item, callback) => {
-    const { email } = item;
+    const { id } = item;
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
       await conn.beginTransaction(); // 쿼리가 모두 성공하고 return ㄷ
-      const [data, filedset] = await conn.query(sql.delete, [email]);
+      const [data, filedset] = await conn.query(sql.delete, [id]);
       conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
       callback({ status: 200, message: '유저 삭제 완료', data: data });
     } catch (error) {
       conn.rollback(); // 커밋 이전 상태로 돌려야한다.
       callback({ status: 500, message: '유저 삭제 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+  myChallenge: async (item, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return ㄷ
+      const [data, filedset] = await conn.query(sql.myChallenge, [item.id]);
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      callback({ status: 200, message: '대회 조회 완료', data: data });
+    } catch (error) {
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '대회 조회 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+  mypage: async (item, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return ㄷ
+      const [data, filedset] = await conn.query(sql.mypage, [item.id]);
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      callback({ status: 200, message: '프로필 조회 완료', data: data });
+    } catch (error) {
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '프로필 조회 실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
     }

@@ -11,7 +11,7 @@ const usersRouter = require('./routes/users');
 const communitysRouter = require('./routes/communitys');
 
 const app = express();
-const PORT = 8001;
+const PORT = 8000;
 // view engine setup
 app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname, 'build')));
