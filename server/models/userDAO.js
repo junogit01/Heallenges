@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const pool = require('./pool');
 
 const sql = {
-  update: `UPDATE user SET nickname = ?, password = ?, phone_number = ?, about_me = ?, blog_url = ?, profile_image = ?, zipcode = ?, address1 = ?  WHERE id = ?`,
+  update: `UPDATE user SET nickname = ?, password = ?, about_me = ?, blog_url = ?, profile_image = ?, zipcode = ?, address1 = ?  WHERE id = ?`,
   delete: `DELETE FROM user where id = ?`,
   mypage: `SELECT *
                FROM user
@@ -21,16 +21,7 @@ const sql = {
 
 const userDAO = {
   update: async (item, callback) => {
-    const {
-      nickname,
-      password,
-      phone_number,
-      about_me,
-      blog_url,
-      profile_image,
-      zipcode,
-      address1,
-    } = item;
+    const { nickname, password, about_me, blog_url, profile_image, zipcode, address1, id } = item;
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
@@ -44,12 +35,12 @@ const userDAO = {
           const [resp] = await conn.query(sql.update, [
             nickname,
             hash,
-            phone_number,
             about_me,
             blog_url,
             profile_image,
             zipcode,
             address1,
+            id,
           ]);
           conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
           return callback({ status: 200, message: '회원정보 수정 완료', data: resp });
