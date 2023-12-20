@@ -9,6 +9,7 @@ const cors = require('cors');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const rankRouter = require('./routes/Rank');
+const communitysRouter = require('./routes/communitys');
 
 const app = express();
 const PORT = 8000;
@@ -37,8 +38,9 @@ app.use(cors());
 
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
-app.use('/rank', rankRouter);
 app.use('/mypage', usersRouter);
+app.use('/rank', rankRouter);
+app.use('/community', communitysRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
