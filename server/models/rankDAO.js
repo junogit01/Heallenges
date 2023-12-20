@@ -5,8 +5,20 @@ const sql = {
               name, reward_cnt, (@rank:=@rank+1) AS rank FROM user
               AS a,(SELECT @rank:=0)
               AS b ORDER BY a.reward_cnt
-              DESC`,
+              DESC, a.name`,
   totalCount: `SELECT COUNT(*) as reward_cnt FROM user`,
+  rankSearch: `SELECT
+                name, reward_cnt, rank
+              FROM
+                (SELECT
+                  name, reward_cnt, (@rank:=@rank+1) AS rank
+                FROM
+                  user AS a,
+                  (SELECT @rank:=0) AS b
+                ORDER BY
+                  a.reward_cnt DESC, a.name) AS ranked_users
+              WHERE
+                name LIKE ?`,
 };
 
 const rankDAO = {
@@ -27,9 +39,26 @@ const rankDAO = {
         data: data,
       });
     } catch (error) {
-      callback({ status: 500, message: '입력 실패', error: error });
+      callback({ status: 500, message: '랭킹 조회 실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+
+  rankSearch: async (item, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection();
+      const [data, fieldset] = await conn.query(sql.rankSearch, [`%${item}%`]);
+      callback({
+        status: 200,
+        message: '검색 성공',
+        data: data,
+      });
+    } catch (error) {
+      callback({ status: 500, message: '랭킹 검색 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release();
     }
   },
 };
