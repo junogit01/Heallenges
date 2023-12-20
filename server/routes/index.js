@@ -11,6 +11,7 @@ router.get('/', function (req, res, next) {
 // 회원가입
 router.post('/signup', function (req, res, next) {
   const data = req.body;
+  console.log(data);
   indexDAO.signup(data, (resp) => {
     res.json(resp);
   });

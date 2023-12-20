@@ -18,12 +18,30 @@ const sql = {
   addParticipant: `INSERT INTO participants (challengeId, memberId, authority, contribution) VALUES (?, ?, ?, ?)`,
   removeParticipant: `DELETE FROM participants WHERE challengeId = ? AND participantId = ?`,
   completeChallenge: `UPDATE challenges SET status = 'Completed' WHERE id = ?`,
-  insert: `INSERT INTO challenge_community (title, contents, Image) VALUES (?, ?, ?)`,
+  insert: `INSERT INTO challenge_community (title, contents, image) VALUES (?, ?, ?)`,
   update: `UPDATE challenge_community
            SET title = ?, contents = ?
            WHERE id = ?`,
   delete: `DELETE FROM challenge_community WHERE id = ?`,
   incCount: `UPDATE challenge_community SET view_cnt = view_cnt + 1 WHERE id = ?`,
+  boardList: `SELECT m.title, m.view_cnt, u.name
+              FROM challenges c
+              JOIN challenge_community m ON c.id = m.challenge_id
+              JOIN challenge_participants p on p.user_id = m.user_id
+              JOIN user u ON p.user_id = u.id
+              WHERE c.id = ?
+              LIMIT ?, ?`,
+  board: `SELECT c.title, c.contents, u.name, c.view_cnt, m.contents as comment
+          FROM challenge_community c
+          JOIN user u ON c.user_id = u.id
+          JOIN challenge_comment m ON m.post_id = c.id
+          WHERE c.id = ?
+          `,
+  myChallenge: `SELECT c.title, c.type
+                FROM user u
+                JOIN challenge_participants p ON u.id = p.user_id
+                JOIN challenges c ON p.challenge_id = c.id
+                WHERE u.id = ?;`,
 };
 
 const challengeDAO = {
@@ -102,6 +120,44 @@ const challengeDAO = {
 
   // 챌린지 완료 처리
   completeChallenge: async (challengeId, callback) => {},
+
+  // 도전별 게시판 리스트
+  boardList: async (item, callback) => {
+    const no = Number(item.no) - 1 || 0;
+    const size = Number(item.size) || 10;
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      const [data] = await conn.query(sql.boardList, [item.id, Number(no * size), Number(size)]);
+      callback({
+        status: 200,
+        message: 'List Up OK',
+        pageno: no + 1,
+        pagesize: size,
+        data: data,
+      });
+    } catch (error) {
+      callback({ status: 500, message: '불러오기 대실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+  board: async (item, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      const [data] = await conn.query(sql.board, [item.id]);
+      callback({
+        status: 200,
+        message: 'List Up OK',
+        data: data,
+      });
+    } catch (error) {
+      callback({ status: 500, message: '불러오기 대실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
 };
 
 module.exports = challengeDAO;

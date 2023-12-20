@@ -12,19 +12,17 @@ const sql = {
 };
 
 const indexDAO = {
-  // 만약 callback을 없앤다면 callback 부분을 return 으로 바꿔줘야한다.
   signup: async (item, callback) => {
-    // console.log('userDAO=>',);
     const {
       name,
       nickname,
       email,
       password,
-      phoneNumber,
-      aboutMe,
-      blogUrl,
-      createdAt,
-      profileImage,
+      phone_number,
+      about_me,
+      blog_url,
+      created_at,
+      profile_image,
       zipcode,
       address1,
     } = item;
@@ -46,15 +44,14 @@ const indexDAO = {
               nickname,
               email,
               hash,
-              phoneNumber,
-              aboutMe,
-              blogUrl,
-              createdAt,
-              profileImage,
+              phone_number,
+              about_me,
+              blog_url,
+              created_at,
+              profile_image,
               zipcode,
               address1,
             ]);
-            console.log(resp);
             return callback({ status: 200, message: '회원가입에 성공했습니다.', data: resp });
           }
         });

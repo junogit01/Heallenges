@@ -46,9 +46,18 @@ router.delete('/:id', async (req, res, next) => {
 });
 
 // 도전별 커뮤니티
-router.get('/:id/board', async (req, res, next) => {
-  const query = req.query;
-  challengesDAO.rankList(query, (resp) => {
+router.get('/board/:id', async (req, res, next) => {
+  const params = req.params;
+  challengesDAO.boardList(params, (resp) => {
+    res.json(resp);
+  });
+});
+
+// 도전별 커뮤니티
+router.get('/:id/board/:id', async (req, res, next) => {
+  const params = req.params;
+  console.log(params);
+  challengesDAO.board(params, (resp) => {
     res.json(resp);
   });
 });
