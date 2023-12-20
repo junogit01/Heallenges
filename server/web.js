@@ -17,7 +17,7 @@ app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', function (req, res) {
-  res.render('index'); // index.html 파일 경로
+  res.sendFile(path.join(__dirname, '/build/index.html')); // index.html 파일 경로
 });
 
 app.set('view engine', 'ejs');
