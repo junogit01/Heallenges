@@ -14,7 +14,6 @@ const sql = {
   totalCount: `SELECT COUNT(*) as cnt FROM community`,
   board: `SELECT b.id, u.nickname, b.title, b.contents, b.created_at, b.like_cnt, b.view_cnt,
           GROUP_CONCAT(DISTINCT l.user_id) AS likeUserIDs, 
-          GROUP_CONCAT(DISTINCT c.contents) AS commentContents,
           GROUP_CONCAT(DISTINCT CONCAT(cu.nickname, ': ', c.contents, ' (', c.create_date, ')') ORDER BY c.create_date ASC SEPARATOR '\n') AS formattedComments
           FROM
             community b
