@@ -11,7 +11,7 @@ const usersRouter = require('./routes/users');
 const rankRouter = require('./routes/Rank');
 
 const app = express();
-const PORT = 8001;
+const PORT = 8000;
 // view engine setup
 app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname, 'build')));
@@ -39,6 +39,7 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/rank', rankRouter);
+app.use('/mypage', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
