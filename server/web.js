@@ -17,7 +17,7 @@ app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.get('/', function (req, res) {
-  res.render('index'); // index.html 파일 경로
+  res.sendFile(path.join(__dirname, '/build/index.html')); // index.html 파일 경로
 });
 
 app.set('view engine', 'ejs');
@@ -37,7 +37,6 @@ app.use(cors());
 
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/rank', rankRouter);
 app.use('/mypage', usersRouter);
 
