@@ -37,7 +37,6 @@ app.use(cors());
 
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/rank', rankRouter);
 app.use('/mypage', usersRouter);
 
