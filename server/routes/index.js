@@ -16,15 +16,6 @@ router.post('/signup', function (req, res, next) {
   });
 });
 
-// 이메일 중복체크
-router.post('/checkEmail', async (req, res, next) => {
-  const data = req.body;
-  // const user = await userDAO.checkEmail(data);
-  indexDAO.checkEmail(data, (resp) => {
-    res.json(resp);
-  });
-});
-
 // 로그인
 router.post('/login', function (req, res, next) {
   const data = req.body;
