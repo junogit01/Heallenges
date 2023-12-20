@@ -9,6 +9,7 @@ const cors = require('cors');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const rankRouter = require('./routes/Rank');
+const missionRouter = require('./routes/mission');
 
 const app = express();
 const PORT = 8000;
@@ -39,6 +40,7 @@ app.use(cors());
 app.use('/', indexRouter);
 app.use('/rank', rankRouter);
 app.use('/mypage', usersRouter);
+app.use('/mission', missionRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
