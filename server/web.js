@@ -8,6 +8,7 @@ const cors = require('cors');
 // 라우터 정의해야 추가가 가능하다
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const rankRouter = require('./routes/Rank');
 
 const app = express();
 const PORT = 8000;
@@ -36,6 +37,7 @@ app.use(cors());
 
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
+app.use('/rank', rankRouter);
 app.use('/mypage', usersRouter);
 
 // catch 404 and forward to error handler
