@@ -18,7 +18,7 @@ const sql = {
   addParticipant: `INSERT INTO participants (challengeId, memberId, authority, contribution) VALUES (?, ?, ?, ?)`,
   removeParticipant: `DELETE FROM participants WHERE challengeId = ? AND participantId = ?`,
   completeChallenge: `UPDATE challenges SET status = 'Completed' WHERE id = ?`,
-  insert: `INSERT INTO challenge_community (title, contents, image) VALUES (?, ?, ?)`,
+  insert: `INSERT INTO challenge_community (title, contents, image, challenge_id, user_id) VALUES (?, ?, ?,?,?)`,
   update: `UPDATE challenge_community
            SET title = ?, contents = ?
            WHERE id = ?`,
@@ -31,17 +31,18 @@ const sql = {
               JOIN user u ON p.user_id = u.id
               WHERE c.id = ?
               LIMIT ?, ?`,
-  board: `SELECT c.title, c.contents, u.name, c.view_cnt, m.contents as comment
+  board: `SELECT c.title, c.contents, u.name, c.view_cnt, c.created_at
           FROM challenge_community c
+          JOIN challenges ON c.challenge_id = challenges.id
           JOIN user u ON c.user_id = u.id
-          JOIN challenge_comment m ON m.post_id = c.id
-          WHERE c.id = ?
-          `,
-  myChallenge: `SELECT c.title, c.type
-                FROM user u
-                JOIN challenge_participants p ON u.id = p.user_id
-                JOIN challenges c ON p.challenge_id = c.id
-                WHERE u.id = ?;`,
+          WHERE challenges.id = ? and c.id = ?`,
+  getComment: `SELECT m.contents, u.name
+               FROM challenge_community c
+               JOIN challenge_comment m ON c.id = m.post_id
+               JOIN user u ON m.user_id = u.id
+               WHERE c.id = ?`,
+  insertComment: `INSERT INTO challenge_comment(contents, user_id, post_id) VALUES(?, ?, ?)`,
+  deleteComment: `DELETE FROM challenge_comment WHERE id = ?`,
 };
 
 const challengeDAO = {
@@ -128,7 +129,9 @@ const challengeDAO = {
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
+      conn.beginTransaction();
       const [data] = await conn.query(sql.boardList, [item.id, Number(no * size), Number(size)]);
+      conn.commit();
       callback({
         status: 200,
         message: 'List Up OK',
@@ -137,6 +140,7 @@ const challengeDAO = {
         data: data,
       });
     } catch (error) {
+      conn.rollback();
       callback({ status: 500, message: '불러오기 대실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
@@ -146,14 +150,83 @@ const challengeDAO = {
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
-      const [data] = await conn.query(sql.board, [item.id]);
+      conn.beginTransaction();
+      const [data] = await conn.query(sql.board, [item.challenge, item.id]);
+      const [comment] = await conn.query(sql.getComment, [item.id]);
+      conn.commit();
       callback({
         status: 200,
         message: 'List Up OK',
         data: data,
+        comment: comment,
       });
     } catch (error) {
+      conn.rollback();
       callback({ status: 500, message: '불러오기 대실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+  update: async (item, callback) => {
+    const { title, contents, id } = item;
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.update, [title, contents, id]);
+      return callback({ status: 200, message: '회원정보 수정 완료', data: resp });
+    } catch (error) {
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '회원정보 수정 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+  delete: async (item, callback) => {
+    const { id } = item;
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.delete, [id]);
+      return callback({ status: 200, message: '게시글 삭제 완료', data: resp });
+    } catch (error) {
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '게시글 삭제 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+  insert: async (item, callback) => {
+    const { title, contents, image, challenge_id, user_id } = item;
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.insert, [title, contents, image, challenge_id, user_id]);
+      return callback({ status: 200, message: '게시글 작성 완료', data: resp });
+    } catch (error) {
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '게시글 작성 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+  insertComment: async (item, callback) => {
+    const { contents, user_id, post_id } = item;
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.insertComment, [contents, user_id, post_id]);
+      return callback({ status: 200, message: '댓글 작성 완료', data: resp });
+    } catch (error) {
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '댓글 작성 실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
     }

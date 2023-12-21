@@ -57,7 +57,6 @@ const indexDAO = {
         });
       }
     } catch (error) {
-      console.log(error);
       callback({ status: 500, message: '입력 실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
@@ -69,7 +68,6 @@ const indexDAO = {
     try {
       conn = await pool.getConnection(); // db 접속
       const [user] = await conn.query(sql.login, [email]); // id 체크
-      console.log(user);
       if (!user[0]) {
         callback({ status: 401, message: '정확한 이메일, 패스워드를 입력해주세요.' });
       } else {
