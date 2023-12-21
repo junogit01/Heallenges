@@ -231,6 +231,22 @@ const challengeDAO = {
       if (conn !== null) conn.release(); // db 접속 해제
     }
   },
+  deleteComment: async (item, callback) => {
+    const { id } = item;
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.deleteComment, [id]);
+      return callback({ status: 200, message: '댓글 삭제 완료', data: resp });
+    } catch (error) {
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '댓글 삭제 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
 };
 
 module.exports = challengeDAO;
