@@ -21,7 +21,8 @@ const sql = {
   insert: `INSERT INTO challenge_community (title, contents, image, challenge_id, user_id) VALUES (?, ?, ?,?,?)`,
   update: `UPDATE challenge_community
            SET title = ?, contents = ?
-           WHERE id = ?`,
+           WHERE id = ?
+           `,
   delete: `DELETE FROM challenge_community WHERE id = ?`,
   incCount: `UPDATE challenge_community SET view_cnt = view_cnt + 1 WHERE id = ?`,
   boardList: `SELECT m.title, m.view_cnt, u.name, m.id
