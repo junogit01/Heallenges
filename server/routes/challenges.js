@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 
 const challengesDAO = require('./../models/challengesDAO');
-const communityDAO = require('./../models/communityDAO');
 
 // 도전 목록 조회
 router.get('/', async (req, res, next) => {
@@ -22,7 +21,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // 도전 상세
-router.get('/:challenge', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   const query = req.query;
   challengesDAO.getChallengeById(query, (resp) => {
     res.json(resp);
@@ -30,7 +29,7 @@ router.get('/:challenge', async (req, res, next) => {
 });
 
 // 도전 수정
-router.put('/:challenge', async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
   const data = req.body;
   challengesDAO.updateChallenge(data, (resp) => {
     res.json(resp);
@@ -38,7 +37,7 @@ router.put('/:challenge', async (req, res, next) => {
 });
 
 // 도전 삭제
-router.delete('/:challenge', async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   const params = req.params;
   challengesDAO.deleteChallenge(params, (resp) => {
     res.json(resp);
@@ -46,15 +45,23 @@ router.delete('/:challenge', async (req, res, next) => {
 });
 
 // 도전별 커뮤니티
-router.get('/:challenge-id/board', async (req, res, next) => {
+router.get('/:id/board', async (req, res, next) => {
   const params = req.params;
   challengesDAO.boardList(params, (resp) => {
     res.json(resp);
   });
 });
 
+// // 도전 별 커뮤니티 카테고리
+// router.get('/:id/board/:category', async (req, res, next) => {
+//   const params = req.params;
+//   challengesDAO.categoryBoardList(params, (resp) => {
+//     res.json(resp);
+//   });
+// });
+
 // 도전별 커뮤니티 상세, 댓글
-router.get('/:challenge/board/:postid', async (req, res, next) => {
+router.get('/:challengeId/board/:id', async (req, res, next) => {
   const params = req.params;
   challengesDAO.board(params, (resp) => {
     res.json(resp);
@@ -62,7 +69,7 @@ router.get('/:challenge/board/:postid', async (req, res, next) => {
 });
 
 // 도전별 커뮤니티 게시글 생성
-router.post('/:challenge/board/:postid', async (req, res, next) => {
+router.post('/:challenge/board', async (req, res, next) => {
   const data = req.body;
   challengesDAO.insert(data, (resp) => {
     res.json(resp);
@@ -70,16 +77,15 @@ router.post('/:challenge/board/:postid', async (req, res, next) => {
 });
 
 // 도전별 커뮤니티 게시글 수정
-router.put('/:challenge/board/:postid', async (req, res, next) => {
+router.put('/:challenge_id/board/:id', async (req, res, next) => {
   const data = req.body;
-  console.log(data);
   challengesDAO.update(data, (resp) => {
     res.json(resp);
   });
 });
 
 // 도전별 커뮤니티 게시글 삭제
-router.delete('/:challenge/board/:postid', async (req, res, next) => {
+router.delete('/:challenge/board/:id', async (req, res, next) => {
   const params = req.params;
   challengesDAO.delete(params, (resp) => {
     res.json(resp);
@@ -87,7 +93,7 @@ router.delete('/:challenge/board/:postid', async (req, res, next) => {
 });
 
 // 도전별 커뮤니티 게시글 댓글 생성
-router.post('/:challenge/board/:postid', async (req, res, next) => {
+router.post('/:challenge/board/:id', async (req, res, next) => {
   const data = req.body;
   challengesDAO.insertComment(data, (resp) => {
     res.json(resp);
