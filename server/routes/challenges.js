@@ -52,14 +52,6 @@ router.get('/:id/board', async (req, res, next) => {
   });
 });
 
-// // 도전 별 커뮤니티 카테고리
-// router.get('/:id/board/:category', async (req, res, next) => {
-//   const params = req.params;
-//   challengesDAO.categoryBoardList(params, (resp) => {
-//     res.json(resp);
-//   });
-// });
-
 // 도전별 커뮤니티 상세, 댓글
 router.get('/:challengeId/board/:id', async (req, res, next) => {
   const params = req.params;
