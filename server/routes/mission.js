@@ -27,7 +27,7 @@ router.get('/:type', (req, res, next) => {
 });
 
 // 미션 상세 조회
-router.get('/list/:id', function (req, res, next) {
+router.get('/missionlist/:id', function (req, res, next) {
   const params = req.params; // { id: 5 }
   missionDAO.missionDetail(params, (resp) => {
     res.json(resp);

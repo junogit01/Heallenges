@@ -62,5 +62,5 @@ const rankDAO = {
     }
   },
 };
-
+// 커밋
 module.exports = rankDAO;
