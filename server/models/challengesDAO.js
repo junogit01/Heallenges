@@ -19,6 +19,25 @@ const sql = {
   removeParticipant: `DELETE FROM challenge_participants WHERE challenge_id = ? AND user_id = ?`,
   completeChallenge: `UPDATE challenges SET status = 'Completed' WHERE id = ?`,
   getChallengesByCategory: `SELECT * FROM challenges WHERE type = ?`,
+  getBoardsByChallengeId: `SELECT * FROM challenge_community WHERE challenge_id = ?`,
+  getBoardComments: `SELECT * FROM challenge_comment WHERE challenge_community_id = ?`,
+  createChallengeCommunity: `
+    INSERT INTO challenge_community
+    (challenge_id, user_id, title, contents, verification_method, verification_result, view_cnt)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    `,
+  updateChallengeCommunity: `
+    UPDATE challenge_community
+    SET title = ?, contents = ?, verification_method = ?, verification_result = ?, view_cnt = ?
+    WHERE id = ?
+    `,
+  deleteChallengeCommunity: `DELETE FROM challenge_community WHERE id = ?`,
+  createChallengeCommunityComment: `
+    INSERT INTO challenge_comment
+    (post_id, user_id, contents)
+    VALUES (?, ?, ?)
+    `,
+  deleteChallengeCommunityComment: `DELETE FROM challenge_comment WHERE id = ?`,
 };
 
 const challengeDAO = {
@@ -311,6 +330,158 @@ const challengeDAO = {
     } catch (error) {
       console.error('카테고리별 챌린지 조회 중 오류 발생:', error);
       callback({ status: 500, message: '카테고리별 챌린지 조회 실패', error: error });
+    } finally {
+      if (conn) conn.release(); // db 연결 종료
+    }
+  },
+
+  boardList: async (challengeId, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속 구문
+      // 챌린지 ID로 게시물 리스트를 조회하는 쿼리를 실행한다.
+      const boardList = await pool.query(sql.getBoardsByChallengeId, [challengeId]);
+
+      // 조회된 게시물 리스트를 콘솔에 출력한다.
+      console.log('게시물 리스트:');
+      boardList.forEach((board) => {
+        console.log(
+          `ID: ${board.id}, TITLE: ${board.title}, CONTENTS: ${board.contents}, CHALLENGE_ID: ${board.challenge_id}`,
+        );
+      });
+
+      // 조회된 게시물 리스트를 콜백 함수를 통해 반환한다.
+      callback({ status: 200, message: '게시물 리스트 조회 성공', data: boardList });
+    } catch (error) {
+      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
+      callback({ status: 500, message: '게시물 리스트 조회 실패', error: error });
+    } finally {
+      if (conn) conn.release(); // db 연결 종료
+    }
+  },
+
+  board: async (boardId, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속 구문
+      // 게시물 ID로 게시물을 조회하는 쿼리를 실행한다.
+      const comments = await pool.query(sql.getBoardComments, [boardId]);
+
+      // 조회된 게시물이 있는지 확인한다.
+      if (comments.length === 0) {
+        // 게시물이 데이터베이스에 존재하지 않는 경우, 콜백 함수를 호출하여 해당 메시지를 반환한다.
+        callback({ status: 404, message: '해당 ID의 게시물을 찾을 수 없음' });
+      } else {
+        // 게시물이 성공적으로 조회된 경우, 콜백 함수를 호출하여 게시물 데이터를 반환한다.
+        callback({ status: 200, message: '댓글 리스트 조회 성공', data: comments });
+      }
+    } catch (error) {
+      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
+      callback({ status: 500, message: '댓글 리스트 조회 실패', error: error });
+    } finally {
+      if (conn) conn.release(); // db 연결 종료
+    }
+  },
+
+  insert: async (data, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속 구문
+      // 게시물을 생성하는 쿼리를 실행한다.
+      const result = await pool.query(sql.createChallengeCommunity, [
+        data.challenge_id,
+        data.user_id,
+        data.title,
+        data.contents,
+        data.verification_method,
+        data.verification_result,
+        data.view_cnt,
+      ]);
+
+      // 게시물 생성 후, 성공 메시지와 함께 콜백 함수를 호출한다.
+      callback({ status: 200, message: '도전별 커뮤니티 게시물 생성 성공', data: result });
+    } catch (error) {
+      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
+      callback({ status: 500, message: '도전별 커뮤니티 게시물 생성 실패', error: error });
+    } finally {
+      if (conn) conn.release(); // db 연결 종료
+    }
+  },
+
+  update: async (data, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속 구문
+      // 게시물을 수정하는 쿼리를 실행한다.
+      const result = await pool.query(sql.updateChallengeCommunity, [
+        data.title,
+        data.contents,
+        data.verification_method,
+        data.verification_result,
+        data.view_cnt,
+        data.id,
+      ]);
+
+      // 게시물 수정 후, 성공 메시지와 함께 콜백 함수를 호출한다.
+      callback({ status: 200, message: '도전별 커뮤니티 게시물 수정 성공', data: result });
+    } catch (error) {
+      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
+      callback({ status: 500, message: '도전별 커뮤니티 게시물 수정 실패', error: error });
+    } finally {
+      if (conn) conn.release(); // db 연결 종료
+    }
+  },
+
+  delete: async (id, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속 구문
+      // 게시물을 삭제하는 쿼리를 실행한다.
+      const result = await pool.query(sql.deleteChallengeCommunity, [id]);
+
+      // 게시물 삭제 후, 성공 메시지와 함께 콜백 함수를 호출한다.
+      callback({ status: 200, message: '도전별 커뮤니티 게시물 삭제 성공', data: result });
+    } catch (error) {
+      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
+      callback({ status: 500, message: '도전별 커뮤니티 게시물 삭제 실패', error: error });
+    } finally {
+      if (conn) conn.release(); // db 연결 종료
+    }
+  },
+
+  insertComment: async (id, data, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속 구문
+      // 댓글을 생성하는 쿼리를 실행한다.
+      const result = await pool.query(sql.createChallengeCommunityComment, [
+        id,
+        data.user_id,
+        data.contents,
+      ]);
+
+      // 댓글 생성 후, 성공 메시지와 함께 콜백 함수를 호출한다.
+      callback({ status: 200, message: '도전별 커뮤니티 댓글 생성 성공', data: result });
+    } catch (error) {
+      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
+      callback({ status: 500, message: '도전별 커뮤니티 댓글 생성 실패', error: error });
+    } finally {
+      if (conn) conn.release(); // db 연결 종료
+    }
+  },
+
+  deleteComment: async (id, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속 구문
+      // 댓글을 삭제하는 쿼리를 실행한다.
+      const result = await pool.query(sql.deleteChallengeCommunityComment, [id]);
+
+      // 댓글 삭제 후, 성공 메시지와 함께 콜백 함수를 호출한다.
+      callback({ status: 200, message: '도전별 커뮤니티 댓글 삭제 성공', data: result });
+    } catch (error) {
+      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
+      callback({ status: 500, message: '도전별 커뮤니티 댓글 삭제 실패', error: error });
     } finally {
       if (conn) conn.release(); // db 연결 종료
     }
