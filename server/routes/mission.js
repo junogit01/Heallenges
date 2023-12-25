@@ -27,7 +27,7 @@ router.get('/:type', (req, res, next) => {
 });
 
 // 미션 상세 조회
-router.get('/missionlist/:id', function (req, res, next) {
+router.get('/:id', function (req, res, next) {
   const params = req.params; // { id: 5 }
   missionDAO.missionDetail(params, (resp) => {
     res.json(resp);
@@ -43,10 +43,22 @@ router.get('/missionlist/:id', function (req, res, next) {
 //     res.json(resp);
 //   });
 // });
-// 댓글 작성
+
+// 댓글 생성
+router.post('/comments/:id', async (req, res, next) => {
+  const data = req.body;
+  missionDAO.createComment(data, (resp) => {
+    res.json(resp);
+  });
+});
 
 // 댓글 수정
 
 // 댓글 삭제
-
+router.delete('/comments/:id', async (req, res, next) => {
+  const params = req.params;
+  missionDAO.deleteComment(params, (resp) => {
+    res.json(resp);
+  });
+});
 module.exports = router;

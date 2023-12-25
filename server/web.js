@@ -5,12 +5,13 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
 const cors = require('cors');
-// 라우터 정의해야 추가가 가능하다
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const rankRouter = require('./routes/Rank');
 const missionRouter = require('./routes/mission');
 const communitysRouter = require('./routes/communitys');
+const challengesRouter = require('./routes/challenges');
 
 const app = express();
 const PORT = 8000;
@@ -43,6 +44,7 @@ app.use('/mypage', usersRouter);
 app.use('/mission', missionRouter);
 app.use('/rank', rankRouter);
 app.use('/community', communitysRouter);
+app.use('/challenges', challengesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

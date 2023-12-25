@@ -21,7 +21,7 @@ const sql = {
                   (user_id, mission_id, status, start_at)
                   VALUES (?, ?, ?, CURRENT_TIMESTAMP)`,
   updateComment: ``,
-  deleteComment: ``,
+  deleteComment: `DELETE FROM mission_comment WHERE id = ?`,
 };
 // 미션 생성
 const missionDAO = {
@@ -130,16 +130,37 @@ const missionDAO = {
 
   // 댓글 생성
   createComment: async (item, callback) => {
+    const { user_id, mission_id, content } = item;
     let conn = null;
     try {
       conn = await pool.getConnection();
-      const { user_id, mission_id, content } = item;
-      await conn.query(sql.createComment, [user_id, mission_id, content]);
-      callback({ status: 200, message: '댓글 생성 성공' });
+      await conn.beginTransaction();
+      conn.commit();
+      const [resp] = await conn.query(sql.createComment, [user_id, mission_id, content]);
+      return callback({ status: 200, message: '댓글 작성 완료', data: resp });
     } catch (error) {
-      callback({ status: 500, message: '댓글 생성 실패', error: error });
+      conn.rollback();
+      callback({ status: 500, message: '댓글 작성 실패', error: error });
     } finally {
-      if (conn !== null) conn.release();
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+
+  // 댓글 삭제
+  deleteComment: async (item, callback) => {
+    const { id } = item;
+    let conn = null;
+    try {
+      conn = await pool.getConnection();
+      await conn.beginTransaction();
+      conn.commit();
+      const [resp] = await conn.query(sql.deleteComment, [id]);
+      return callback({ status: 200, message: '댓글 삭제 완료', data: resp });
+    } catch (error) {
+      conn.rollback();
+      callback({ status: 500, message: '댓글 삭제 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
     }
   },
 };
