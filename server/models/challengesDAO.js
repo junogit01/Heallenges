@@ -11,8 +11,7 @@ const sql = {
   updateChallenge: `
     UPDATE challenges 
     SET title = ?, description = ?, type = ?, totalParticipants = ?, rules = ?, schedule = ?, status = ?, hostId = ?, mainImage = ?, prize = ? 
-    WHERE id = ?
-  `,
+    WHERE id = ?`,
   deleteChallenge: `DELETE FROM challenges WHERE id = ?`,
   getParticipants: `SELECT * FROM participants WHERE challengeId = ?`,
   addParticipant: `INSERT INTO participants (challengeId, memberId, authority, contribution) VALUES (?, ?, ?, ?)`,
