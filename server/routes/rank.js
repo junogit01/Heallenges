@@ -13,7 +13,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // 랭킹 유저 검색
-router.get('/search', (req, res) => {
+router.get('/search', (req, res, next) => {
   const searchKeyword = req.query.keyword; // 검색어는 쿼리 매개변수로 전달됨
   rankDAO.rankSearch(searchKeyword, (resp) => {
     res.json(resp);

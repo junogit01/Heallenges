@@ -9,6 +9,7 @@ const cors = require('cors');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const rankRouter = require('./routes/Rank');
+const missionRouter = require('./routes/mission');
 const communitysRouter = require('./routes/communitys');
 const challengesRouter = require('./routes/challenges');
 
@@ -40,6 +41,7 @@ app.use(cors());
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
 app.use('/mypage', usersRouter);
+app.use('/mission', missionRouter);
 app.use('/rank', rankRouter);
 app.use('/community', communitysRouter);
 app.use('/challenges', challengesRouter);

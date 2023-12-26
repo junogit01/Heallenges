@@ -18,7 +18,7 @@ const sql = {
                 ORDER BY
                   a.reward_cnt DESC, a.name) AS ranked_users
               WHERE
-                name LIKE ?`,
+                name = ?`,
 };
 
 const rankDAO = {
@@ -49,7 +49,7 @@ const rankDAO = {
     let conn = null;
     try {
       conn = await pool.getConnection();
-      const [data, fieldset] = await conn.query(sql.rankSearch, [`%${item}%`]);
+      const [data, fieldset] = await conn.query(sql.rankSearch, [`${item}`]);
       callback({
         status: 200,
         message: '검색 성공',
@@ -62,5 +62,5 @@ const rankDAO = {
     }
   },
 };
-
+// 커밋
 module.exports = rankDAO;
