@@ -3,41 +3,57 @@ const pool = require('./pool');
 const sql = {
   createChallenge: `
     INSERT INTO challenges 
-    (title, description, type, totalParticipants, rules, end_date, start_date, status, hostId, reward) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (title, description, type, totalParticipants, rules, end_date, start_date, status, hostId, mainImage, reward) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `,
   getAllChallenges: `SELECT * FROM challenges`,
   getChallengeById: `SELECT * FROM challenges WHERE id = ?`,
   updateChallenge: `
     UPDATE challenges 
-    SET title = ?, description = ?, type = ?, totalParticipants = ?, rules = ?, end_date = ?, start_date = ?, status = ?, hostId = ?, reward = ? 
+    SET title = ?, description = ?, type = ?, totalParticipants = ?, rules = ?, end_date = ?, start_date = ?, status = ?, hostId = ?, reward = ?, mainImage = ? 
     WHERE id = ?
   `,
   deleteChallenge: `DELETE FROM challenges WHERE id = ?`,
-  getParticipants: `SELECT * FROM challenge_participants WHERE challenge_id = ?`,
+  getParticipantsByTitle: `SELECT * FROM challenge_participants WHERE challenge_id = ?`,
   addParticipant: `INSERT INTO challenge_participants (challenge_id, user_id) VALUES (?, ?)`,
   removeParticipant: `DELETE FROM challenge_participants WHERE challenge_id = ? AND user_id = ?`,
   completeChallenge: `UPDATE challenges SET status = 'Completed' WHERE id = ?`,
   getChallengesByCategory: `SELECT * FROM challenges WHERE type = ?`,
-  getBoardsByChallengeId: `SELECT * FROM challenge_community WHERE challenge_id = ?`,
-  getBoardComments: `SELECT * FROM challenge_comment WHERE challenge_community_id = ?`,
-  createChallengeCommunity: `
-    INSERT INTO challenge_community
-    (challenge_id, user_id, title, contents, verification_method, verification_result, view_cnt)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-    `,
-  updateChallengeCommunity: `
-    UPDATE challenge_community
-    SET title = ?, contents = ?, verification_method = ?, verification_result = ?, view_cnt = ?
-    WHERE id = ?
-    `,
-  deleteChallengeCommunity: `DELETE FROM challenge_community WHERE id = ?`,
-  createChallengeCommunityComment: `
-    INSERT INTO challenge_comment
-    (post_id, user_id, contents)
-    VALUES (?, ?, ?)
-    `,
-  deleteChallengeCommunityComment: `DELETE FROM challenge_comment WHERE id = ?`,
+
+    // 커뮤니티 게시글 작성
+    insert: `INSERT INTO challenge_community (title, contents, image, challenge_id, user_id) VALUES (?, ?, ?,?,?)`,
+    // 커뮤니티 게시글 수정
+    update: `UPDATE challenge_community
+             SET title = ?, contents = ?
+             WHERE id = ?
+             `,
+    // 커뮤니티 게시글 삭제
+    delete: `DELETE FROM challenge_community WHERE id = ?`,
+    // 커뮤니티 조회수 증가
+    incCount: `UPDATE challenge_community SET view_cnt = view_cnt + 1 WHERE id = ?`,
+    // 커뮤니티 게시글 리스트 조회
+    boardList: `SELECT m.title, m.view_cnt, u.name, m.id
+                FROM challenges c
+                JOIN challenge_community m ON c.id = m.challenge_id
+                JOIN user u ON m.user_id = u.id
+                WHERE c.id = ?
+                LIMIT ?, ?`,
+    // 커뮤니티 게시글 상세 조회
+    board: `SELECT c.title, c.contents, u.name, c.view_cnt, DATE_FORMAT(c.created_at, '%Y-%m-%d %h-%i-%s') as created
+            FROM challenge_community c
+            JOIN challenges ON c.challenge_id = challenges.id
+            JOIN user u ON c.user_id = u.id
+            WHERE challenges.id = ? and c.id = ?`,
+    // 커뮤니티 댓글 조회
+    getComment: `SELECT m.contents, u.name
+                 FROM challenge_community c
+                 JOIN challenge_comment m ON c.id = m.post_id
+                 JOIN user u ON m.user_id = u.id
+                 WHERE c.id = ?`,
+    // 커뮤니티 댓글 작성
+    insertComment: `INSERT INTO challenge_comment(contents, user_id, post_id) VALUES(?, ?, ?)`,
+    // 커뮤니티 댓글 삭제
+    deleteComment: `DELETE FROM challenge_comment WHERE id = ?`,
 };
 
 const challengeDAO = {
@@ -66,6 +82,7 @@ const challengeDAO = {
         challengeData.start_date,
         challengeData.status,
         challengeData.hostId,
+        challengeData.mainImage,
         challengeData.reward,
       ]);
 
@@ -150,6 +167,7 @@ const challengeDAO = {
           updatedChallengeData.status,
           updatedChallengeData.hostId,
           updatedChallengeData.reward,
+          updatedChallengeData.mainImage,
           updatedChallengeData.id,
         ]);
 
@@ -335,155 +353,172 @@ const challengeDAO = {
     }
   },
 
-  boardList: async (challengeId, callback) => {
+   // 도전별 게시판 리스트
+   boardList: async (item, callback) => {
+    const no = Number(item.no) - 1 || 0;
+    const size = Number(item.size) || 10;
     let conn = null;
     try {
-      conn = await pool.getConnection(); // db 접속 구문
-      // 챌린지 ID로 게시물 리스트를 조회하는 쿼리를 실행한다.
-      const boardList = await pool.query(sql.getBoardsByChallengeId, [challengeId]);
-
-      // 조회된 게시물 리스트를 콘솔에 출력한다.
-      console.log('게시물 리스트:');
-      boardList.forEach((board) => {
-        console.log(
-          `ID: ${board.id}, TITLE: ${board.title}, CONTENTS: ${board.contents}, CHALLENGE_ID: ${board.challenge_id}`,
-        );
+      conn = await pool.getConnection(); // db 접속
+      conn.beginTransaction();
+      const [data] = await conn.query(sql.boardList, [item.id, Number(no * size), Number(size)]);
+      conn.commit();
+      callback({
+        status: 200,
+        message: '해당 도전 게시글 가져오기 성공',
+        pageno: no + 1,
+        pagesize: size,
+        data: data,
       });
-
-      // 조회된 게시물 리스트를 콜백 함수를 통해 반환한다.
-      callback({ status: 200, message: '게시물 리스트 조회 성공', data: boardList });
     } catch (error) {
-      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
-      callback({ status: 500, message: '게시물 리스트 조회 실패', error: error });
+      conn.rollback();
+      callback({ status: 500, message: '불러오기 대실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 접속 해제
     }
   },
 
-  board: async (boardId, callback) => {
+  // 도전별 게시판 카테고리별 리스트
+  categoryBoardList: async (item, callback) => {
+    const no = Number(item.no) - 1 || 0;
+    const size = Number(item.size) || 10;
     let conn = null;
     try {
-      conn = await pool.getConnection(); // db 접속 구문
-      // 게시물 ID로 게시물을 조회하는 쿼리를 실행한다.
-      const comments = await pool.query(sql.getBoardComments, [boardId]);
-
-      // 조회된 게시물이 있는지 확인한다.
-      if (comments.length === 0) {
-        // 게시물이 데이터베이스에 존재하지 않는 경우, 콜백 함수를 호출하여 해당 메시지를 반환한다.
-        callback({ status: 404, message: '해당 ID의 게시물을 찾을 수 없음' });
-      } else {
-        // 게시물이 성공적으로 조회된 경우, 콜백 함수를 호출하여 게시물 데이터를 반환한다.
-        callback({ status: 200, message: '댓글 리스트 조회 성공', data: comments });
-      }
-    } catch (error) {
-      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
-      callback({ status: 500, message: '댓글 리스트 조회 실패', error: error });
-    } finally {
-      if (conn) conn.release(); // db 연결 종료
-    }
-  },
-
-  insert: async (data, callback) => {
-    let conn = null;
-    try {
-      conn = await pool.getConnection(); // db 접속 구문
-      // 게시물을 생성하는 쿼리를 실행한다.
-      const result = await pool.query(sql.createChallengeCommunity, [
-        data.challenge_id,
-        data.user_id,
-        data.title,
-        data.contents,
-        data.verification_method,
-        data.verification_result,
-        data.view_cnt,
+      conn = await pool.getConnection(); // db 접속
+      conn.beginTransaction();
+      const [data] = await conn.query(sql.boardList, [
+        item.id,
+        item.category,
+        Number(no * size),
+        Number(size),
       ]);
-
-      // 게시물 생성 후, 성공 메시지와 함께 콜백 함수를 호출한다.
-      callback({ status: 200, message: '도전별 커뮤니티 게시물 생성 성공', data: result });
+      conn.commit();
+      callback({
+        status: 200,
+        message: '해당 도전 게시글 가져오기 성공',
+        pageno: no + 1,
+        pagesize: size,
+        data: data,
+      });
     } catch (error) {
-      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
-      callback({ status: 500, message: '도전별 커뮤니티 게시물 생성 실패', error: error });
+      conn.rollback();
+      callback({ status: 500, message: '불러오기 대실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 접속 해제
     }
   },
 
-  update: async (data, callback) => {
+  // 도전별 커뮤니티 상세 글
+  board: async (item, callback) => {
     let conn = null;
     try {
-      conn = await pool.getConnection(); // db 접속 구문
-      // 게시물을 수정하는 쿼리를 실행한다.
-      const result = await pool.query(sql.updateChallengeCommunity, [
-        data.title,
-        data.contents,
-        data.verification_method,
-        data.verification_result,
-        data.view_cnt,
-        data.id,
-      ]);
-
-      // 게시물 수정 후, 성공 메시지와 함께 콜백 함수를 호출한다.
-      callback({ status: 200, message: '도전별 커뮤니티 게시물 수정 성공', data: result });
+      conn = await pool.getConnection(); // db 접속
+      conn.beginTransaction();
+      await conn.query(sql.incCount, [item.id]);
+      const [data] = await conn.query(sql.board, [item.challengeId, item.id]);
+      const [comment] = await conn.query(sql.getComment, [item.id]);
+      conn.commit();
+      callback({
+        status: 200,
+        message: '게시글 상세 불러오기 성공',
+        data: data,
+        comment: comment,
+      });
     } catch (error) {
-      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
-      callback({ status: 500, message: '도전별 커뮤니티 게시물 수정 실패', error: error });
+      conn.rollback();
+      callback({ status: 500, message: '불러오기 대실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 접속 해제
     }
   },
 
-  delete: async (id, callback) => {
+  // 도전 커뮤니티 게시글 수정
+  update: async (item, callback) => {
+    const { title, contents, id } = item;
     let conn = null;
     try {
-      conn = await pool.getConnection(); // db 접속 구문
-      // 게시물을 삭제하는 쿼리를 실행한다.
-      const result = await pool.query(sql.deleteChallengeCommunity, [id]);
-
-      // 게시물 삭제 후, 성공 메시지와 함께 콜백 함수를 호출한다.
-      callback({ status: 200, message: '도전별 커뮤니티 게시물 삭제 성공', data: result });
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.update, [title, contents, id]);
+      return callback({ status: 200, message: '게시글 수정 완료', data: resp });
     } catch (error) {
-      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
-      callback({ status: 500, message: '도전별 커뮤니티 게시물 삭제 실패', error: error });
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '게시글 수정 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 접속 해제
     }
   },
 
-  insertComment: async (id, data, callback) => {
+  // 도전 게시글 삭제
+  delete: async (item, callback) => {
+    const { id } = item;
     let conn = null;
     try {
-      conn = await pool.getConnection(); // db 접속 구문
-      // 댓글을 생성하는 쿼리를 실행한다.
-      const result = await pool.query(sql.createChallengeCommunityComment, [
-        id,
-        data.user_id,
-        data.contents,
-      ]);
-
-      // 댓글 생성 후, 성공 메시지와 함께 콜백 함수를 호출한다.
-      callback({ status: 200, message: '도전별 커뮤니티 댓글 생성 성공', data: result });
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.delete, [id]);
+      return callback({ status: 200, message: '게시글 삭제 완료', data: resp });
     } catch (error) {
-      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
-      callback({ status: 500, message: '도전별 커뮤니티 댓글 생성 실패', error: error });
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '게시글 삭제 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 접속 해제
     }
   },
 
-  deleteComment: async (id, callback) => {
+  // 도전 게시글 작성
+  insert: async (item, callback) => {
+    const { title, contents, image, challenge_id, user_id } = item;
     let conn = null;
     try {
-      conn = await pool.getConnection(); // db 접속 구문
-      // 댓글을 삭제하는 쿼리를 실행한다.
-      const result = await pool.query(sql.deleteChallengeCommunityComment, [id]);
-
-      // 댓글 삭제 후, 성공 메시지와 함께 콜백 함수를 호출한다.
-      callback({ status: 200, message: '도전별 커뮤니티 댓글 삭제 성공', data: result });
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.insert, [title, contents, image, challenge_id, user_id]);
+      return callback({ status: 200, message: '게시글 작성 완료', data: resp });
     } catch (error) {
-      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출한다.
-      callback({ status: 500, message: '도전별 커뮤니티 댓글 삭제 실패', error: error });
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '게시글 작성 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+
+  // 도전 댓글 작성
+  insertComment: async (item, callback) => {
+    const { contents, user_id, post_id } = item;
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.insertComment, [contents, user_id, post_id]);
+      return callback({ status: 200, message: '댓글 작성 완료', data: resp });
+    } catch (error) {
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '댓글 작성 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+
+  // 도전 댓글 삭제
+  deleteComment: async (item, callback) => {
+    const { id } = item;
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      const [resp] = await conn.query(sql.deleteComment, [id]);
+      return callback({ status: 200, message: '댓글 삭제 완료', data: resp });
+    } catch (error) {
+      conn.rollback(); // 커밋 이전 상태로 돌려야한다.
+      callback({ status: 500, message: '댓글 삭제 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
     }
   },
 };
