@@ -3,9 +3,9 @@ const pool = require('./pool');
 
 const sql = {
   // 게시판 입력
-  insert: `INSERT INTO community (category, title, contents, Image)
-            VALUES (?, ?, ?, ?)`,
-  // 게시판 수정
+  insert: `INSERT INTO community (user_id, category, title, contents, Image)
+            VALUES (?, ?, ?, ?, ?)`,
+  // 게시판 수정(이미지는 update로 힘들다나?)
   update: `UPDATE community
             SET title = ?,
                 contents = ?,
