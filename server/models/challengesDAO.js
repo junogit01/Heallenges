@@ -11,37 +11,46 @@ const sql = {
   updateChallenge: `
     UPDATE challenges 
     SET title = ?, description = ?, type = ?, totalParticipants = ?, rules = ?, schedule = ?, status = ?, hostId = ?, mainImage = ?, prize = ? 
-    WHERE id = ?
-  `,
+    WHERE id = ?`,
   deleteChallenge: `DELETE FROM challenges WHERE id = ?`,
   getParticipants: `SELECT * FROM participants WHERE challengeId = ?`,
   addParticipant: `INSERT INTO participants (challengeId, memberId, authority, contribution) VALUES (?, ?, ?, ?)`,
   removeParticipant: `DELETE FROM participants WHERE challengeId = ? AND participantId = ?`,
   completeChallenge: `UPDATE challenges SET status = 'Completed' WHERE id = ?`,
+
+  // 커뮤니티 게시글 작성
   insert: `INSERT INTO challenge_community (title, contents, image, challenge_id, user_id) VALUES (?, ?, ?,?,?)`,
+  // 커뮤니티 게시글 수정
   update: `UPDATE challenge_community
            SET title = ?, contents = ?
            WHERE id = ?
            `,
+  // 커뮤니티 게시글 삭제
   delete: `DELETE FROM challenge_community WHERE id = ?`,
+  // 커뮤니티 조회수 증가
   incCount: `UPDATE challenge_community SET view_cnt = view_cnt + 1 WHERE id = ?`,
+  // 커뮤니티 게시글 리스트 조회
   boardList: `SELECT m.title, m.view_cnt, u.name, m.id
               FROM challenges c
               JOIN challenge_community m ON c.id = m.challenge_id
               JOIN user u ON m.user_id = u.id
               WHERE c.id = ?
               LIMIT ?, ?`,
-  board: `SELECT c.title, c.contents, u.name, c.view_cnt, c.created_at
+  // 커뮤니티 게시글 상세 조회
+  board: `SELECT c.title, c.contents, u.name, c.view_cnt, DATE_FORMAT(c.created_at, '%Y-%m-%d %h-%i-%s') as created
           FROM challenge_community c
           JOIN challenges ON c.challenge_id = challenges.id
           JOIN user u ON c.user_id = u.id
           WHERE challenges.id = ? and c.id = ?`,
+  // 커뮤니티 댓글 조회
   getComment: `SELECT m.contents, u.name
                FROM challenge_community c
                JOIN challenge_comment m ON c.id = m.post_id
                JOIN user u ON m.user_id = u.id
                WHERE c.id = ?`,
+  // 커뮤니티 댓글 작성
   insertComment: `INSERT INTO challenge_comment(contents, user_id, post_id) VALUES(?, ?, ?)`,
+  // 커뮤니티 댓글 삭제
   deleteComment: `DELETE FROM challenge_comment WHERE id = ?`,
 };
 
@@ -198,6 +207,7 @@ const challengeDAO = {
       if (conn !== null) conn.release(); // db 접속 해제
     }
   },
+  // 도전 커뮤니티 게시글 수정
   update: async (item, callback) => {
     const { title, contents, id } = item;
     let conn = null;
@@ -214,6 +224,7 @@ const challengeDAO = {
       if (conn !== null) conn.release(); // db 접속 해제
     }
   },
+  // 도전 게시글 삭제
   delete: async (item, callback) => {
     const { id } = item;
     let conn = null;
@@ -230,6 +241,7 @@ const challengeDAO = {
       if (conn !== null) conn.release(); // db 접속 해제
     }
   },
+  // 도전 게시글 작성
   insert: async (item, callback) => {
     const { title, contents, image, challenge_id, user_id } = item;
     let conn = null;
@@ -246,6 +258,7 @@ const challengeDAO = {
       if (conn !== null) conn.release(); // db 접속 해제
     }
   },
+  // 도전 댓글 작성
   insertComment: async (item, callback) => {
     const { contents, user_id, post_id } = item;
     let conn = null;
@@ -262,6 +275,7 @@ const challengeDAO = {
       if (conn !== null) conn.release(); // db 접속 해제
     }
   },
+  // 도전 댓글 삭제
   deleteComment: async (item, callback) => {
     const { id } = item;
     let conn = null;
