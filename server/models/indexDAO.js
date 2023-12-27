@@ -2,13 +2,22 @@ const bcrypt = require('bcrypt');
 const pool = require('./pool');
 
 const sql = {
+  // 이메일 검증
   checkEmail: `select email
               from user
               where email = ?`,
+  // 로그인
   login: `select *
               from user
               where email = ?`,
+  // 회원가입
   signup: `INSERT INTO user(name, nickname, email, password, phone_number, about_me, blog_url, created_at, profile_image, zipcode, address1) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  // 도전 조회
+  challenge: `SELECT *
+              FROM challenges
+              LIMIT 0, 10
+  
+  `,
 };
 
 const indexDAO = {

@@ -11,7 +11,6 @@ router.get('/', function (req, res, next) {
 // 회원가입
 router.post('/signup', function (req, res, next) {
   const data = req.body;
-  console.log(data);
   indexDAO.signup(data, (resp) => {
     res.json(resp);
   });
@@ -20,7 +19,6 @@ router.post('/signup', function (req, res, next) {
 // 로그인
 router.post('/login', function (req, res, next) {
   const data = req.body;
-  // console.log(data);
   indexDAO.login(data, (resp) => {
     res.json(resp);
   });
