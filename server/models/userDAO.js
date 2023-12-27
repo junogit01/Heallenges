@@ -6,11 +6,15 @@ const bcrypt = require('bcrypt');
 const pool = require('./pool');
 
 const sql = {
+  // 유저 정보 수정
   update: `UPDATE user SET nickname = ?, password = ?, about_me = ?, blog_url = ?, profile_image = ?, zipcode = ?, address1 = ?  WHERE id = ?`,
+  // 유저 정보 삭제
   delete: `DELETE FROM user where id = ?`,
+  // 마이페이지
   mypage: `SELECT *
                FROM user
                WHERE id = ?`,
+  // 참여한 도전 조회
   myChallenge: `SELECT c.title, c.type
                 FROM user u
                 JOIN challenge_participants p ON u.id = p.user_id
