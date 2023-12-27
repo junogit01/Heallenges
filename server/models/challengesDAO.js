@@ -94,7 +94,7 @@ const challengeDAO = {
       callback({ status: 500, message: '챌린지 생성에 실패하였습니다', error: error });
       // 실패 응답
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
@@ -114,7 +114,7 @@ const challengeDAO = {
       // '챌린지 조회 오류' 메시지는 발생한 오류의 성격을 더 명확히 하기 위해 추가함
       callback({ status: 500, message: '모든 챌린지 조회 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
@@ -138,7 +138,7 @@ const challengeDAO = {
       // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출
       callback({ status: 500, message: '챌린지 검색 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
@@ -178,7 +178,7 @@ const challengeDAO = {
       // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출.
       callback({ status: 500, message: '챌린지 정보 업데이트 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
@@ -193,7 +193,7 @@ const challengeDAO = {
     } catch (error) {
       callback({ status: 500, message: 'Failed to delete challenge', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
@@ -230,7 +230,7 @@ const challengeDAO = {
       // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출.
       callback({ status: 500, message: '참가자 목록 조회 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
@@ -294,7 +294,7 @@ const challengeDAO = {
       // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출.
       callback({ status: 500, message: '참가자 삭제 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
@@ -333,7 +333,7 @@ const challengeDAO = {
       // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출.
       callback({ status: 500, message: '챌린지 완료 처리 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
@@ -349,7 +349,7 @@ const challengeDAO = {
       console.error('카테고리별 챌린지 조회 중 오류 발생:', error);
       callback({ status: 500, message: '카테고리별 챌린지 조회 실패', error: error });
     } finally {
-      if (conn) conn.release(); // db 연결 종료
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
