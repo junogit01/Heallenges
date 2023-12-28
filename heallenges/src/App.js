@@ -1,11 +1,18 @@
-import Home from "@pages/Home";
-import Layout from "@pages/Layout";
-import { Route, Routes } from "react-router-dom";
+import React from 'react';
+import {Route, Routes} from 'react-router-dom';
+
+import Home from '@pages/Home';
+import Layout from '@pages/Layout';
+import Community from '@pages/Communitys';
+import Notice from '@pages/Notice';
+
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="/" element={<Home />} />
+      <Route path='/' element={<Layout />}>
+        <Route path='/' element={<Home />} />
+        <Route path='/community' element={<Community />} />
+        <Route path='/community/notice' element={<Notice />} />
       </Route>
     </Routes>
   );

@@ -1,5 +1,4 @@
 {
   "extends": "./jsconfig.paths.json",
-  "compilerOptions": {
-  }
+  "compilerOptions": {}
 }
