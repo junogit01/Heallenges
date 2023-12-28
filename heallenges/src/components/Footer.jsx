@@ -40,12 +40,10 @@ function Footer() {
                   <i className="bi bi-dash"></i> <Link to="#">Services</Link>
                 </li>
                 <li>
-                  <i className="bi bi-dash"></i>{" "}
-                  <Link to="#">Terms of service</Link>
+                  <i className="bi bi-dash"></i> <Link to="#">Terms of service</Link>
                 </li>
                 <li>
-                  <i className="bi bi-dash"></i>{" "}
-                  <Link to="#">Privacy policy</Link>
+                  <i className="bi bi-dash"></i> <Link to="#">Privacy policy</Link>
                 </li>
               </ul>
             </div>
@@ -54,12 +52,10 @@ function Footer() {
               <h4>Our Services</h4>
               <ul>
                 <li>
-                  <i className="bi bi-dash"></i>{" "}
-                  <Link to="/challenges">도전</Link>
+                  <i className="bi bi-dash"></i> <Link to="/challenges">도전</Link>
                 </li>
                 <li>
-                  <i className="bi bi-dash"></i>{" "}
-                  <Link to="/community">커뮤니티</Link>
+                  <i className="bi bi-dash"></i> <Link to="/community">커뮤니티</Link>
                 </li>
                 <li>
                   <i className="bi bi-dash"></i> <Link to="/mission">미션</Link>
