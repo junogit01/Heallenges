@@ -10,9 +10,7 @@ function Header() {
     const handleScroll = () => {
       const selectHeader = document.querySelector("#header");
       if (selectHeader) {
-        window.scrollY > 100
-          ? selectHeader.classList.add("sticked")
-          : selectHeader.classList.remove("sticked");
+        window.scrollY > 100 ? selectHeader.classList.add("sticked") : selectHeader.classList.remove("sticked");
       }
     };
 
@@ -46,9 +44,7 @@ function Header() {
         event.target.classList.toggle("active");
         event.target.nextElementSibling.classList.toggle("dropdown-active");
 
-        let dropDownIndicator = event.target.querySelector(
-          ".dropdown-indicator"
-        );
+        let dropDownIndicator = event.target.querySelector(".dropdown-indicator");
         dropDownIndicator.classList.toggle("bi-chevron-up");
         dropDownIndicator.classList.toggle("bi-chevron-down");
       }
@@ -67,26 +63,15 @@ function Header() {
   }, [mobileNavActive]);
 
   return (
-    <header
-      id="header"
-      className={`header d-flex align-items-center fixed-top ${
-        mobileNavActive ? "mobile-nav-active" : ""
-      }`}
-    >
+    <header id="header" className={`header d-flex align-items-center fixed-top ${mobileNavActive ? "mobile-nav-active" : ""}`}>
       <div className="container-fluid container-xl d-flex align-items-center justify-content-between">
         <Link to="/" className="logo d-flex align-items-center">
           {/* <!-- <img src="assets/img/logo.png" alt=""> --> */}
           <h1 className="d-flex align-items-center">Heallenges</h1>
         </Link>
 
-        <i
-          className="mobile-nav-toggle mobile-nav-show bi bi-list"
-          onClick={mobileNavToggle}
-        ></i>
-        <i
-          className={`mobile-nav-toggle mobile-nav-hide d-none bi bi-x`}
-          onClick={mobileNavToggle}
-        ></i>
+        <i className="mobile-nav-toggle mobile-nav-show bi bi-list" onClick={mobileNavToggle}></i>
+        <i className={`mobile-nav-toggle mobile-nav-hide d-none bi bi-x`} onClick={mobileNavToggle}></i>
 
         <nav id="navbar" className="navbar">
           <ul>
@@ -110,8 +95,7 @@ function Header() {
             {isLogin ? (
               <li className="dropdown">
                 <Link to="#">
-                  <span>더보기</span>{" "}
-                  <i className="bi bi-chevron-down dropdown-indicator"></i>
+                  <span>더보기</span> <i className="bi bi-chevron-down dropdown-indicator"></i>
                 </Link>
                 <ul>
                   <li>
