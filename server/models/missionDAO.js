@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const pool = require('./pool');
 
 const sql = {
@@ -5,7 +6,7 @@ const sql = {
                   (title, description, user_cnt, mission_image, reward, mission_type)
                   VALUES (?, ?, ?, ?, ?, ?)`,
   delete: `DELETE FROM mission WHERE id = ?`,
-  missionList: `SELECT title, mission_image, description FROM mission WHERE mission_type = ?`,
+  missionList: `SELECT id,title, mission_image, description, reward, mission_type FROM mission WHERE mission_type = ?`,
   // missionList: `SELECT title, mission_image, description FROM mission WHERE ? IS NULL OR mission_type = ?`,
   totalCount: `SELECT COUNT(*) as title FROM mission`,
   missionDetail: `SELECT m.title, m.description, m.user_cnt, m.mission_image, m.reward, m.mission_type,
@@ -99,7 +100,7 @@ const missionDAO = {
       conn = await pool.getConnection();
       conn.beginTransaction();
 
-      const [resp] = await conn.query(sql.missionDetail, [item.id]);
+      const [resp] = await conn.query(sql.missionDetail, [Number(item.id)]);
 
       conn.commit();
       callback({ status: 200, message: 'OK', data: resp[0] });

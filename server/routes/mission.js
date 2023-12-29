@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 const express = require('express');
 const router = express.Router();
 const missionDAO = require('./../models/missionDAO');
@@ -34,7 +35,7 @@ router.get('/:id', (req, res, next) => {
   });
 });
 
-//미션 참여
+// 미션 참여
 router.post('/:id/participate', (req, res, next) => {
   const missionId = req.params.id;
   const userId = req.body.user_id;
