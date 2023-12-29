@@ -55,7 +55,6 @@
     font-family: var(--font-default);
     border-left: 2px solid var(--color-primary);
     margin: 40px 0;
-    
   }
 
   .btn-get-started {
@@ -70,7 +69,7 @@
     color: #fff;
     background: var(--color-primary);
     &:hover {
-      background: rgba($primary, .8);
+      background: rgba($primary, 0.8);
     }
   }
 
@@ -78,7 +77,7 @@
     font-size: 16px;
     transition: 0.5s;
     margin-left: 25px;
-    color: rgba(#fff, .7);
+    color: rgba(#fff, 0.7);
     font-weight: 600;
 
     i {
@@ -103,9 +102,9 @@
       line-height: 1;
     }
 
-    .btn-get-started, .btn-watch-video {
+    .btn-get-started,
+    .btn-watch-video {
       font-size: 13px;
     }
   }
-
 }
