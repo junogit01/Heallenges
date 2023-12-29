@@ -40,13 +40,11 @@ router.delete('/:id', async (req, res) => {
 // });
 
 // 전체 게시물 리스트 조회
-router.post('/:id/comment', (req, res) => {
-  const boardId = req.params.id;
-  const { contents } = req.body;
+router.get('/:id', (req, res) => {
+  const categoryId = req.params.id; // 동적 라우팅 매개변수를 사용하여 카테고리 ID를 가져옵니다.
 
-  // 게시물 ID와 댓글 내용을 사용하여 댓글을 등록
-  communityDAO.commentInsert({ contents }, (result) => {
-    res.status(result.status).json(result);
+  communityDAO.boardList(categoryId, (resp) => {
+    res.json(resp);
   });
 });
 

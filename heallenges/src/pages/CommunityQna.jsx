@@ -1,12 +1,20 @@
-// Notice.jsx
+// CommunityQna.jsx
 
 import React from 'react';
-
 import CommunityHeader from '../components/Community/CommunityHeader';
 import CommunitySidebar from '../components/Community/CommunitySidebar';
-import NoticeBoard from './NoticeBoard'; // NoticeBoard import 추가
+import CommunityBoard from '../components/Community/CommunityBoard';
 
-function Notice() {
+const CommunityQna = () => {
+  // 질문게시판의 글 데이터
+  const qnaPosts = [
+    {id: 1, title: '질문 게시물 1'},
+    {id: 2, title: '질문 게시물 2'},
+    {id: 3, title: '질문 게시물 3'},
+
+    // ... 다른 게시물 데이터
+  ];
+
   return (
     <>
       <main id='main'>
@@ -19,8 +27,8 @@ function Notice() {
             <div className='row g-5'>
               <div className='col-lg-8' data-aos='fade-up' data-aos-delay={200}>
                 <div className='row gy-5 posts-list'>
-                  {/* NoticeBoard 추가 */}
-                  <NoticeBoard />
+                  {/* CommunityBoard에 질문게시판의 글 데이터 전달 */}
+                  <CommunityBoard posts={qnaPosts} />
                 </div>
               </div>
               {/* Sidebar 부분 */}
@@ -32,6 +40,6 @@ function Notice() {
       </main>
     </>
   );
-}
+};
 
-export default Notice;
+export default CommunityQna;
