@@ -1,9 +1,22 @@
-import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import { useRecoilValue } from "recoil";
+import { loginState } from "@recoils/login";
+import { useSetRecoilState } from "recoil";
+import axios from "axios";
 
 function Header() {
   const [mobileNavActive, setMobileNavActive] = useState(false);
+
+  const setUser = useSetRecoilState(loginState);
   const [isLogin, setIsLogin] = useState(false);
+  const user = useRecoilValue(loginState);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.name === "" && user?.email === "") setIsLogin(false);
+    else return setIsLogin(true);
+  }, [user.name, user.email]);
 
   // Sticky header on scroll
   useEffect(() => {
@@ -62,6 +75,18 @@ function Header() {
     };
   }, [mobileNavActive]);
 
+  const logout = useCallback(
+    async (evt) => {
+      evt.preventDefault();
+      const resp = await axios.post("http://localhost:8001/logout");
+      if (resp.data.status === 200) {
+        setUser(null);
+        navigate("/");
+        return;
+      }
+    },
+    [setUser, navigate]
+  );
   return (
     <header id="header" className={`header d-flex align-items-center fixed-top ${mobileNavActive ? "mobile-nav-active" : ""}`}>
       <div className="container-fluid container-xl d-flex align-items-center justify-content-between">
