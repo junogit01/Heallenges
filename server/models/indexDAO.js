@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const pool = require('./pool');
 
 const sql = {
@@ -8,16 +8,16 @@ const sql = {
               where email = ?`,
   // 로그인
   login: `select *
-              from user
-              where email = ?`,
+          from user
+          where email = ?`,
   // 회원가입
-  signup: `INSERT INTO user(name, nickname, email, password, phone_number, about_me, blog_url, created_at, profile_image, zipcode, address1) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  signup: `INSERT INTO user(name, nickname, email, password, about_me, blog_url, created_at, profile_image, zipcode, address) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   // 도전 조회
   challenge: `SELECT *
               FROM challenges
               LIMIT 0, 10
-  
   `,
+  insertImage: `UPDATE user SET profile_image = ? where id = ? `,
 };
 
 const indexDAO = {
@@ -27,13 +27,12 @@ const indexDAO = {
       nickname,
       email,
       password,
-      phone_number,
       about_me,
       blog_url,
       created_at,
       profile_image,
       zipcode,
-      address1,
+      address,
     } = item;
     let conn = null;
     try {
@@ -53,13 +52,12 @@ const indexDAO = {
               nickname,
               email,
               hash,
-              phone_number,
               about_me,
               blog_url,
               created_at,
               profile_image,
               zipcode,
-              address1,
+              address,
             ]);
             return callback({ status: 200, message: '회원가입에 성공했습니다.', data: resp });
           }
@@ -101,6 +99,25 @@ const indexDAO = {
       callback({ status: 500, message: '로그인 실패', error: error.message });
     } finally {
       if (conn !== null) conn.release();
+    }
+  },
+  insertImage: async (item, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      conn.beginTransaction();
+      const [data] = await conn.query(sql.insertImage, [item.profile_image]);
+      conn.commit();
+      callback({
+        status: 200,
+        message: '이미지 업로드 성공',
+        data: data,
+      });
+    } catch (error) {
+      conn.rollback();
+      callback({ status: 500, message: '업로드 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
     }
   },
 };
