@@ -1,7 +1,7 @@
 // DAO => Data Access Object
 // npm i mysql2
 // get the client
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 // Create the connection pool. The pool-specific settings are the defaults
 const pool = require('./pool');
 
