@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": ["google", "eslint:recommended", "prettier", "react-app"],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "prettier/prettier": "off",
+    "no-unused-vars": "off",
+    "require-jsdoc": "off",
+    "space-before-function-paren": 0
+  },
+  "plugins": ["prettier"]
+}
