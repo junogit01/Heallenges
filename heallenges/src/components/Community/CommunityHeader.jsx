@@ -11,7 +11,7 @@ const translateToKorean = (name) => {
     case 'notice':
       return '공지';
     case 'qna':
-      return '질문'
+      return '질문';
     // 필요한 경우에 계속 추가
     default:
       return name;
@@ -25,7 +25,7 @@ function CommunityHeader() {
   return (
     <div
       className='breadcrumbs d-flex align-items-center'
-      style={{backgroundImage: 'url("assets/img/blog-header.jpg")'}}
+      style={{backgroundImage: 'url("/images/portfolio-header.jpg")'}}
     >
       <div className='container position-relative d-flex flex-column align-items-center'>
         <h2>커뮤니티</h2>

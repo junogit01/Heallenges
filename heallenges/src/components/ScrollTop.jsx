@@ -7,9 +7,7 @@ const ScrollTopButton = () => {
 
     if (scrollTop) {
       const toggleScrollTop = () => {
-        window.scrollY > 100
-          ? scrollTop.classList.add("active")
-          : scrollTop.classList.remove("active");
+        window.scrollY > 100 ? scrollTop.classList.add("active") : scrollTop.classList.remove("active");
       };
 
       window.addEventListener("load", toggleScrollTop);

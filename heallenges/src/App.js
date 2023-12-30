@@ -7,6 +7,8 @@ import Home from '@pages/Home';
 import Layout from '@pages/Layout';
 import Mypage from '@pages/Mypage';
 import Login from '@pages/Login';
+import Mission from '@pages/Mission';
+import MissionDetail from '@pages/MissionDetail';
 
 import Community from '@pages/Communitys';
 import CommunityNotice from '@pages/CommunityNotice';
@@ -18,6 +20,8 @@ function App() {
     <Routes>
       <Route path='/' element={<Layout />}>
         <Route path='/' element={<Home />} />
+        <Route path='/mission' element={<Mission />} />
+        <Route path='/mission/:id' element={<MissionDetail />} />
         <Route path='/mypage' element={<Mypage />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />

@@ -902,7 +902,17 @@ section {
   display: flex;
   flex-direction: column;
 }
-
+.mission-items-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3개의 열로 나눔 */
+  gap: 300px;
+}
+.mission-item {
+  width: 300%; /* 미션 아이템이 100%의 너비를 가지도록 설정 */
+  max-width: 400px; /* 최대 너비 설정 */
+  margin-bottom: 30px;
+  /* 추가적인 스타일 조정 */
+}
 .recent-posts .post-box .post-img {
   overflow: hidden;
   position: relative;

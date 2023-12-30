@@ -9,7 +9,7 @@ const PostItem = ({post, linkTo}) => {
       {/* 제목에 대한 링크 */}
       {/* 
           지금은 제목 classname을 post-author에 있는거로 해서 일시적으로 변경
-          앞으로 이 CSS 어떤식으로 할건지 나중에 다 하고 팀원이랑 논의가 필요할듯 
+          앞으로 이 CSS 어떤식으로 할건지 팀원이랑 논의가 필요할듯 
       */}
       <div className='post-author'>
         <Link to={linkTo}>제목: {post.title}</Link>

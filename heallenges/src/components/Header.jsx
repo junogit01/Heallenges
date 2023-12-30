@@ -1,18 +1,29 @@
-import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import { useRecoilValue } from "recoil";
+import { loginState } from "@recoils/login";
+import { useSetRecoilState } from "recoil";
+import axios from "axios";
 
 function Header() {
   const [mobileNavActive, setMobileNavActive] = useState(false);
+
+  const setUser = useSetRecoilState(loginState);
   const [isLogin, setIsLogin] = useState(false);
+  const user = useRecoilValue(loginState);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.name === "" && user?.email === "") setIsLogin(false);
+    else return setIsLogin(true);
+  }, [user.name, user.email]);
 
   // Sticky header on scroll
   useEffect(() => {
     const handleScroll = () => {
       const selectHeader = document.querySelector("#header");
       if (selectHeader) {
-        window.scrollY > 100
-          ? selectHeader.classList.add("sticked")
-          : selectHeader.classList.remove("sticked");
+        window.scrollY > 100 ? selectHeader.classList.add("sticked") : selectHeader.classList.remove("sticked");
       }
     };
 
@@ -46,9 +57,7 @@ function Header() {
         event.target.classList.toggle("active");
         event.target.nextElementSibling.classList.toggle("dropdown-active");
 
-        let dropDownIndicator = event.target.querySelector(
-          ".dropdown-indicator"
-        );
+        let dropDownIndicator = event.target.querySelector(".dropdown-indicator");
         dropDownIndicator.classList.toggle("bi-chevron-up");
         dropDownIndicator.classList.toggle("bi-chevron-down");
       }
@@ -66,27 +75,28 @@ function Header() {
     };
   }, [mobileNavActive]);
 
+  const logout = useCallback(
+    async (evt) => {
+      evt.preventDefault();
+      const resp = await axios.post("http://localhost:8001/logout");
+      if (resp.data.status === 200) {
+        setUser(null);
+        navigate("/");
+        return;
+      }
+    },
+    [setUser, navigate]
+  );
   return (
-    <header
-      id="header"
-      className={`header d-flex align-items-center fixed-top ${
-        mobileNavActive ? "mobile-nav-active" : ""
-      }`}
-    >
+    <header id="header" className={`header d-flex align-items-center fixed-top ${mobileNavActive ? "mobile-nav-active" : ""}`}>
       <div className="container-fluid container-xl d-flex align-items-center justify-content-between">
         <Link to="/" className="logo d-flex align-items-center">
           {/* <!-- <img src="assets/img/logo.png" alt=""> --> */}
           <h1 className="d-flex align-items-center">Heallenges</h1>
         </Link>
 
-        <i
-          className="mobile-nav-toggle mobile-nav-show bi bi-list"
-          onClick={mobileNavToggle}
-        ></i>
-        <i
-          className={`mobile-nav-toggle mobile-nav-hide d-none bi bi-x`}
-          onClick={mobileNavToggle}
-        ></i>
+        <i className="mobile-nav-toggle mobile-nav-show bi bi-list" onClick={mobileNavToggle}></i>
+        <i className={`mobile-nav-toggle mobile-nav-hide d-none bi bi-x`} onClick={mobileNavToggle}></i>
 
         <nav id="navbar" className="navbar">
           <ul>
@@ -110,8 +120,7 @@ function Header() {
             {isLogin ? (
               <li className="dropdown">
                 <Link to="#">
-                  <span>더보기</span>{" "}
-                  <i className="bi bi-chevron-down dropdown-indicator"></i>
+                  <span>더보기</span> <i className="bi bi-chevron-down dropdown-indicator"></i>
                 </Link>
                 <ul>
                   <li>

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const pool = require('./pool');
 
 const sql = {
@@ -5,7 +6,7 @@ const sql = {
                   (title, description, user_cnt, mission_image, reward, mission_type)
                   VALUES (?, ?, ?, ?, ?, ?)`,
   delete: `DELETE FROM mission WHERE id = ?`,
-  missionList: `SELECT title, mission_image, description FROM mission WHERE mission_type = ?`,
+  missionList: `SELECT id,title, mission_image, description, reward, mission_type FROM mission WHERE mission_type = ?`,
   // missionList: `SELECT title, mission_image, description FROM mission WHERE ? IS NULL OR mission_type = ?`,
   totalCount: `SELECT COUNT(*) as title FROM mission`,
   missionDetail: `SELECT m.title, m.description, m.user_cnt, m.mission_image, m.reward, m.mission_type,
@@ -18,9 +19,9 @@ const sql = {
                   (user_id, mission_id, content)
                   VALUES (?, ?, ?)`,
   participateMission: `INSERT INTO mission_user
-                  (user_id, mission_id, status, start_at)
-                  VALUES (?, ?, ?, CURRENT_TIMESTAMP)`,
-  updateComment: ``,
+                  (user_id, mission_id, start_at)
+                  VALUES (?, ?, CURRENT_TIMESTAMP)`,
+  updateComment: `UPDATE mission_comment SET content = ? WHERE id = ?`,
   deleteComment: `DELETE FROM mission_comment WHERE id = ?`,
 };
 // 미션 생성
@@ -99,7 +100,7 @@ const missionDAO = {
       conn = await pool.getConnection();
       conn.beginTransaction();
 
-      const [resp] = await conn.query(sql.missionDetail, [item.id]);
+      const [resp] = await conn.query(sql.missionDetail, [Number(item.id)]);
 
       conn.commit();
       callback({ status: 200, message: 'OK', data: resp[0] });
@@ -112,13 +113,12 @@ const missionDAO = {
   },
 
   // 미션 참여
-
   participateMission: async (item, callback) => {
     let conn = null;
     try {
       conn = await pool.getConnection();
       const { user_id, mission_id } = item;
-      await conn.query(sql.participateMission, [user_id, mission_id, 1]);
+      await conn.query(sql.participateMission, [user_id, mission_id]);
 
       callback({ status: 200, message: '미션 참여 성공' });
     } catch (error) {
@@ -161,6 +161,24 @@ const missionDAO = {
       callback({ status: 500, message: '댓글 삭제 실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+
+  updateComment: async (item, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection();
+      conn.beginTransaction();
+
+      const [resp] = await conn.query(sql.updateComment, [item.content, item.id]);
+      conn.commit();
+
+      callback({ status: 200, message: 'OK', data: resp });
+    } catch (error) {
+      conn.rollback();
+      callback({ status: 500, message: '로그인 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release();
     }
   },
 };

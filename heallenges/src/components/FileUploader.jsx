@@ -1,34 +1,33 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 function FileUploader() {
+  const [file, setFile] = useState();
+
+  const handleFile = (e) => {
+    setFile(e.target.files[0]);
+  };
+  const handleUpload = () => {
+    const formData = new FormData();
+    formData.append("image", file);
+    axios
+      .post("http://localhost:8001/signup/upload", formData)
+      .then((res) => {
+        console.log(res);
+        if (res.data.status === "Success") {
+          console.log("Success");
+        } else {
+          console.log("Fail");
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
-      <form action="#">
-        <p>Browse FIle to Upload</p>
-      </form>
-      <section className="progress-area">
-        <li className="row">
-          <i className="fas fa-file-alt"></i>
-          <div className="content">
-            <div className="details">
-              <span className="name">image_01.png - Uploding</span>
-              <span className="percent">50%</span>
-            </div>
-            <div className="progreess-bar">
-              <div className="progress"></div>
-            </div>
-          </div>
-        </li>
-      </section>
-      <section className="uploaded-area">
-        <li className="row">
-          <div className="content">
-            <i className="fas fa-file-alt"></i>
-            <div className="details">
-              <span className="name">image_01.png - Uploded</span>
-              <span className="percent">70kb</span>
-            </div>
-          </div>
-        </li>
-      </section>
+      <div className="container">
+        <input type="file" onChange={handleFile}></input>
+        <button onClick={handleUpload}>Upload</button>
+      </div>
     </>
   );
 }
