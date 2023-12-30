@@ -1,6 +1,5 @@
-import SignHeader from "@components/Signup/SignHead";
-import SignBody from "@components/Signup/SignBody";
-import FileUploader from "@components/FileUploader";
+import SignHeader from '@components/Signup/SignHead';
+import SignBody from '@components/Signup/SignBody';
 
 function Signup() {
   return (

@@ -1,9 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
-import React, { useEffect, useState, useCallback } from "react";
-import { useRecoilValue } from "recoil";
-import { loginState } from "@recoils/login";
-import { useSetRecoilState } from "recoil";
-import axios from "axios";
+import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useRecoilValue } from 'recoil';
+import { loginState } from '@recoils/login';
+import { useSetRecoilState } from 'recoil';
+import axios from 'axios';
 
 function Header() {
   const [mobileNavActive, setMobileNavActive] = useState(false);
@@ -14,81 +14,83 @@ function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user?.name === "" && user?.email === "") setIsLogin(false);
+    if (user?.name === '' && user?.email === '') setIsLogin(false);
     else return setIsLogin(true);
   }, [user.name, user.email]);
 
   // Sticky header on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const selectHeader = document.querySelector("#header");
+      const selectHeader = document.querySelector('#header');
       if (selectHeader) {
-        window.scrollY > 100 ? selectHeader.classList.add("sticked") : selectHeader.classList.remove("sticked");
+        window.scrollY > 100 ? selectHeader.classList.add('sticked') : selectHeader.classList.remove('sticked');
       }
     };
 
-    document.addEventListener("scroll", handleScroll);
+    document.addEventListener('scroll', handleScroll);
 
     // Cleanup 함수 등록
     return () => {
-      document.removeEventListener("scroll", handleScroll);
+      document.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   // Mobile nav toggle
   const mobileNavToggle = () => {
-    const mobileNavShow = document.querySelector(".mobile-nav-show");
-    const mobileNavHide = document.querySelector(".mobile-nav-hide");
+    const mobileNavShow = document.querySelector('.mobile-nav-show');
+    const mobileNavHide = document.querySelector('.mobile-nav-hide');
 
     if (mobileNavShow && mobileNavHide) {
-      document.body.classList.toggle("mobile-nav-active");
-      mobileNavShow.classList.toggle("d-none");
-      mobileNavHide.classList.toggle("d-none");
+      document.body.classList.toggle('mobile-nav-active');
+      mobileNavShow.classList.toggle('d-none');
+      mobileNavHide.classList.toggle('d-none');
     }
   };
 
   // Toggle mobile nav dropdowns
   useEffect(() => {
-    const navDropdowns = document.querySelectorAll(".navbar .dropdown > a");
+    const navDropdowns = document.querySelectorAll('.navbar .dropdown > a');
 
-    const handleDropdownClick = (event) => {
+    const handleDropdownClick = event => {
       if (mobileNavActive) {
         event.preventDefault();
-        event.target.classList.toggle("active");
-        event.target.nextElementSibling.classList.toggle("dropdown-active");
+        event.target.classList.toggle('active');
+        event.target.nextElementSibling.classList.toggle('dropdown-active');
 
-        let dropDownIndicator = event.target.querySelector(".dropdown-indicator");
-        dropDownIndicator.classList.toggle("bi-chevron-up");
-        dropDownIndicator.classList.toggle("bi-chevron-down");
+        const dropDownIndicator = event.target.querySelector('.dropdown-indicator');
+        dropDownIndicator.classList.toggle('bi-chevron-up');
+        dropDownIndicator.classList.toggle('bi-chevron-down');
       }
     };
 
-    navDropdowns.forEach((el) => {
-      el.addEventListener("click", handleDropdownClick);
+    navDropdowns.forEach(el => {
+      el.addEventListener('click', handleDropdownClick);
     });
 
     // Cleanup 함수 등록
     return () => {
-      navDropdowns.forEach((el) => {
-        el.removeEventListener("click", handleDropdownClick);
+      navDropdowns.forEach(el => {
+        el.removeEventListener('click', handleDropdownClick);
       });
     };
   }, [mobileNavActive]);
 
   const logout = useCallback(
-    async (evt) => {
+    async evt => {
       evt.preventDefault();
-      const resp = await axios.post("http://localhost:8001/logout");
+      const resp = await axios.post('http://localhost:8001/logout');
       if (resp.data.status === 200) {
         setUser(null);
-        navigate("/");
+        navigate('/');
         return;
       }
     },
-    [setUser, navigate]
+    [setUser, navigate],
   );
   return (
-    <header id="header" className={`header d-flex align-items-center fixed-top ${mobileNavActive ? "mobile-nav-active" : ""}`}>
+    <header
+      id="header"
+      className={`header d-flex align-items-center fixed-top ${mobileNavActive ? 'mobile-nav-active' : ''}`}>
       <div className="container-fluid container-xl d-flex align-items-center justify-content-between">
         <Link to="/" className="logo d-flex align-items-center">
           {/* <!-- <img src="assets/img/logo.png" alt=""> --> */}

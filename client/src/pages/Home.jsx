@@ -1,12 +1,12 @@
-import Hero from "@components/Home/HeroSection";
-import WhyChoose from "@components/Home/WhyChoose";
-import OurServices from "@components/Home/OurServices";
-import Challenges from "@components/Home/Challenges";
+import OurServices from '@components/Home/OurServices/OurServices';
+import Challenges from '@components/Home/Challenges/Challenges';
+import SwiperImages from '@components/Home/SwiperImages/SwiperImages';
+
 function Home() {
   return (
     <>
-      <Hero />
-      <WhyChoose />
+      {/* <Hero /> */}
+      <SwiperImages />
       <OurServices />
       <Challenges />
     </>
