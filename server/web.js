@@ -8,7 +8,7 @@ const cors = require('cors');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-const rankRouter = require('./routes/Rank');
+const rankRouter = require('./routes/rank');
 const missionRouter = require('./routes/mission');
 const communitysRouter = require('./routes/communitys');
 const challengesRouter = require('./routes/challenges');
