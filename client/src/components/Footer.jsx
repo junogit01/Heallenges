@@ -3,23 +3,20 @@ import { Link } from 'react-router-dom';
 function Footer() {
   return (
     // <!-- Footer -->
-    <footer className="text-center text-lg-start bg-body-tertiary text-muted">
-      {/* <!-- Section: Social media --> */}
-      <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom"></section>
-      {/* <!-- Section: Social media --> */}
-
-      {/* <!-- Section: Links  --> */}
+    <footer className="text-center text-lg-start bg-body-tertiary text-muted mt-5">
+      <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+        <div>
+          <h3>개인정보</h3>
+        </div>
+      </section>
       <section className="">
         <div className="container text-center text-md-start mt-5 mb-5">
-          {/* <!-- Grid row --> */}
           <div className="row mt-3">
-            {/* <!-- Grid column --> */}
             <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-              {/* <!-- Content --> */}
               <h6 className="text-uppercase fw-bold mb-4">
                 <i className="fas fa-gem me-3"></i>Heallenges
               </h6>
-              <p>내용삽입</p>
+              <p>여러분의 모든 도전을 응원합니다.</p>
               <div>
                 <Link to="" className="me-4 text-reset text-decoration-none">
                   <i className="bi bi-facebook"></i>
@@ -32,11 +29,8 @@ function Footer() {
                 </Link>
               </div>
             </div>
-            {/* <!-- Grid column --> */}
 
-            {/* <!-- 목록 --> */}
             <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-              {/* <!-- Links --> */}
               <h6 className="text-uppercase fw-bold mb-4">주요 서비스</h6>
               <p>
                 <Link to="/challenges" className="text-reset text-decoration-none">
@@ -54,11 +48,8 @@ function Footer() {
                 </Link>
               </p>
             </div>
-            {/* <!-- 목록 --> */}
 
-            {/* <!-- 목록 --> */}
             <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-              {/* <!-- Links --> */}
               <h6 className="text-uppercase fw-bold mb-4">자주가는 사이트</h6>
               <p>
                 <Link to="/communitys" className="text-reset text-decoration-none">
@@ -71,11 +62,8 @@ function Footer() {
                 </Link>
               </p>
             </div>
-            {/* <!-- 목록 --> */}
 
-            {/* <!-- 목록 --> */}
             <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-              {/* <!-- Links --> */}
               <h6 className="text-uppercase fw-bold mb-4">찾아오시는 길</h6>
               <p>
                 <i className="bi bi-house me-2"></i> 서울특별시 광진구 능동로 195-16 6층
@@ -90,18 +78,14 @@ function Footer() {
                 <i className="bi bi-printer me-2"></i> + 82 02 456 7891
               </p>
             </div>
-            {/* <!-- 목록 --> */}
           </div>
-          {/* <!-- Grid row --> */}
         </div>
       </section>
-      {/* <!-- Section: Links  --> */}
 
       {/* <!-- Copyright --> */}
       <div className="text-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05);' }}>
         © 2023 Copyright <span className="text-reset fw-bold">Heallenges</span>
       </div>
-      {/* <!-- Copyright --> */}
     </footer>
     // <!-- Footer -->
   );

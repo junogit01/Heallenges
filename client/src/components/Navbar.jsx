@@ -39,18 +39,18 @@ import { Link } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 
 function NavHeader() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   return (
     <>
       {['xl'].map(expand => (
-        <Navbar key={expand} expand={expand} className="bg-body-tertiary ms-5 me-5">
+        <Navbar key={expand} expand={expand} className="bg-body-tertiary">
           <Container fluid className="align-items-center">
             <Navbar.Brand href="/" className="fs-4 fw-bold me-5 align-items-center text-primary">
               {'    '}
               <img
                 src="images/Heallenges-logo-black-trophy-500.png"
                 alt=""
-                style={{ width: '250px', height: '85px' }}
+                style={{ width: '250px', height: '70px' }}
               />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
@@ -61,21 +61,21 @@ function NavHeader() {
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>더보기</Offcanvas.Title>
               </Offcanvas.Header>
-              <Offcanvas.Body className="fs-4 align-items-center">
+              <Offcanvas.Body className="align-items-center">
                 <Nav className="justify-content-evenly flex-grow-1 pe-3 align-items-center">
-                  <Link to="/" className="fs-4 text-decoration-none text-body-secondary">
+                  <Link to="/" className="fs-5 text-decoration-none text-body-secondary">
                     메인
                   </Link>
-                  <Link to="/challenges" className="fs-4 text-decoration-none text-body-secondary">
+                  <Link to="/challenges" className="fs-5 text-decoration-none text-body-secondary">
                     도전
                   </Link>
-                  <Link to="/communitys" className="fs-4 text-decoration-none text-body-secondary">
+                  <Link to="/communitys" className="fs-5 text-decoration-none text-body-secondary">
                     커뮤니티
                   </Link>
-                  <Link to="/mission" className="fs-4 text-decoration-none text-body-secondary">
+                  <Link to="/mission" className="fs-5 text-decoration-none text-body-secondary">
                     미션
                   </Link>
-                  <Link to="/rank" className="fs-4 text-decoration-none text-body-secondary">
+                  <Link to="/rank" className="fs-5 text-decoration-none text-body-secondary">
                     랭킹
                   </Link>
                 </Nav>
@@ -85,23 +85,23 @@ function NavHeader() {
                       title="더보기"
                       id={`offcanvasNavbarDropdown-expand-${expand}`}
                       className="me-5 justify-content-center">
-                      <LinkContainer to="/mypage" className="text-center">
+                      <LinkContainer to="/mypage" className=" fs-5 text-center">
                         <Nav.Link>마이페이지</Nav.Link>
                       </LinkContainer>
-                      <LinkContainer to="/contact" className="text-center">
+                      <LinkContainer to="/contact" className="fs-5 text-center">
                         <Nav.Link>문의하기</Nav.Link>
                       </LinkContainer>
-                      <LinkContainer to="/" className="text-center">
+                      <LinkContainer to="/" className="fs-5 text-center">
                         <Nav.Link>로그아웃</Nav.Link>
                       </LinkContainer>
                     </NavDropdown>
                   ) : (
                     // 로그인 상태가 아닌 경우 더보기 메뉴를 표시하지 않음
                     <div class="d-flex align-items-center">
-                      <Link to="/login" className="fs-4 text-decoration-none text-body-secondary me-4">
+                      <Link to="/login" className="fs-5 text-decoration-none text-body-secondary me-4">
                         로그인
                       </Link>
-                      <Link to="/signup" className="fs-4 text-decoration-none text-body-secondary">
+                      <Link to="/signup" className="fs-5 text-decoration-none text-body-secondary">
                         회원가입
                       </Link>
                     </div>
