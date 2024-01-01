@@ -1,15 +1,17 @@
-import Header from "@components/Header";
-import Footer from "@components/Footer";
-import React from "react";
-import { Outlet } from "react-router-dom";
-import ScrollTopButton from "@components/ScrollTop";
+import Footer from '@components/Footer';
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import ScrollBtn from '@components/ScrollBtn';
+import NavHeader from '@components/Navbar';
+
 function Layout() {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
+      <NavHeader />
       <Outlet />
       <Footer />
-      <ScrollTopButton />
+      <ScrollBtn />
     </>
   );
 }

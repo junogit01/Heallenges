@@ -1,0 +1,21 @@
+.scroll__container {
+  position: fixed;
+  right: 5%;
+  bottom: 5%;
+  z-index: 1;
+}
+#top {
+  width: 65px;
+  height: 65px;
+  font-weight: bold;
+  font-size: 25px;
+  background-color: rgb(14, 129, 222);
+  color: #fff;
+  border: 1px solid rgb(14, 129, 222);
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+}
+#top:hover {
+  color: rgb(142, 26, 26);
+}

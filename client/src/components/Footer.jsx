@@ -1,101 +1,93 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 function Footer() {
   return (
-    <footer id="footer" className="footer">
-      <div className="footer-content">
-        <div className="container">
-          <div className="row gy-4">
-            <div className="col-lg-5 col-md-12 footer-info">
-              <Link to="index.html" className="logo d-flex align-items-center">
-                <span>Heallenges</span>
-              </Link>
-              <p>내용 삽입</p>
-              <div className="social-links d-flex mt-3">
-                <Link to="#" className="twitter">
-                  <i className="bi bi-twitter"></i>
-                </Link>
-                <Link to="#" className="facebook">
+    // <!-- Footer -->
+    <footer className="text-center text-lg-start bg-body-tertiary text-muted mt-5">
+      <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+        <div>
+          <h3>개인정보</h3>
+        </div>
+      </section>
+      <section className="">
+        <div className="container text-center text-md-start mt-5 mb-5">
+          <div className="row mt-3">
+            <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+              <h6 className="text-uppercase fw-bold mb-4">
+                <i className="fas fa-gem me-3"></i>Heallenges
+              </h6>
+              <p>여러분의 모든 도전을 응원합니다.</p>
+              <div>
+                <Link to="" className="me-4 text-reset text-decoration-none">
                   <i className="bi bi-facebook"></i>
                 </Link>
-                <Link to="#" className="instagram">
-                  <i className="bi bi-instagram"></i>
+                <Link to="" className="me-4 text-reset text-decoration-none">
+                  <i className="bi bi-twitter"></i>
                 </Link>
-                <Link to="#" className="linkedin">
-                  <i className="bi bi-linkedin"></i>
+                <Link to="" className="me-4 text-reset text-decoration-none">
+                  <i className="bi bi-instagram"></i>
                 </Link>
               </div>
             </div>
 
-            <div className="col-lg-2 col-6 footer-links">
-              <h4>Useful Links</h4>
-              <ul>
-                <li>
-                  <i className="bi bi-dash"></i> <Link to="#">Home</Link>
-                </li>
-                <li>
-                  <i className="bi bi-dash"></i> <Link to="#">About us</Link>
-                </li>
-                <li>
-                  <i className="bi bi-dash"></i> <Link to="#">Services</Link>
-                </li>
-                <li>
-                  <i className="bi bi-dash"></i> <Link to="#">Terms of service</Link>
-                </li>
-                <li>
-                  <i className="bi bi-dash"></i> <Link to="#">Privacy policy</Link>
-                </li>
-              </ul>
-            </div>
-
-            <div className="col-lg-2 col-6 footer-links">
-              <h4>Our Services</h4>
-              <ul>
-                <li>
-                  <i className="bi bi-dash"></i> <Link to="/challenges">도전</Link>
-                </li>
-                <li>
-                  <i className="bi bi-dash"></i> <Link to="/community">커뮤니티</Link>
-                </li>
-                <li>
-                  <i className="bi bi-dash"></i> <Link to="/mission">미션</Link>
-                </li>
-                <li>
-                  <i className="bi bi-dash"></i> <Link to="/rank">랭킹</Link>
-                </li>
-              </ul>
-            </div>
-
-            <div className="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-              <h4>Contact Us</h4>
+            <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+              <h6 className="text-uppercase fw-bold mb-4">주요 서비스</h6>
               <p>
-                서울특별시 광진구 능동로 195-16 <br />
-                6층 멀티캠퍼스 (세종대학교 김원관 6층)
-                <br />
-                대한민국 <br />
-                <br />
-                <strong>Call:</strong> +82 02-1111-1111
-                <br />
-                <strong>Email:</strong> contact@heallenges.com
-                <br />
+                <Link to="/challenges" className="text-reset text-decoration-none">
+                  도전
+                </Link>
+              </p>
+              <p>
+                <Link to="/mission" className="text-reset text-decoration-none">
+                  미션
+                </Link>
+              </p>
+              <p>
+                <Link to="/ranking" className="text-reset text-decoration-none">
+                  랭킹
+                </Link>
+              </p>
+            </div>
+
+            <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+              <h6 className="text-uppercase fw-bold mb-4">자주가는 사이트</h6>
+              <p>
+                <Link to="/communitys" className="text-reset text-decoration-none">
+                  커뮤니티
+                </Link>
+              </p>
+              <p>
+                <Link to="/contact" className="text-reset text-decoration-none">
+                  문의하기
+                </Link>
+              </p>
+            </div>
+
+            <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+              <h6 className="text-uppercase fw-bold mb-4">찾아오시는 길</h6>
+              <p>
+                <i className="bi bi-house me-2"></i> 서울특별시 광진구 능동로 195-16 6층
+              </p>
+              <p>
+                <i className="bi bi-envelope me-2"></i> contact@heallenges.com
+              </p>
+              <p>
+                <i className="bi bi-phone me-2"></i> + 82 02 123 4567
+              </p>
+              <p>
+                <i className="bi bi-printer me-2"></i> + 82 02 456 7891
               </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="footer-legal">
-        <div className="container">
-          <div className="copyright">
-            &copy; Copyright{" "}
-            <strong>
-              <span>Heallenges</span>
-            </strong>
-            . All Rights Reserved
-          </div>
-        </div>
+      {/* <!-- Copyright --> */}
+      <div className="text-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05);' }}>
+        © 2023 Copyright <span className="text-reset fw-bold">Heallenges</span>
       </div>
     </footer>
+    // <!-- Footer -->
   );
 }
 

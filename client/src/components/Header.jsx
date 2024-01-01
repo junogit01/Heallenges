@@ -57,7 +57,6 @@ function Header() {
         event.target.classList.toggle('active');
         event.target.nextElementSibling.classList.toggle('dropdown-active');
 
-        // let로 되어있는데 오류나서 임시로 const로 변경
         const dropDownIndicator = event.target.querySelector('.dropdown-indicator');
         dropDownIndicator.classList.toggle('bi-chevron-up');
         dropDownIndicator.classList.toggle('bi-chevron-down');
