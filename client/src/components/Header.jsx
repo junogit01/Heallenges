@@ -87,6 +87,7 @@ function Header() {
     },
     [setUser, navigate],
   );
+
   return (
     <header
       id="header"
@@ -126,7 +127,7 @@ function Header() {
                 </Link>
                 <ul>
                   <li>
-                    <Link to="/mypage">마이 페이지</Link>
+                    <Link to={'/mypage/'}>마이 페이지</Link>
                   </li>
                   <li>
                     <Link to="/contact">문의하기</Link>

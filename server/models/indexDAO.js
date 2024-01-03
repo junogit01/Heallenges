@@ -21,6 +21,23 @@ const sql = {
 };
 
 const indexDAO = {
+  checkEmail: async (item, callback) => {
+    const email = item;
+    let conn = null;
+    try {
+      conn = await poll.getConnection();
+      const resp = await conn.query(sql.checkEmail, [email]);
+      if (resp[0]) {
+        return callback({ status: 401, message: '이미 존재하는 이메일 입니다.', data: resp[0] });
+      } else {
+        return callback({ status: 200, message: '사용 가능한 이메일 입니다.', data: resp[0] });
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
   signup: async (item, callback) => {
     const {
       name,
@@ -40,12 +57,12 @@ const indexDAO = {
       // 기존 유저가 존재하는지 체크
       const [data] = await conn.query(sql.checkEmail, [email]);
       if (data[0]) {
-        callback({ status: 500, message: '이미 사용자가 존재합니다.', data: data });
+        return callback({ status: 501, message: '이미 사용자가 존재합니다.', data: data });
       } else {
         const salt = await bcrypt.genSalt();
         bcrypt.hash(password, salt, async (error, hash) => {
           if (error) {
-            return { status: 500, message: '암호화 실패', error: error };
+            return { status: 502, message: '암호화 실패', error: error };
           } else {
             const [resp] = await conn.query(sql.signup, [
               name,
@@ -64,7 +81,7 @@ const indexDAO = {
         });
       }
     } catch (error) {
-      callback({ status: 500, message: '입력 실패', error: error });
+      callback({ status: 503, message: '입력 실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
     }
@@ -88,10 +105,10 @@ const indexDAO = {
             callback({
               status: 200,
               message: '로그인 성공!',
-              data: { name: user[0].name, email: user[0].email, id: user[0].user_id },
+              data: { name: user[0].name, email: user[0].email, id: user[0].id },
             });
           } else {
-            callback({ status: 401, message: '로그인 처리중 에러 발생.', error });
+            callback({ status: 403, message: '로그인 처리중 에러 발생.', error });
           }
         });
       }

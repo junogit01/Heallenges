@@ -21,6 +21,14 @@ router.get('/', function (req, res, next) {
   res.render('index', { title: 'Heallenges' });
 });
 
+// 이메일 검증
+router.get('/signup', async (req, res, next) => {
+  const params = req.params; // get
+  userDAO.mypage(params, (resp) => {
+    res.json(resp);
+  });
+});
+
 // 회원가입
 router.post('/signup', uploadName.single('profile'), async (req, res, next) => {
   try {
@@ -35,7 +43,6 @@ router.post('/signup', uploadName.single('profile'), async (req, res, next) => {
       zipcode: data.address.postcode,
       address: data.address.main,
     };
-    console.log(`insertData : ${insertData}`);
     indexDAO.signup(insertData, (resp) => {
       res.json(resp);
     });

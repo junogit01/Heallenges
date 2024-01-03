@@ -1,13 +1,13 @@
-import { atom } from "recoil";
-import { recoilPersist } from "recoil-persist";
+import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist({
-  key: "login",
+  key: 'login',
   storage: localStorage,
 });
 
 export const loginState = atom({
-  key: "login/loginState",
-  default: { name: "", email: "" },
+  key: 'login/loginState',
+  default: { name: '', email: '', id: '' },
   effects: [persistAtom],
 });
