@@ -1,5 +1,4 @@
 // App.js
-
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Signup from '@pages/Signup';
@@ -14,6 +13,7 @@ import Community from '@pages/Communitys';
 import CommunityNotice from '@pages/CommunityNotice';
 import CommunityFree from '@pages/CommunityFree';
 import CommunityQna from '@pages/CommunityQna';
+import CommunityBoardDetail from '@pages/CommunityBoardDetail';
 
 function App() {
   return (
@@ -30,6 +30,7 @@ function App() {
         <Route path="/community/notice" element={<CommunityNotice />} />
         <Route path="/community/free" element={<CommunityFree />} />
         <Route path="/community/qna" element={<CommunityQna />} />
+        <Route path="/board/:id/" element={<CommunityBoardDetail />} />
       </Route>
     </Routes>
   );

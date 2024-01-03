@@ -5,10 +5,10 @@ import { useRecoilState } from 'recoil';
 import CommunityHeader from '../components/Community/CommunityHeader';
 import CommunitySidebar from '../components/Community/CommunitySidebar';
 import CommunityBoard from '../components/Community/CommunityBoard';
-import { allPostsState } from './../recoils/Community';
+import { communityListState } from './../recoils/Community';
 
 const CommunityQna = () => {
-  const [allPosts, setAllPosts] = useRecoilState(allPostsState);
+  const [allPosts, setAllPosts] = useRecoilState(communityListState);
 
   useEffect(() => {
     const fetchAllPosts = async () => {
@@ -32,10 +32,10 @@ const CommunityQna = () => {
         <CommunityHeader />
 
         {/* Blog Section 부분 */}
-        <section id="blog" className="blog">
+        <section id="blog" className="blog" style={{ marginTop: '30px' }}>
           <div className="container" data-aos="fade-up">
             <div className="row g-5">
-              <div className="col-lg-8" data-aos="fade-up" data-aos-delay={200}>
+              <div className="col-lg-9" data-aos="fade-up" data-aos-delay={200}>
                 <div className="row gy-5 posts-list">
                   {/* CommunityBoard에 전체게시판의 글 데이터 전달 */}
                   <CommunityBoard posts={allPosts} />

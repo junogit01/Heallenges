@@ -2,7 +2,7 @@ const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 
-const communityDAO = require('./../models/communityDAO');
+const communityDAO = require('../models/communityDAO');
 
 // 게시물 입력: POST /
 router.post('/', (req, res) => {
@@ -39,9 +39,9 @@ router.delete('/:id', async (req, res) => {
 //   });
 // });
 
-// 전체 게시물 리스트 조회
-router.get('/:id', (req, res) => {
-  const categoryId = req.params.id; // 동적 라우팅 매개변수를 사용하여 카테고리 ID를 가져옵니다.
+// 전체 또는 카테고리 게시물 리스트 조회
+router.get('/:id?', (req, res) => {
+  const categoryId = req.params.id || null; // 동적 라우팅 매개변수를 사용하여 카테고리 ID를 가져옵니다. 없으면 null로 설정합니다.
 
   communityDAO.boardList(categoryId, (resp) => {
     res.json(resp);
@@ -67,23 +67,30 @@ router.post('/board/:id', (req, res) => {
   });
 });
 
-// 댓글 수정 라우터
-router.put('/board/:id/:comment_id', async (req, res) => {
-  const updatedContents = req.body.contents;
-  const commentId = req.params.comment_id;
-  const userId = req.body.user_id;
-
-  communityDAO.commentUpdate(updatedContents, commentId, userId, (response) => {
-    res.json(response);
+// 댓글 입력: POST /:id/:id
+router.post('/:id/:comment_id', (req, res) => {
+  const data = req.body;
+  data.post_id = req.params.id; // 게시물 ID를 URL에서 가져와서 데이터에 추가
+  communityDAO.c_insert(data, (resp) => {
+    res.json(resp);
   });
 });
 
-// 댓글 삭제
-router.delete('/board/:id/:comment_id', async (req, res) => {
-  const commentId = req.params.comment_id;
+// 댓글 수정: PUT /:id/:id
+router.put('/:id/:comment_id', async (req, res) => {
+  const data = req.body;
+  data.comment_id = req.params.id; // 댓글 ID를 URL에서 가져와서 데이터에 추가
+  communityDAO.c_update(data, (resp) => {
+    res.json(resp);
+  });
+});
 
-  communityDAO.commentDelete(commentId, (response) => {
-    res.json(response);
+// 댓글 삭제: DELETE /:id/:id
+router.delete('/:id/:comment_id', async (req, res) => {
+  const params = { ...req.params };
+  params.post_id = req.params.id; // 게시물 ID를 URL에서 가져와서 데이터에 추가
+  communityDAO.c_delete(params, (resp) => {
+    res.json(resp);
   });
 });
 

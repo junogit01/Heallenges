@@ -69,7 +69,7 @@ function NavHeader() {
                   <Link to="/challenges" className="fs-5 text-decoration-none text-body-secondary">
                     도전
                   </Link>
-                  <Link to="/communitys" className="fs-5 text-decoration-none text-body-secondary">
+                  <Link to="/community" className="fs-5 text-decoration-none text-body-secondary">
                     커뮤니티
                   </Link>
                   <Link to="/mission" className="fs-5 text-decoration-none text-body-secondary">
@@ -97,7 +97,7 @@ function NavHeader() {
                     </NavDropdown>
                   ) : (
                     // 로그인 상태가 아닌 경우 더보기 메뉴를 표시하지 않음
-                    <div class="d-flex align-items-center">
+                    <div className="d-flex align-items-center">
                       <Link to="/login" className="fs-5 text-decoration-none text-body-secondary me-4">
                         로그인
                       </Link>

@@ -190,7 +190,11 @@ const communityDAO = {
     try {
       conn = await pool.getConnection(); // DB 연결
       // eslint-disable-next-line prefer-const
-      let query = category ? sql.listByCategory : sql.listAll;
+      let query = sql.listAll;
+
+      if (category) {
+        query = sql.listByCategory;
+      }
 
       const [data] = await conn.query(query, category ? [category] : []);
       callback({

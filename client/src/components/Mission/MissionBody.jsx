@@ -1,12 +1,12 @@
-import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function MissionBody() {
   const navigate = useNavigate();
   const [mission, setMission] = useState({
-    status: "",
-    message: "",
+    status: '',
+    message: '',
     pageno: 1,
     pagesize: 7,
     total: 0,
@@ -15,7 +15,7 @@ function MissionBody() {
   });
 
   const getMission = useCallback(async (no = 1, size = 6) => {
-    const resp = await axios.get("http://localhost:8000/mission/day", { params: { no, size } });
+    const resp = await axios.get('http://localhost:8001/mission/day', { params: { no, size } });
     setMission(resp.data);
   }, []);
 
@@ -31,17 +31,17 @@ function MissionBody() {
             {/* <div className="row gy-5 posts-list"> */}
             <div className="col-lg-4">
               <div className="mission-items-container">
-                {mission.data.map((list) => (
+                {mission.data.map(list => (
                   <article key={list.id} className="d-flex flex-column mission-item">
                     <div className="post-img">
                       <img
                         src="/images/blog/blog-1.jpg"
                         alt=""
                         onClick={() => {
-                          navigate("/mission/detail");
+                          navigate('/mission/detail');
                         }}
                         className="img-fluid"
-                        style={{ cursor: "pointer" }}
+                        style={{ cursor: 'pointer' }}
                       />
                     </div>
 

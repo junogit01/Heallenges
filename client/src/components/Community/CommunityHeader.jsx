@@ -6,6 +6,8 @@ const translateToKorean = name => {
   switch (name) {
     case 'community':
       return '커뮤니티';
+    // case 'board':
+    //   return '커뮤니티';
     case 'free':
       return '자유';
     case 'notice':
@@ -28,18 +30,21 @@ function CommunityHeader() {
       style={{ backgroundImage: 'url("assets/img/blog-header.jpg")' }}>
       <div className="container position-relative d-flex flex-column align-items-center">
         <h2>커뮤니티</h2>
-        <ol>
+        <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', alignItems: 'center' }}>
           <li>
             <Link to="/">메인</Link>
           </li>
           {pathSegments.map((segment, index) => (
-            <li key={index}>
-              {index === pathSegments.length - 1 ? (
-                translateToKorean(segment) // 마지막 요소인 경우 일반 텍스트로 표시
-              ) : (
-                <Link to={`/${segment}`}>{translateToKorean(segment)}</Link> // 그 외의 경우 링크로 표시
-              )}
-            </li>
+            <React.Fragment key={index}>
+              <li style={{ margin: '0 8px' }}>/</li>
+              <li>
+                {index === pathSegments.length - 1 ? (
+                  translateToKorean(segment)
+                ) : (
+                  <Link to={`/${segment}`}>{translateToKorean(segment)}</Link>
+                )}
+              </li>
+            </React.Fragment>
           ))}
         </ol>
       </div>
