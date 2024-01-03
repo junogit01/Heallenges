@@ -27,7 +27,7 @@ function ScrollBtn() {
     showButton && (
       <div className="scroll__container">
         <button id="top" onClick={scrollToTop} type="button">
-          <i class="bi bi-arrow-up"></i>
+          <i className="bi bi-arrow-up"></i>
         </button>
       </div>
     )
