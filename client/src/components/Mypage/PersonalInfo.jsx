@@ -69,7 +69,7 @@ function PersonalInfo() {
             localStorage.removeItem('user');
             navigate('/');
           } else {
-            Swal.fire('회원탈퇴 처리가 되지 않았습니다.', '다시 시도해주시기 바랍니다.', 'error');
+            Swal.fire('회원탈퇴 처리 되지 않았습니다.', '다시 시도해주시기 바랍니다.', 'error');
           }
         } catch (error) {
           console.error(error.message);

@@ -17,16 +17,8 @@ const uploadName = multer({
 });
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', async function (req, res, next) {
   res.render('index', { title: 'Heallenges' });
-});
-
-// 이메일 검증
-router.get('/signup', async (req, res, next) => {
-  const params = req.params; // get
-  userDAO.mypage(params, (resp) => {
-    res.json(resp);
-  });
 });
 
 // 회원가입

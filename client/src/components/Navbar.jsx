@@ -39,7 +39,7 @@ function NavHeader() {
               <img
                 src="images/Heallenges-logo-black-trophy-500.png"
                 alt=""
-                style={{ width: '250px', height: '70px' }}
+                style={{ width: '200px', height: '70px' }}
               />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
