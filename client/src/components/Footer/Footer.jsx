@@ -1,13 +1,12 @@
 import { Link } from 'react-router-dom';
+import FooterModal from './FooterModal';
 
 function Footer() {
   return (
     // <!-- Footer -->
     <footer className="text-center text-lg-start bg-body-tertiary text-muted mt-5">
-      <section className="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
-        <div>
-          <h3>개인정보</h3>
-        </div>
+      <section className="d-flex justify-content-lg-around p-4 border-bottom">
+        <FooterModal />
       </section>
       <section className="">
         <div className="container text-center text-md-start mt-5 mb-5">
@@ -18,15 +17,15 @@ function Footer() {
               </h6>
               <p>여러분의 모든 도전을 응원합니다.</p>
               <div>
-                <Link to="" className="me-4 text-reset text-decoration-none">
+                <a href="https://www.facebook.com" className="me-4 text-reset text-decoration-none">
                   <i className="bi bi-facebook"></i>
-                </Link>
-                <Link to="" className="me-4 text-reset text-decoration-none">
-                  <i className="bi bi-twitter"></i>
-                </Link>
-                <Link to="" className="me-4 text-reset text-decoration-none">
+                </a>
+                <a href="https://www.twitter.com" className="me-4 text-reset text-decoration-none">
+                  <i className="bi bi-twitter-x"></i>
+                </a>
+                <a href="https://www.instagram.com" className="me-4 text-reset text-decoration-none">
                   <i className="bi bi-instagram"></i>
-                </Link>
+                </a>
               </div>
             </div>
 
@@ -38,12 +37,7 @@ function Footer() {
                 </Link>
               </p>
               <p>
-                <Link to="/mission" className="text-reset text-decoration-none">
-                  미션
-                </Link>
-              </p>
-              <p>
-                <Link to="/ranking" className="text-reset text-decoration-none">
+                <Link to="/rank" className="text-reset text-decoration-none">
                   랭킹
                 </Link>
               </p>
@@ -52,7 +46,7 @@ function Footer() {
             <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
               <h6 className="text-uppercase fw-bold mb-4">자주가는 사이트</h6>
               <p>
-                <Link to="/communitys" className="text-reset text-decoration-none">
+                <Link to="/community" className="text-reset text-decoration-none">
                   커뮤니티
                 </Link>
               </p>

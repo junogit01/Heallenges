@@ -102,7 +102,7 @@ function LoginBody2() {
               />
             </div>
 
-            <div className="col-sm-12 position-relative form-group">
+            <div className="col-sm-12 position-relative form-group d-flex justify-content-between">
               <button type="submit" className="btn btn-primary btn-md me-2">
                 로그인
               </button>{' '}
@@ -111,23 +111,23 @@ function LoginBody2() {
               </button>
             </div>
           </form>
-          <hr />
-          <GoogleOAuthProvider
-            clientId="241669845547-flvgh9p9k5n2ed7hrjoiq0i53ouuil2o.apps.googleusercontent.com"
-            style={{}}>
-            <GoogleLogin
-              onSuccess={credentialResponse => {
-                const decode = jwtDecode(credentialResponse.credential);
+          <hr className="mt-5 mb-5" />
+          <div className="d-flex justify-content-center">
+            <GoogleOAuthProvider clientId="241669845547-flvgh9p9k5n2ed7hrjoiq0i53ouuil2o.apps.googleusercontent.com">
+              <GoogleLogin
+                onSuccess={credentialResponse => {
+                  const decode = jwtDecode(credentialResponse.credential);
 
-                console.log(decode);
-                setLogin({ email: decode.email, name: decode.name });
-                navigate('/');
-              }}
-              onError={() => {
-                console.log('Login Failed');
-              }}
-            />
-          </GoogleOAuthProvider>
+                  console.log(decode);
+                  setLogin({ email: decode.email, name: decode.name });
+                  navigate('/');
+                }}
+                onError={() => {
+                  console.log('Login Failed');
+                }}
+              />
+            </GoogleOAuthProvider>
+          </div>
         </div>
       </div>
     </section>
