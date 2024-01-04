@@ -5,6 +5,8 @@ import { loginState } from '@recoils/login';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode';
 
 function LoginBody2() {
   const setLogin = useSetRecoilState(loginState);
@@ -109,6 +111,23 @@ function LoginBody2() {
               </button>
             </div>
           </form>
+          <hr />
+          <GoogleOAuthProvider
+            clientId="241669845547-flvgh9p9k5n2ed7hrjoiq0i53ouuil2o.apps.googleusercontent.com"
+            style={{}}>
+            <GoogleLogin
+              onSuccess={credentialResponse => {
+                const decode = jwtDecode(credentialResponse.credential);
+
+                console.log(decode);
+                setLogin({ email: decode.email, name: decode.name });
+                navigate('/');
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            />
+          </GoogleOAuthProvider>
         </div>
       </div>
     </section>

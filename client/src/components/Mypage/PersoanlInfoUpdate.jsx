@@ -18,8 +18,6 @@ function PersonalInfoUpdate() {
   const loginUser = useRecoilValue(loginState);
   if (loginUser?.id === '' && loginUser?.email === '') navigate('/login');
 
-  const setLoginUser = useSetRecoilState(loginState);
-
   const user = useRecoilValue(userState);
   const getUserRecoild = useRecoilCallback(
     ({ set }) =>
@@ -194,7 +192,7 @@ function PersonalInfoUpdate() {
                       </tr>
 
                       <tr className=" form-group col-md-4">
-                        <th className="fs-4">주소 </th>
+                        <th className="fs-4">주소</th>
                         <td>
                           <input
                             type="text"
