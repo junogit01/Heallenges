@@ -40,7 +40,12 @@ a:hover {
   text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-primary);
 }
 
@@ -55,7 +60,7 @@ section {
 .section-header {
   text-align: center;
   padding-bottom: 30px;
-  
+
   h2 {
     font-size: 32px;
     font-weight: 600;
@@ -118,7 +123,7 @@ section {
     color: var(--color-primary);
 
     a {
-      color: rgba(#fff, .8);
+      color: rgba(#fff, 0.8);
       transition: 0.3s;
       &:hover {
         text-decoration: underline;
@@ -133,8 +138,8 @@ section {
       display: inline-block;
       padding-right: 10px;
       color: #fff;
-      
-      content: "/";
+
+      content: '/';
     }
   }
 }
@@ -146,7 +151,7 @@ section {
   position: fixed;
   visibility: hidden;
   opacity: 0;
-  right:15px;
+  right: 15px;
   bottom: 15px;
   z-index: 99999;
   background: var(--color-primary);
@@ -161,8 +166,8 @@ section {
     line-height: 0;
   }
 
-  &:hover  {
-    background: rgba($primary, .8);
+  &:hover {
+    background: rgba($primary, 0.8);
     color: #fff;
   }
 
@@ -170,13 +175,12 @@ section {
     visibility: visible;
     opacity: 1;
   }
-
 }
 
 /*--------------------------------------------------------------
 # Preloader
 --------------------------------------------------------------*/
-#preloader {  
+#preloader {
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -185,7 +189,7 @@ section {
   transition: all 0.6s ease-out;
 
   &:before {
-    content: "";
+    content: '';
     position: fixed;
     top: calc(50% - 30px);
     left: calc(50% - 30px);
@@ -199,10 +203,13 @@ section {
 }
 
 @keyframes animate-preloader {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
-
 
 /*--------------------------------------------------------------
 # Disable aos animation delay on mobile devices

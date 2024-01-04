@@ -38,20 +38,6 @@ function OurServices() {
             </div>
           </div>
           {/* <!-- End Service Item --> */}
-
-          <div className="col-lg-4 col-md-6 service-item d-flex">
-            <div className="icon flex-shrink-0 me-3">
-              <i className="bi bi-card-checklist fs-1" style={{ color: '#15bfbc' }}></i>
-            </div>
-            <div>
-              <h4 className="title">
-                <Link to="/mission" className="text-decoration-none">
-                  미션
-                </Link>
-              </h4>
-              <p className="description">매일매일 달라지는 미션들을 통해 끝까지 함께해요.</p>
-            </div>
-          </div>
           <div className="col-lg-4 col-md-6 service-item d-flex">
             <div className="icon flex-shrink-0 me-3">
               <i className="bi bi-list-stars fs-1" style={{ color: '#15bfbc' }}></i>
