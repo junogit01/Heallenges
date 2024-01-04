@@ -52,6 +52,12 @@ function CommunitySidebar() {
           </ul>
         </div>
         {/* End sidebar categories */}
+        <div className="sidebar-item write-post">
+          <h3 className="sidebar-title">글쓰기</h3>
+          <Link to="/community/write" className="btn btn-primary mt-3">
+            새 글 작성
+          </Link>
+        </div>
       </div>
       {/* End Blog Sidebar */}
     </div>
