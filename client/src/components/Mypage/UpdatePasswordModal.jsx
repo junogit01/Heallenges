@@ -111,7 +111,7 @@ function UpdatePasswordModal(props) {
                 // getValues()는 hook- form이 관리하는 모든 필드 값을 가져오고  getValues('password')는 password 값만 가져온다
                 // 이 값이 현재 필드의 값(data)와 같은지를 체크. 같으면 true(리엑트는 boolean 값은 화면에 표시 안함), 맞지 않으면 에러 문구 출력
                 validate: {
-                  compare: data => (getValues('password') === data ? true : '비밀번호가 같지 않습니다'),
+                  compare: data => (getValues('password') === data ? true : '비밀번호가 일치하지 않습니다'),
                 },
               })}
             />

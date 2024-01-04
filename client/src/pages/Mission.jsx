@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import MissionBody from "@components/Mission/MissionBody";
-import MissionHead from "@components/Mission/MissionHead";
+import MissionBody from '@components/Mission/MissionBody';
+import MissionHead from '@components/Mission/MissionHead';
 
-import AOS from "aos";
+import AOS from 'aos';
 
 function Mission() {
   useEffect(() => {

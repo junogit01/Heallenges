@@ -1,11 +1,11 @@
-// App.js
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import Signup from '@pages/Signup';
 import Home from '@pages/Home';
 import Layout from '@pages/Layout';
+import Rank from '@pages/Rank';
 import Mypage from '@pages/Mypage';
 import Login from '@pages/Login';
+import { Route, Routes } from 'react-router-dom';
+import Signup from '@pages/Signup';
 import Mission from '@pages/Mission';
 import MissionDetail from '@pages/MissionDetail';
 
@@ -21,8 +21,8 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/mission" element={<Mission />} />
-        <Route path="/mission/:id" element={<MissionDetail />} />
+        <Route path="/rank" element={<Rank />} />
+        <Route path="/mypage" element={<Mypage />} />
         <Route path="/mypage/:id" element={<Mypage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

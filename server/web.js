@@ -9,8 +9,7 @@ const mysql = require('mysql2');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const rankRouter = require('./routes/rank');
-const missionRouter = require('./routes/mission');
-const communityRouter = require('./routes/community');
+const communitysRouter = require('./routes/communitys');
 const challengesRouter = require('./routes/challenges');
 
 const app = express();
@@ -70,9 +69,8 @@ app.post('/upload', upload.single('image'), (req, res) => {
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
 app.use('/mypage', usersRouter);
-app.use('/mission', missionRouter);
 app.use('/rank', rankRouter);
-app.use('/community', communityRouter);
+app.use('/community', communitysRouter);
 app.use('/challenges', challengesRouter);
 
 // catch 404 and forward to error handler

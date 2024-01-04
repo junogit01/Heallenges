@@ -7,7 +7,7 @@ const sql = {
                   VALUES (?, ?, ?, ?, ?, ?)`,
   delete: `DELETE FROM mission WHERE id = ?`,
   missionList: `SELECT id,title, mission_image, description, reward, mission_type FROM mission WHERE mission_type = ?`,
-  // missionList: `SELECT title, mission_image, description FROM mission WHERE ? IS NULL OR mission_type = ?`,
+  missionAllList: `SELECT title, mission_image, description, reward, mission_type FROM mission`,
   totalCount: `SELECT COUNT(*) as title FROM mission`,
   missionDetail: `SELECT m.title, m.description, m.user_cnt, m.mission_image, m.reward, m.mission_type,
                   user.name, mc.content, mc.created_at
@@ -77,6 +77,29 @@ const missionDAO = {
     try {
       conn = await pool.getConnection();
       const [data, filedset] = await conn.query(sql.missionList, missionType);
+      const [total] = await conn.query(sql.totalCount);
+      callback({
+        status: 200,
+        message: 'ok',
+        pageno: no + 1,
+        pagesize: size,
+        total: total[0].title,
+        data: data,
+      });
+    } catch (error) {
+      callback({ status: 500, message: '미션 조회 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release();
+    }
+  },
+
+  missionAllList: async (item, callback) => {
+    const no = Number(item.no) - 1 || 0;
+    const size = Number(item.size) || 10;
+    let conn = null;
+    try {
+      conn = await pool.getConnection();
+      const [data, filedset] = await conn.query(sql.missionAllList);
       const [total] = await conn.query(sql.totalCount);
       callback({
         status: 200,
