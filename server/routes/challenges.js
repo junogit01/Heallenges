@@ -46,7 +46,8 @@ router.get('/category', async (req, res, next) => {
 
 // 도전 목록 조회
 router.get('/', async (req, res, next) => {
-  challengesDAO.getAllChallenges((resp) => {
+  const query = req.query;
+  challengesDAO.getAllChallenges(query, (resp) => {
     res.json(resp);
   });
 });

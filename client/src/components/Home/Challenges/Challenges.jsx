@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -8,11 +8,20 @@ import 'swiper/css/navigation';
 import './Challenges.css';
 
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { useRecoilValue } from 'recoil';
+import { challengesListState, challengesListSelector } from '@recoils/challenge';
 
 function Challenges() {
+  const challengeList = useRecoilValue(challengesListState);
+  const { getChallengeList } = useRecoilValue(challengesListSelector);
+
+  useEffect(() => {
+    getChallengeList(1, 5);
+  }, []);
+
   return (
     <section id="recent-posts" className="recent-posts">
-      <div className="container" data-aos="fade-up">
+      <div className="container">
         <div className="section-header d-flex justify-content-center mb-5 mt-5">
           <h2>최근 개설된 도전</h2>
         </div>
@@ -31,7 +40,7 @@ function Challenges() {
           }}
           modules={[Autoplay, Navigation, Pagination]}
           className="mySwiper">
-          <SwiperSlide className="mb-5">
+          {/* <SwiperSlide className="mb-5">
             <div className="card" style={{}}>
               <img src="images/cards-1.jpg" className="card-img-top" alt="..." style={{ height: '300px' }} />
               <div className="card-body">
@@ -109,7 +118,24 @@ function Challenges() {
                 </p>
               </div>
             </div>
-          </SwiperSlide>
+          </SwiperSlide> */}
+
+          {challengeList?.data?.[0]?.map(data => (
+            <SwiperSlide key={data?.id}>
+              <div className="card">
+                <img
+                  src={data?.main_image}
+                  className="card-img-top img-thumbnail"
+                  alt="..."
+                  style={{ height: '300px' }}
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{data?.title}</h5>
+                  <p className="card-text">{data?.description}</p>
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
         </Swiper>
       </div>
     </section>

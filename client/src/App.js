@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // App.js
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
@@ -15,6 +16,16 @@ import CommunityFree from '@pages/CommunityFree';
 import CommunityQna from '@pages/CommunityQna';
 import CommunityBoardDetail from '@pages/CommunityBoardDetail';
 
+=======
+import Home from '@pages/Home';
+import Layout from '@pages/Layout';
+import Mission from '@pages/Mission';
+import MissionDetail from '@pages/MissionDetail';
+import Mypage from '@pages/Mypage';
+import Login from '@pages/Login';
+import { Route, Routes } from 'react-router-dom';
+import Signup from '@pages/Signup';
+>>>>>>> 020f4d6410f5d6127be27579c203a8077bade2a9
 function App() {
   return (
     <Routes>
@@ -22,7 +33,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/mission" element={<Mission />} />
         <Route path="/mission/:id" element={<MissionDetail />} />
-        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/mypage/:id" element={<Mypage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         {/* 커뮤니티 */}
