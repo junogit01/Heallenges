@@ -1,19 +1,17 @@
 import React from 'react';
+import { Breadcrumb, Container, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 
-function MissionHead() {
+function MissionDetailHead() {
   const style = { textDecoration: 'none', color: 'black' };
+
   return (
     <Breadcrumb className="mb-4 mt-0">
       <Container
-        fluid
+        fluidBreadcrumb
         className="mb-4 d-flex align-items-center justify-content-center"
         style={{ backgroundImage: 'url("/images/blog-header.jpg")', height: '5rem', fontSize: '42px' }}>
-        미션
+        미션 상세페이지
       </Container>
       <Container fluid>
         <Row className="justify-content-center">
@@ -21,18 +19,8 @@ function MissionHead() {
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <Link to="/mission/day" style={style}>
-                    일일미션
-                  </Link>
-                </li>
-                <li className="breadcrumb-item">
-                  <Link to="/mission/week" style={style}>
-                    주간미션
-                  </Link>
-                </li>
-                <li className="breadcrumb-item active" aria-current="page">
-                  <Link to="/mission/month" style={style}>
-                    월간미션
+                  <Link to="/mission" style={style}>
+                    목록으로
                   </Link>
                 </li>
               </ol>
@@ -44,4 +32,4 @@ function MissionHead() {
   );
 }
 
-export default MissionHead;
+export default MissionDetailHead;
