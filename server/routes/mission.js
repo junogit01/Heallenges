@@ -27,6 +27,14 @@ router.get('/:type', (req, res, next) => {
   });
 });
 
+// 미션 전체 조회
+router.get('/', (req, res, next) => {
+  const params = req.params.type;
+  missionDAO.missionAllList({ mission_type: params }, (resp) => {
+    res.json(resp);
+  });
+});
+
 // 미션 상세 조회
 router.get('/:id', (req, res, next) => {
   const params = req.params; // { id: 5 }

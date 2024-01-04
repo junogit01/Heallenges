@@ -2,7 +2,7 @@ const pool = require('./pool');
 
 const sql = {
   rankList: `SELECT
-              name, reward_cnt, (@rank:=@rank+1) AS rank FROM user
+              name, reward_cnt, profile_image,(@rank:=@rank+1) AS rank FROM user
               AS a,(SELECT @rank:=0)
               AS b ORDER BY a.reward_cnt
               DESC, a.name`,

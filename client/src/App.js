@@ -1,11 +1,12 @@
-import Home from "@pages/Home";
-import Layout from "@pages/Layout";
-import Mission from "@pages/Mission";
-import MissionDetail from "@pages/MissionDetail";
-import Mypage from "@pages/Mypage";
-import Login from "@pages/Login";
-import { Route, Routes } from "react-router-dom";
-import Signup from "@pages/Signup";
+import Home from '@pages/Home';
+import Layout from '@pages/Layout';
+import Mission from '@pages/Mission';
+import MissionDetail from '@pages/MissionDetail';
+import Rank from '@pages/Rank';
+import Mypage from '@pages/Mypage';
+import Login from '@pages/Login';
+import { Route, Routes } from 'react-router-dom';
+import Signup from '@pages/Signup';
 function App() {
   return (
     <Routes>
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/mission" element={<Mission />} />
         <Route path="/mission/:id" element={<MissionDetail />} />
+        <Route path="/rank" element={<Rank />} />
         <Route path="/mypage" element={<Mypage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
