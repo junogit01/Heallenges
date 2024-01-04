@@ -5,11 +5,11 @@ import { searchKeywordState } from '@recoils/rank';
 function RankHead() {
   const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    // Recoil 상태 업데이트
-    setSearchKeyword(e.target.elements.keyword.value);
-  };
+  // const handleSubmit = e => {
+  //   e.preventDefault();
+  //   // Recoil 상태 업데이트
+  //   setSearchKeyword(e.target.value);
+  // };
 
   return (
     <nav className="navbar navbar-light bg-light">
@@ -20,10 +20,7 @@ function RankHead() {
           </p>
         </div>
         <div className="d-flex justify-content-end">
-          <form
-            className="d-flex "
-            style={{ width: '20rem', marginTop: '7rem', marginRight: '1.5rem' }}
-            onSubmit={handleSubmit}>
+          <form className="d-flex " style={{ width: '20rem', marginTop: '7rem', marginRight: '1.5rem' }}>
             <input
               className="form-control"
               type="search"

@@ -1,87 +1,107 @@
 import { useNavigate } from 'react-router-dom';
-import AOS from 'aos';
-import 'aos/dist/aos';
 import { useEffect, useState, useCallback } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { loginState } from '@recoils/login';
 import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
 
-function LoginBody() {
-  useEffect(() => {
-    AOS.init();
-  }, []);
+function LoginBody2() {
+  const setLogin = useSetRecoilState(loginState);
 
-  const setUser = useSetRecoilState(loginState);
   const [data, setData] = useState({ email: '', password: '' });
   const navigate = useNavigate();
 
-  const changeData = useCallback(evt => {
-    setData(data => ({ ...data, [evt.target.name]: evt.target.value }));
-  }, []);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onBlur',
+  });
 
-  const login = useCallback(
-    async evt => {
-      evt.preventDefault();
-      const resp = await axios.post('http://heallenges.cafe24app.com/login', data);
+  const submitEvent = useCallback(
+    async data => {
+      const resp = await axios.post('http://localhost:8001/login', data);
       if (resp.data.status === 200) {
-        // const storage = window.sessionStorage;
-        // storage.setItem('name', resp.data.user.name);
-        // storage.setItem('email', resp.data.user.email);
-        // storage.setItem("id", resp.data.user.id);
-        setUser(resp.data.user);
-
+        setLogin(resp.data.data);
         navigate('/');
         return;
-      } else {
+      } else if (resp.data.status === 401 || resp.data.status === 403 || resp.data.status === 500) {
         setData({ email: '', password: '' });
+        Swal.fire({
+          title: '로그인 처리중 에러 발생', // Alert 제목
+          text: '이메일 혹은 비밀번호를 다시 입력해주세요.', // Alert 내용
+          icon: 'error', // Alert 타입
+        });
       }
     },
-    [data, setUser, navigate],
+    [setLogin, navigate],
   );
+  const errorEvent = error => console.error(error);
 
   return (
     <section style={{ paddingTop: '100px', marginBottom: '100px' }}>
       <div className="container">
         <div className="row">
           <div className="col-md-12 ">
-            <div className="title-wrap d-flex justify-content-center" style={{ paddingBottom: '15px' }}>
-              <div className="title-box">
-                <h2 className="title-a fs-1 mb-5">로그인</h2>
-              </div>
-            </div>
+            <div className="title-wrap d-flex justify-content-center" style={{ paddingBottom: '15px' }}></div>
           </div>
         </div>
         <div className="row justify-content-center">
-          <form className="col-sm-5  ">
+          <form className="col-sm-5" onSubmit={handleSubmit(submitEvent, errorEvent)}>
             <div className="col-sm-12 position-relative form-group mb-5">
               <label htmlFor="email" className="form-label fs-3 mb-3">
-                이메일
+                이메일 :{' '}
+                <span style={{ color: 'orange' }} className="fs-5">
+                  {errors.email?.message}
+                </span>
               </label>
               <input
                 type="text"
                 className="form-control p-2"
                 id="email"
                 name="email"
-                value={data.email}
-                onChange={changeData}
+                {...register('email', {
+                  required: {
+                    value: true,
+                    message: '이메일을 입력해주세요',
+                  },
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: '이메일 형식이 아닙니다.',
+                  },
+                })}
               />
             </div>
+
             <div className="col-sm-12 position-relative form-group mb-5">
               <label htmlFor="password" className="form-label fs-3 mb-3">
-                비밀번호
+                비밀번호 :{' '}
+                <span style={{ color: 'orange' }} className="fs-5">
+                  {errors.password?.message}
+                </span>
               </label>
               <input
                 type="password"
                 className="form-control p-2"
                 id="password"
                 name="password"
-                value={data.password}
-                onChange={changeData}
+                {...register('password', {
+                  required: {
+                    value: true,
+                    message: '비밀번호를 입력해주세요',
+                  },
+                })}
               />
             </div>
 
             <div className="col-sm-12 position-relative form-group">
-              <button type="submit" className="btn btn-primary btn-md me-2" onClick={login}>
+              <button type="submit" className="btn btn-primary btn-md me-2">
                 로그인
               </button>{' '}
               <button type="button" className="btn btn-primary btn-md" onClick={() => navigate('/signup')}>
@@ -95,4 +115,4 @@ function LoginBody() {
   );
 }
 
-export default LoginBody;
+export default LoginBody2;

@@ -7,15 +7,22 @@ const pool = require('./pool');
 
 const sql = {
   // 유저 정보 수정
-  update: `UPDATE user SET nickname = ?, password = ?, about_me = ?, blog_url = ?, profile_image = ?, zipcode = ?, address1 = ?  WHERE id = ?`,
+  update: `UPDATE user 
+           SET nickname = ?, about_me = ?, blog_url = ?, profile_image = ?, zipcode = ?, address = ?  
+           WHERE email = ?`,
+
+  // 유저 비밀번호 변경
+  updatePassword: `UPDATE user 
+                   SET password = ? 
+                   WHERE id = ?`,
   // 유저 정보 삭제
   delete: `DELETE FROM user where id = ?`,
   // 마이페이지
-  mypage: `SELECT *
-               FROM user
-               WHERE id = ?`,
+  mypage: `SELECT *, DATE_FORMAT(created_at, '%Y-%m-%d %h-%i-%s') as Created
+           FROM user
+           WHERE id = ?`,
   // 참여한 도전 조회
-  myChallenge: `SELECT c.title, c.type
+  myChallenge: `SELECT c.title, c.type, c.id
                 FROM user u
                 JOIN challenge_participants p ON u.id = p.user_id
                 JOIN challenges c ON p.challenge_id = c.id
@@ -25,36 +32,54 @@ const sql = {
 
 const userDAO = {
   update: async (item, callback) => {
-    const { nickname, password, about_me, blog_url, profile_image, zipcode, address1, id } = item;
+    const { nickname, about_me, blog_url, profile_image, zipcode, address, email } = item;
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
-      await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
+      await conn.beginTransaction();
 
-      const salt = await bcrypt.genSalt();
-      bcrypt.hash(password, salt, async (error, hash) => {
-        if (error) {
-          callback({ status: 500, message: '회원정보 수정 실패', error: error });
-        } else {
-          const [resp] = await conn.query(sql.update, [
-            nickname,
-            hash,
-            about_me,
-            blog_url,
-            profile_image,
-            zipcode,
-            address1,
-            id,
-          ]);
-          conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
-          return callback({ status: 200, message: '회원정보 수정 완료', data: resp });
-        }
-      });
+      const [resp] = await conn.query(sql.update, [
+        nickname,
+        about_me,
+        blog_url,
+        profile_image,
+        zipcode,
+        address,
+        email,
+      ]);
+      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+      return callback({ status: 200, message: '회원정보 수정 완료', data: resp });
     } catch (error) {
       conn.rollback(); // 커밋 이전 상태로 돌려야한다.
       callback({ status: 500, message: '회원정보 수정 실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+  updatePassword: async (item, callback) => {
+    console.log(item);
+    let conn = null;
+    try {
+      conn = await pool.getConnection();
+      await conn.beginTransaction();
+      const [data] = await conn.query(sql.mypage, [item.id]);
+      console.log(data[0]);
+      const compare = await bcrypt.compare(item.current, data[0]?.password);
+      console.log(compare);
+      if (compare) {
+        const salt = await bcrypt.genSalt();
+        const hash = await bcrypt.hash(item.password, salt);
+        const resp = await conn.query(sql.updatePassword, [hash, item.id]);
+        conn.commit();
+        callback({ status: 200, message: '비밀번호 변경 성공' });
+      } else {
+        callback({ status: 401, message: '비밀번호를 다시 확인해주세요' });
+      }
+    } catch (error) {
+      conn.rollback();
+      callback({ status: 500, message: '비밀번호 변경 실패', error: error });
+    } finally {
+      if (conn) conn.release();
     }
   },
   delete: async (item, callback) => {

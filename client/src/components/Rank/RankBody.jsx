@@ -10,18 +10,14 @@ function RankBody() {
     status: '',
     message: '',
     pageno: 1,
-    pagesize: 10,
+    pagesize: 20,
     total: 0,
     totalPage: 1,
     data: [],
   });
-  // const getRank = useCallback(async (no = 1, size = 10) => {
-  //   const resp = await axios.get('http://localhost:8001/Rank', { params: { no, size } });
-  //   setRank(resp.data);
-  // }, []);
 
   const getRank = useCallback(
-    async (no = 1, size = 10) => {
+    async (no = 1, size = 20) => {
       try {
         const resp = await (searchKeyword
           ? axios.get('http://localhost:8001/Rank/search', { params: { no, size, keyword: searchKeyword } })
@@ -50,8 +46,8 @@ function RankBody() {
             </tr>
           </thead>
           <tbody style={{ verticalAlign: 'middle' }}>
-            {rank.data.map(item => (
-              <tr>
+            {rank.data.map((item, index) => (
+              <tr key={index}>
                 <td>{item.rank}</td>
                 <td>
                   <img
@@ -68,35 +64,31 @@ function RankBody() {
           </tbody>
         </table>
       </div>
-      <div className="card-footer clearfix">
-        <ul className="pagination pagination-sm m-0 float-right">
-          <li className="page-item">
-            <a className="page-link" href="#">
-              &laquo;
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              1
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              2
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              3
-            </a>
-          </li>
-          <li className="page-item">
-            <a className="page-link" href="#">
-              &raquo;
-            </a>
-          </li>
-        </ul>
-      </div>
+      {/* <div className="card-footer clearfix">
+        <div className="container">
+          <nav>
+            {currentSet > 1 && (
+              <button onClick={() => setRank(startPage - 1)} $active={false}>
+                &lt;
+              </button>
+            )}
+            {Array(btnRange)
+              .fill(startPage)
+              .map((_, i) => {
+                return (
+                  <button key={i} onClick={() => setRank(startPage + i)} $active={rank.pageno === startPage + i}>
+                    {startPage + i}
+                  </button>
+                );
+              })}
+            {totalSet > currentSet && (
+              <button onClick={() => setRank(endPage + 1)} $active={false}>
+                &gt;
+              </button>
+            )}
+          </nav>
+        </div>
+      </div> */}
     </div>
   );
 }

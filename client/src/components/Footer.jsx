@@ -83,7 +83,7 @@ function Footer() {
       </section>
 
       {/* <!-- Copyright --> */}
-      <div className="text-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05);' }}>
+      <div className="text-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
         © 2023 Copyright <span className="text-reset fw-bold">Heallenges</span>
       </div>
     </footer>
