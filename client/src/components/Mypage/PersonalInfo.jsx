@@ -96,42 +96,44 @@ function PersonalInfo() {
               <div className="col-lg-8">
                 <div className="content ps-lg-4">
                   <table className="table">
-                    <tr className="">
-                      <th className="fs-4">이름</th>
-                      <td>{user?.data?.[0]?.name}</td>
-                    </tr>
-                    <tr>
-                      <th className="fs-4">이메일</th>
-                      <td>{user?.data?.[0]?.email}</td>
-                    </tr>
-                    <tr>
-                      <th className="fs-4"> 닉네임</th>
-                      <td>{user?.data?.[0]?.nickname}</td>
-                    </tr>
-                    <tr>
-                      <th className="fs-4">자기소개</th>
-                      <td>{user?.data?.[0]?.about_me}</td>
-                    </tr>
-                    <tr>
-                      <th className="fs-4">블로그</th>
-                      <td>{user?.data?.[0]?.blog_url}</td>
-                    </tr>
-                    <tr>
-                      <th className="fs-4">우편번호</th>
-                      <td>{user?.data?.[0]?.zipcode}</td>
-                    </tr>
-                    <tr>
-                      <th className="fs-4">상세주소</th>
-                      <td>{user?.data?.[0]?.address}</td>
-                    </tr>
-                    <tr>
-                      <th className="fs-4">가입일</th>
-                      <td>{user?.data?.[0]?.Created}</td>
-                    </tr>
-                    <tr>
-                      <th className="fs-4">점수</th>
-                      <td>{user?.data?.[0]?.reward_cnt}</td>
-                    </tr>
+                    <tbody>
+                      <tr className="">
+                        <th className="fs-4">이름</th>
+                        <td>{user?.data?.[0]?.name}</td>
+                      </tr>
+                      <tr>
+                        <th className="fs-4">이메일</th>
+                        <td>{user?.data?.[0]?.email}</td>
+                      </tr>
+                      <tr>
+                        <th className="fs-4"> 닉네임</th>
+                        <td>{user?.data?.[0]?.nickname}</td>
+                      </tr>
+                      <tr>
+                        <th className="fs-4">자기소개</th>
+                        <td>{user?.data?.[0]?.about_me}</td>
+                      </tr>
+                      <tr>
+                        <th className="fs-4">블로그</th>
+                        <td>{user?.data?.[0]?.blog_url}</td>
+                      </tr>
+                      <tr>
+                        <th className="fs-4">우편번호</th>
+                        <td>{user?.data?.[0]?.zipcode}</td>
+                      </tr>
+                      <tr>
+                        <th className="fs-4">상세주소</th>
+                        <td>{user?.data?.[0]?.address}</td>
+                      </tr>
+                      <tr>
+                        <th className="fs-4">가입일</th>
+                        <td>{user?.data?.[0]?.Created}</td>
+                      </tr>
+                      <tr>
+                        <th className="fs-4">점수</th>
+                        <td>{user?.data?.[0]?.reward_cnt}</td>
+                      </tr>
+                    </tbody>
                   </table>
                 </div>
               </div>
@@ -164,16 +166,26 @@ function PersonalInfo() {
               </tbody>
             </table>
             <div className="mt-5 d-flex justify-content-center">
-              <button type="button" className="btn btn-outline-primary me-5 btn-lg" onClick={clickModify}>
-                {isModify ? '수정완료' : '수정하기'}
-              </button>
-              <button type="button" className="btn btn-outline-primary me-5 btn-lg" onClick={() => handleShow(true)}>
-                비밀번호변경
-              </button>
-              <UpdatePasswordModal show={show} handleClose={handleClose} id={user?.data?.[0]?.id}></UpdatePasswordModal>
-              <button type="button" className="btn btn-outline-danger me-2 btn-lg" onClick={deleteUser}>
-                회원탈퇴
-              </button>
+              {loginUser.id === user?.data?.[0]?.id && (
+                <>
+                  <button type="button" className="btn btn-outline-primary me-5 btn-lg" onClick={clickModify}>
+                    {isModify ? '수정완료' : '수정하기'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary me-5 btn-lg"
+                    onClick={() => handleShow(true)}>
+                    비밀번호변경
+                  </button>
+                  <UpdatePasswordModal
+                    show={show}
+                    handleClose={handleClose}
+                    id={user?.data?.[0]?.id}></UpdatePasswordModal>
+                  <button type="button" className="btn btn-outline-danger me-2 btn-lg" onClick={deleteUser}>
+                    회원탈퇴
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </section>

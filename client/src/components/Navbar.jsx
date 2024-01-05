@@ -72,12 +72,19 @@ function NavHeader() {
                     <NavDropdown
                       title="더보기"
                       id={`offcanvasNavbarDropdown-expand-${expand}`}
-                      className="me-5 justify-content-center">
+                      className="me-5 justify-content-center ">
                       <LinkContainer to={'/mypage/' + loginUser?.id} className=" fs-5 text-center">
                         <Nav.Link>마이페이지</Nav.Link>
                       </LinkContainer>
-                      <LinkContainer to="/contact" className="fs-5 text-center">
-                        <Nav.Link>문의하기</Nav.Link>
+                      <LinkContainer to="/" className="fs-5 justify-content-center">
+                        <button
+                          type="button"
+                          className="btn btn-link text-decoration-none text-center"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal"
+                          style={{}}>
+                          문의하기
+                        </button>
                       </LinkContainer>
                       <LinkContainer to="/" className="fs-5 text-center">
                         <Nav.Link onClick={logout}>로그아웃</Nav.Link>

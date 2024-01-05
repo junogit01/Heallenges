@@ -6,8 +6,6 @@ import Mypage from '@pages/Mypage';
 import Login from '@pages/Login';
 import { Route, Routes } from 'react-router-dom';
 import Signup from '@pages/Signup';
-import Mission from '@pages/Mission';
-import MissionDetail from '@pages/MissionDetail';
 
 import Community from '@pages/Communitys';
 import CommunityNotice from '@pages/CommunityNotice';
@@ -31,7 +29,7 @@ function App() {
         <Route path="/community/notice" element={<CommunityNotice />} />
         <Route path="/community/free" element={<CommunityFree />} />
         <Route path="/community/qna" element={<CommunityQna />} />
-        <Route path="/board/:id/" element={<CommunityBoardDetail />} />
+        <Route path="/community/:id" element={<CommunityBoardDetail />} />
         <Route path="/community/write" element={<CommunityInsert />} />
       </Route>
     </Routes>

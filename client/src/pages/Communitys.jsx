@@ -11,7 +11,7 @@ const Community = () => {
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        const response = await fetch('http://localhost:8001/community/');
+        const response = await fetch('http://localhost:8001/community');
         const data = await response.json();
         // console.log(data); // 서버 응답 구조 확인
         setAllPosts(data.data || []); // Recoil 상태 업데이트
