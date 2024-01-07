@@ -57,9 +57,8 @@ const ChallengeAdd = () => {
               name="type"
               onChange={e => updateValue({ oldData: data, propsName: 'type', propValue: e.target.value })}>
               <option value="a">운동</option>
-              <option value="b">식습관</option>
-              <option value="c">규칙적인 생활</option>
-              <option value="d">멘탈케어</option>
+              <option value="b">영양</option>
+              <option value="c">취미</option>
             </select>
           </FormItem>
           <FormItem label="참여자 총 수">
