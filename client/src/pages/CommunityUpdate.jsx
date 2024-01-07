@@ -1,20 +1,25 @@
+// CommunityUpdate
+
 import React, { useState, useEffect } from 'react';
 import { loginState } from '@recoils/login';
-import { useNavigate } from 'react-router-dom';
-import { useRecoilCallback, useRecoilStateLoadable, useRecoilValue } from 'recoil';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useRecoilCallback, useRecoilStateLoadable, useRecoilValue as useRecoilValueCustom } from 'recoil';
 import { communityState, communityListSelector } from '@recoils/Community';
 import CommunityHeader from '../components/Community/CommunityHeader';
 
-function CommunityInsert() {
+function CommunityUpdate() {
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  // console.log('Current ID:', id);
 
   // 로그인이 안되면 로그인페이지로 이동
-  const loginUser = useRecoilValue(loginState);
-  if (!loginUser.id && !loginUser.email) navigate('/login');
+  const loginUser = useRecoilValueCustom(loginState);
+  if (loginUser?.id === '' && loginUser?.email === '') navigate('/login');
 
-  const user = useRecoilValue(loginState);
+  const user = useRecoilValueCustom(loginState);
   const [community, setCommunity] = useState({
-    id: '',
+    id: Number(id),
     user_id: '',
     title: '',
     category: '',
@@ -23,7 +28,8 @@ function CommunityInsert() {
   });
 
   const communityLoadable = useRecoilStateLoadable(communityState());
-  const { insertCommunity } = useRecoilValue(communityListSelector);
+  const { updateCommunity } = useRecoilValueCustom(communityListSelector);
+  // console.log(updateCommunity);
 
   const changeBoard = e => {
     const { name, value } = e.target;
@@ -35,31 +41,38 @@ function CommunityInsert() {
     setCommunity(prevCommunity => ({ ...prevCommunity, Image: file }));
   };
 
-  const insertCommunityEvent = useRecoilCallback(
-    ({ snapshot }) =>
-      async () => {
+  const handleSubmit = useRecoilCallback(
+    ({ set }) =>
+      async evt => {
+        evt.preventDefault();
         try {
           // 제목과 내용이 비어있는지 확인
           if (!community.title || !community.contents) {
             alert('제목과 내용을 입력해주세요.'); // 또는 다른 사용자 피드백 방식 사용
             return;
           }
+          // console.log(community);
 
-          const userSnapshot = await snapshot.getPromise(loginState);
           const newData = {
             ...community,
-            user_id: userSnapshot.id && String(userSnapshot.id), // 유효한 ID로 변환
+            user_id: user.id && String(user.id), // 유효한 ID로 변환
             category: getCategoryValue(community.category),
           };
 
-          console.log('Sending data to server:', newData);
-          insertCommunity(newData);
+          const postId = newData.id || (communityLoadable.contents && communityLoadable.contents.board.id);
+
+          // console.log('Sending data to server:', newData);
+          // console.log('Current ID:', postId);
+
+          // id 값을 추가하여 업데이트 요청을 보냄(호출이 안 됨)
+          await updateCommunity({ ...newData, id: postId });
+
           navigate('/community');
         } catch (error) {
-          console.error('Error while inserting community:', error);
+          console.error('Error while updating community:', error);
         }
       },
-    [community, insertCommunity, user.id, navigate],
+    [id, community, updateCommunity, user.id, navigate],
   );
 
   useEffect(() => {
@@ -134,7 +147,7 @@ function CommunityInsert() {
                   </tr>
                   <tr>
                     <td colSpan="2" className="text-end">
-                      <button type="submit" className="btn btn-outline-secondary" onClick={insertCommunityEvent}>
+                      <button type="submit" className="btn btn-outline-secondary" onClick={handleSubmit}>
                         입력
                       </button>{' '}
                       <button
@@ -155,4 +168,4 @@ function CommunityInsert() {
   );
 }
 
-export default CommunityInsert;
+export default CommunityUpdate;

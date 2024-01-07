@@ -18,14 +18,13 @@ import { RecoilRoot } from 'recoil';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  // React.StrictMode 이거를 주석 처리하니까 2번 찍히던게 1번이 되는데 쓰는건가요?
-  // <React.StrictMode>
-  <BrowserRouter>
-    <RecoilRoot>
-      <App />
-    </RecoilRoot>
-  </BrowserRouter>,
-  // </React.StrictMode>
+  <React.StrictMode>
+    <BrowserRouter>
+      <RecoilRoot>
+        <App />
+      </RecoilRoot>
+    </BrowserRouter>
+  </React.StrictMode>,
 );
 
 reportWebVitals();

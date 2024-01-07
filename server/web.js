@@ -9,7 +9,7 @@ const mysql = require('mysql2');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const rankRouter = require('./routes/rank');
-const communitysRouter = require('./routes/communitys');
+const communityRouter = require('./routes/community');
 const challengesRouter = require('./routes/challenges');
 
 const app = express();
@@ -46,6 +46,7 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname));
   },
 });
+
 const upload = multer({
   storage: storage,
 });
@@ -70,7 +71,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
 app.use('/', indexRouter);
 app.use('/mypage', usersRouter);
 app.use('/rank', rankRouter);
-app.use('/community', communitysRouter);
+app.use('/community', communityRouter);
 app.use('/challenges', challengesRouter);
 
 // catch 404 and forward to error handler

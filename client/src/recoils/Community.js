@@ -1,4 +1,5 @@
-// recoils/Community 모듈
+// 리코일
+
 import axios from 'axios';
 import { atom, atomFamily, selector } from 'recoil';
 
@@ -10,7 +11,7 @@ export const communityListState = atom({
 });
 
 export const communityState = atomFamily({
-  key: 'board/id/communityState',
+  key: 'community/id/communityState',
   default: id => ({
     board: {
       id: id,
@@ -20,23 +21,22 @@ export const communityState = atomFamily({
       view_cnt: '',
       created_at: '',
       like_cnt: '',
+      category: '',
     },
-    comments: [
-      {
-        nickname: '',
-        contents: '',
-        create_date: '',
-      },
-    ],
+    comments: [],
   }),
 });
 
-// export const boardReplyState = atom({
-//   key: 'board/boardReplyState',
-//   default: [],
+export const communityCommentState = atom({
+  key: 'community/communityCommentState',
+  default: [],
+});
+
+// export const searchKeywordState = atom({
+//   key: 'searchKeyword',
+//   default: '',
 // });
 
-// selector
 export const communityListSelector = selector({
   key: 'community/communitySelector',
   get: ({ get, getCallback }) => {
@@ -44,39 +44,61 @@ export const communityListSelector = selector({
       const resp = await axios.get(`${baseURL}`);
       set(communityListState, resp.data);
     });
+
     const getcommunity = getCallback(
       ({ set }) =>
         async id => {
           const resp = await axios.get(`${baseURL}${id}`);
-          // console.log('community', resp.data.community);
-          set(communityState, resp.data.community);
+          set(communityState(id), resp.data.community);
         },
       [],
     );
 
     const insertCommunity = getCallback(({ set }) => async item => {
-      const resp = await axios.post(`${baseURL}`, item);
-      // console.log('insert', resp);
+      try {
+        const resp = await axios.post(`${baseURL}`, item);
+        await getcommunityList();
+        return resp.data; // 수정된 부분: 서버 응답 데이터 반환
+      } catch (error) {
+        console.error('Error inserting community:', error);
+        throw error;
+      }
     });
 
-    return { getcommunityList, getcommunity, insertCommunity };
+    const updateCommunity = getCallback(({ set }) => async item => {
+      console.log('recoil update', item);
+      const resp = await axios.put(`${baseURL}/${item.id}`, item);
+    });
+
+    const deleteCommunity = getCallback(({ set }) => async id => {
+      const resp = await axios.delete(`${baseURL}/${id}`);
+      console.log('delete', resp);
+    });
+
+    const insertComment = getCallback(({ set }) => async comment => {
+      try {
+        const resp = await axios.post(`${baseURL}/comment`, comment);
+        // console.log('insertComment response:', resp.data);
+
+        // resp.data.post_id 값이 있는 경우에만 getcommunity를 호출
+        if (resp.data.post_id !== undefined) {
+          await getcommunity(resp.data.post_id);
+        }
+
+        return resp.data;
+      } catch (error) {
+        console.error('Error inserting comment:', error);
+        throw error;
+      }
+    });
+
+    return {
+      getcommunityList,
+      getcommunity,
+      insertCommunity,
+      updateCommunity,
+      deleteCommunity,
+      insertComment,
+    };
   },
 });
-
-// deletecommunity, getcommunityReplyList, updatecommunity
-
-// const updateBoard = getCallback(({set}) => async (item) => {
-//   const resp = await axios.put(`${baseURL}`, item);
-//   // console.log('update', resp);
-// });
-
-// const deleteBoard = getCallback(({set}) => async (id) => {
-//   const resp = await axios.delete(`${baseURL}${id}`);
-//   console.log('delete', resp);
-// });
-
-// const getBoardReplyList = getCallback(({set}) => async (id) => {
-//   const resp = await axios.get(`${baseURL}/reply/${id}`);
-//   console.log('replyList', resp.board);
-//   set(boardReplyState, resp.data);
-// });

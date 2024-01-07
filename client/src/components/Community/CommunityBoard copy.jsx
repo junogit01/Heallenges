@@ -20,20 +20,13 @@ const getCategoryName = categoryNumber => {
 
 const CommunityBoard = () => {
   const allPosts = useRecoilValue(communityListState);
-
-  const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
   const totalPosts = allPosts.length;
   const totalPages = Math.ceil(totalPosts / postsPerPage);
   const maxVisiblePages = 10;
   let startPage;
   let endPage;
-
-  // 추가 코드: allPosts가 배열이 아니거나 비어있으면 오류 출력
-  if (!Array.isArray(allPosts) || allPosts.length === 0) {
-    console.error('allPosts가 유효한 배열이 아닙니다.');
-    return null; // 또는 다른 처리를 수행할 수 있음
-  }
 
   if (totalPages <= maxVisiblePages) {
     startPage = 1;

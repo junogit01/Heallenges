@@ -1,21 +1,52 @@
-// // CommunitySidebar.jsx
-
-import React from 'react';
+// CommunitySidebar.jsx
+// CommunitySidebar.jsx
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import React, { useCallback, useEffect, useState } from 'react';
+import { searchKeywordState } from '@recoils/Community';
+import { useRecoilState } from 'recoil';
 
 function CommunitySidebar() {
+  const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
+  const [community, setCommunity] = useState({
+    data: [],
+  });
+
+  const getCommunity = useCallback(async () => {
+    try {
+      const resp = await (searchKeyword
+        ? axios.get(`http://localhost:8001/community/search?keyword=${searchKeyword}`)
+        : axios.get('http://localhost:8001/community'));
+
+      setCommunity(resp.data);
+    } catch (error) {
+      console.error('Error fetching rank:', error);
+    }
+  }, [searchKeyword]);
+
+  const handleSearchSubmit = async event => {
+    event.preventDefault();
+    getCommunity(); // 이 부분이 변경되었습니다.
+  };
+
+  useEffect(() => {
+    getCommunity();
+  }, [getCommunity, searchKeyword]);
+
   return (
     <div className="col-lg-3">
       {/* Search widget */}
       <div className="card mb-4">
         <div className="card-header">검색</div>
         <div className="card-body">
-          <form action="" className="input-group">
+          <form onSubmit={handleSearchSubmit} className="input-group">
             <input
               type="text"
               className="form-control"
               placeholder="검색할 내용을 작성해주세요"
               aria-label="Enter search term..."
+              value={searchKeyword}
+              onChange={e => setSearchKeyword(e.target.value)}
             />
             <button className="btn btn-primary" type="submit">
               검색
@@ -57,15 +88,6 @@ function CommunitySidebar() {
           </div>
         </div>
       </div>
-
-      {/* Side widget */}
-      {/* <div className="card mb-4">
-        <div className="card-header">Side Widget</div>
-        <div className="card-body">
-          You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5
-          card component!
-        </div>
-      </div> */}
 
       {/* Write post widget */}
       <div className="card mb-4">

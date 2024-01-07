@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import moment from 'moment';
 
 const Comment = ({ comments }) => {
-  const commentsPerPage = 10;
+  // console.log({ comments });
+  const commentsPerPage = 5;
   const [currentPage, setCurrentPage] = useState(1);
   const totalComments = comments.length;
   const totalPages = Math.ceil(totalComments / commentsPerPage);
@@ -32,25 +33,52 @@ const Comment = ({ comments }) => {
   const currentComments = comments.slice((currentPage - 1) * commentsPerPage, currentPage * commentsPerPage);
 
   const renderComments = currentComments.map((comment, index) => (
-    <div key={`comment-${index + 1}`} className="d-flex align-items-start mb-4">
-      <div className="comment-img">
-        <img
-          src="/images/blog/comments-1.jpg"
-          alt=""
-          style={{ maxHeight: '5rem', maxWidth: '5rem', marginRight: '1rem' }}
-        />
+    <div key={`comment-${index + 1}`} className="card bg-light mb-4">
+      <div className="card-body">
+        <div className="d-flex align-items-start">
+          <div className="flex-shrink-0">
+            <img
+              className="rounded-circle"
+              src={comment.profile_image} // 실제 avatar URL 속성 이름으로 교체하세요.
+              alt="사진"
+              style={{ maxHeight: '50px', maxWidth: '50px', marginRight: '1rem' }}
+            />
+          </div>
+          <div className="ms-3">
+            <div className="fw-bold">{comment.nickname || '사용자 없음'}</div>
+            <p>{comment.contents}</p>
+            {/* 답글이 있는 경우 */}
+            {comment.children && comment.children.length > 0 && (
+              <div className="ms-4">
+                {comment.children.map((childComment, childIndex) => (
+                  <div key={`child-comment-${childIndex + 1}`} className="d-flex mt-4">
+                    <div className="flex-shrink-0">
+                      <img
+                        className="rounded-circle"
+                        src={childComment.profile_image || '/images/blog/default-avatar.jpg'} // 실제 avatar URL 속성 이름으로 교체하세요.
+                        alt="유저 아바타"
+                        style={{ maxHeight: '50px', maxWidth: '50px', marginRight: '1rem' }}
+                      />
+                    </div>
+                    <div className="ms-3">
+                      <div className="fw-bold">{childComment.nickname || '사용자 없음'}</div>
+                      <p>{childComment.contents}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div className="mt-3">
+              <time dateTime={comment.create_date ? moment(comment.create_date).format('YYYY-MM-DD HH:mm:ss') : ''}>
+                {comment.create_date ? moment(comment.create_date).format('YYYY년 MM월 DD일 HH:mm:ss') : '날짜 없음'}
+              </time>
+              <button type="button" className="btn btn-link btn-sm btn-rounded ml-auto">
+                삭제
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="d-flex flex-column">
-        <h5>
-          <p>{comment.nickname || '사용자 없음'}</p>
-        </h5>
-        <time dateTime={comment.create_date ? moment(comment.create_date).format('YYYY-MM-DD HH:mm:ss') : ''}>
-          {comment.create_date ? moment(comment.create_date).format('DD MMM, YYYY HH:mm:ss') : '날짜 없음'}
-        </time>
-      </div>
-      <button type="button" className="btn btn-link btn-sm btn-rounded ml-auto">
-        삭제
-      </button>
     </div>
   ));
 

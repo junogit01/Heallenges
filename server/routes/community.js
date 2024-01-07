@@ -1,8 +1,22 @@
+/* eslint-disable camelcase */
 const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 
 const communityDAO = require('../models/communityDAO');
+
+const imageUploadPath = 'http://localhost:8001/images/community/';
+
+const uploadName = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) =>
+      cb(null, path.join(__dirname, '..', 'public', 'images', 'community')),
+    filename: (req, file, cb) => cb(null, `${Date.now()}_${file.originalname}`),
+  }),
+  limits: { fileSize: 1024 * 1024 * 3 },
+});
 
 // 게시물 입력: POST /
 router.post('/', (req, res) => {
@@ -12,8 +26,34 @@ router.post('/', (req, res) => {
   });
 });
 
+// router.post('/', uploadName.single('data'), async (req, res, next) => {
+//   try {
+//     const data = JSON.parse(req.body.data || '{}');
+//     const Image = req.file
+//       ? `${imageUploadPath}${req.file.filename}`
+//       : `${imageUploadPath}no_image.jpg`;
+
+//     const address = data.address || {};
+
+//     const insertData = {
+//       ...data,
+//       Image,
+//       zipcode: address.postcode || '',
+//       address: address.main || '',
+//     };
+
+//     communityDAO.insert(insertData, (resp) => {
+//       res.json(resp);
+//     });
+//   } catch (error) {
+//     console.error('Error in communityDAO.insert:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
 // 게시물 수정: PUT /:id
 router.put('/:id', async (req, res) => {
+  // console.log('server', req.body);
   const data = req.body;
   data.id = req.params.id; // 게시물 ID를 URL에서 가져와서 데이터에 추가
   communityDAO.update(data, (resp) => {
@@ -29,16 +69,6 @@ router.delete('/:id', async (req, res) => {
   });
 });
 
-// 게시물 삭제: DELETE /:id(프론트단 와서 아이디 받아서 테스트용)
-// router.delete('/:id', async (req, res) => {
-//   const postId = req.params.id;
-//   const currentUserId = req.user.id; // 현재 사용자의 ID를 세션 또는 토큰 등에서 가져옴
-
-//   communityDAO.delete({ id: postId, user_id: currentUserId }, (result) => {
-//     res.status(result.status).json(result);
-//   });
-// });
-
 // 전체 또는 카테고리 게시물 리스트 조회
 router.get('/:id?', (req, res) => {
   const categoryId = req.params.id || null; // 동적 라우팅 매개변수를 사용하여 카테고리 ID를 가져옵니다. 없으면 null로 설정합니다.
@@ -49,65 +79,60 @@ router.get('/:id?', (req, res) => {
 });
 
 // 게시물 상세 조회
-router.get('/board/:id', async (req, res, next) => {
+router.get('/community/:id', async (req, res, next) => {
   const id = req.params.id;
   communityDAO.board(id, (resp) => {
     res.json(resp);
   });
 });
 
-// 댓글 입력
-router.post('/board/:id', (req, res) => {
-  const boardId = req.params.id;
-  const { contents } = req.body;
-
-  // 게시물 ID와 댓글 내용을 사용하여 댓글을 등록
-  communityDAO.commentInsert({ post_id: boardId, user_id: '사용자 아이디', contents }, (result) => {
-    res.status(result.status).json(result);
-  });
-});
-
-// 댓글 입력: POST /:id/:id
-router.post('/:id/:comment_id', (req, res) => {
+// 댓글 입력(뭐지 자꾸 뭐가 자꾸 바뀐다?)
+router.post('/comment', (req, res) => {
   const data = req.body;
-  data.post_id = req.params.id; // 게시물 ID를 URL에서 가져와서 데이터에 추가
-  communityDAO.c_insert(data, (resp) => {
+  communityDAO.commentInsert(data, (resp) => {
     res.json(resp);
   });
 });
 
-// 댓글 수정: PUT /:id/:id
-router.put('/:id/:comment_id', async (req, res) => {
-  const data = req.body;
-  data.comment_id = req.params.id; // 댓글 ID를 URL에서 가져와서 데이터에 추가
-  communityDAO.c_update(data, (resp) => {
-    res.json(resp);
-  });
-});
+// 댓글 수정
 
-// 댓글 삭제: DELETE /:id/:id
-router.delete('/:id/:comment_id', async (req, res) => {
-  const params = { ...req.params };
-  params.post_id = req.params.id; // 게시물 ID를 URL에서 가져와서 데이터에 추가
-  communityDAO.c_delete(params, (resp) => {
+// 댓글 삭제
+router.delete('/comment/:comment_id', async (req, res) => {
+  const comment_id = req.params.comment_id; // 수정된 부분: params 전체 객체 대신 comment_id만을 가져옴
+
+  communityDAO.commentDelete(comment_id, (resp) => {
     res.json(resp);
   });
 });
 
 // 좋아요 등록
-router.post('/:id/:like_id', (req, res) => {
-  const data = req.body;
-  communityDAO.like(data, (resp) => {
+// router.post('/:id/:like_id', (req, res) => {
+//   const data = req.body;
+//   communityDAO.like(data, (resp) => {
+//     res.json(resp);
+//   });
+// });
+
+// 좋아요 취소
+// router.delete('/:id/:post_id/:user_id', (req, res) => {
+//   const params = req.params;
+//   communityDAO.notlike(params, (resp) => {
+//     res.json(resp);
+//   });
+// });
+
+router.get('/search', (req, res, next) => {
+  const searchKeyword = req.query.keyword; // 검색어는 쿼리 매개변수로 전달됨
+  communityDAO.communitySearch(searchKeyword, (resp) => {
     res.json(resp);
   });
 });
 
-// 좋아요 취소
-router.delete('/:id/:post_id/:user_id', (req, res) => {
-  const params = req.params;
-  communityDAO.notlike(params, (resp) => {
-    res.json(resp);
-  });
-});
+// router.get('/search', (req, res, next) => {
+//   const searchKeyword = req.query.keyword || ''; // 검색어는 쿼리 매개변수로 전달됨
+//   communityDAO.communitySearch(searchKeyword, (resp) => {
+//     res.json(resp);
+//   });
+// });
 
 module.exports = router;
