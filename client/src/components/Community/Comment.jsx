@@ -135,7 +135,9 @@ const Comment = ({ comments }) => {
                 // 댓글 삭제 버튼(위치)
                 <button
                   type="button"
-                  className="btn btn-link btn-sm btn-rounded ml-auto"
+                  // className= "btn btn-link btn-sm btn-rounded ml-auto"
+                  className="btn btn-primary btn-sm"
+                  style={{ marginLeft: '20px' }}
                   onClick={() => handleDeleteComment(comment.comment_id)}>
                   삭제
                 </button>

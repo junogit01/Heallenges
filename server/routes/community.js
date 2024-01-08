@@ -19,34 +19,34 @@ const uploadName = multer({
 });
 
 // 게시물 입력: POST /
-// router.post('/', (req, res) => {
-//   const data = req.body;
-//   communityDAO.insert(data, (resp) => {
-//     res.json(resp);
-//   });
-// });
-
-router.post('/', uploadName.single('data'), async (req, res, next) => {
-  try {
-    const data = JSON.parse(req.body.data || '{}');
-    const Image = req.file
-      ? `${imageUploadPath}${req.file.filename}`
-      : `${imageUploadPath}no_image.jpg`;
-
-    const address = data.address || {};
-
-    const insertData = {
-      ...data,
-      Image,
-    };
-
-    communityDAO.insert(insertData, (resp) => {
-      res.json(resp);
-    });
-  } catch (error) {
-    next(error);
-  }
+router.post('/', (req, res) => {
+  const data = req.body;
+  communityDAO.insert(data, (resp) => {
+    res.json(resp);
+  });
 });
+
+// router.post('/', uploadName.single('data'), async (req, res, next) => {
+//   try {
+//     const data = JSON.parse(req.body.data || '{}');
+//     const Image = req.file
+//       ? `${imageUploadPath}${req.file.filename}`
+//       : `${imageUploadPath}no_image.jpg`;
+
+//     const address = data.address || {};
+
+//     const insertData = {
+//       ...data,
+//       Image,
+//     };
+
+//     communityDAO.insert(insertData, (resp) => {
+//       res.json(resp);
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 // 게시물 수정: PUT /:id
 router.put('/:id', async (req, res) => {
@@ -103,13 +103,6 @@ router.delete('/comment/:comment_id', async (req, res) => {
 });
 
 // 좋아요 등록
-// router.post('/like/:user_id/:post_id', (req, res) => {
-//   const data = req.body;
-//   communityDAO.like(data, (resp) => {
-//     res.json(resp);
-//   });
-// });
-
 router.post('/like/:user_id/:post_id', (req, res) => {
   const { user_id, post_id } = req.params;
   const data = { user_id, post_id };
@@ -120,13 +113,6 @@ router.post('/like/:user_id/:post_id', (req, res) => {
 });
 
 // 좋아요 취소
-// router.delete('/dlslike/:user_id/:post_id', (req, res) => {
-//   const params = req.params;
-//   communityDAO.notlike(params, (resp) => {
-//     res.json(resp);
-//   });
-// });
-
 router.delete('/dislike/:user_id/:post_id', (req, res) => {
   const { user_id, post_id } = req.params;
   const data = { user_id, post_id };
