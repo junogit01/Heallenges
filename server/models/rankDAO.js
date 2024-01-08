@@ -1,11 +1,12 @@
 const pool = require('./pool');
 
 const sql = {
-  rankList: `SELECT
-              name, reward_cnt, profile_image,(@rank:=@rank+1) AS rank FROM user
-              AS a,(SELECT @rank:=0)
-              AS b ORDER BY a.reward_cnt
-              DESC, a.name`,
+  rankList: `SELECT 
+              name, reward_cnt, profile_image,
+              (SELECT COUNT(*)+1 FROM user AS b WHERE b.reward_cnt > a.reward_cnt OR (b.reward_cnt = a.reward_cnt AND b.name < a.name)) AS rank
+            FROM user AS a
+            ORDER BY reward_cnt DESC, name
+            LIMIT ? OFFSET ?`,
   totalCount: `SELECT COUNT(*) as reward_cnt FROM user`,
   rankSearch: `SELECT
                 name, reward_cnt, rank
@@ -23,17 +24,18 @@ const sql = {
 
 const rankDAO = {
   rankList: async (item, callback) => {
-    const no = Number(item.no) - 1 || 0;
+    const no = Number(item.no) || 1;
     const size = Number(item.size) || 10;
+    const offset = (no - 1) * size;
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
-      const [data, filedset] = await conn.query(sql.rankList);
+      const [data, filedset] = await conn.query(sql.rankList, [size, offset]);
       const [total] = await conn.query(sql.totalCount);
       callback({
         status: 200,
         message: 'ok',
-        pageno: no + 1,
+        pageno: no,
         pagesize: size,
         total: total[0].reward_cnt,
         data: data,

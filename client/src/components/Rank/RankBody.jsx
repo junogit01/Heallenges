@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
+import Pagination from 'react-js-pagination';
 import { searchKeywordState } from '@recoils/rank';
 import { useRecoilValue } from 'recoil';
 
@@ -22,7 +23,6 @@ function RankBody() {
         const resp = await (searchKeyword
           ? axios.get('http://localhost:8001/Rank/search', { params: { no, size, keyword: searchKeyword } })
           : axios.get('http://localhost:8001/Rank', { params: { no, size } }));
-
         setRank(resp.data);
       } catch (error) {
         console.error('Error fetching rank:', error);
@@ -30,6 +30,10 @@ function RankBody() {
     },
     [searchKeyword],
   );
+
+  const handlePageChange = page => {
+    getRank(page);
+  };
 
   useEffect(() => {
     getRank();
@@ -46,7 +50,7 @@ function RankBody() {
             </tr>
           </thead>
           <tbody style={{ verticalAlign: 'middle' }}>
-            {rank.data.map((item, index) => (
+            {rank.data?.map((item, index) => (
               <tr key={index}>
                 <td>{item.rank}</td>
                 <td>
@@ -64,31 +68,22 @@ function RankBody() {
           </tbody>
         </table>
       </div>
-      {/* <div className="card-footer clearfix">
-        <div className="container">
-          <nav>
-            {currentSet > 1 && (
-              <button onClick={() => setRank(startPage - 1)} $active={false}>
-                &lt;
-              </button>
-            )}
-            {Array(btnRange)
-              .fill(startPage)
-              .map((_, i) => {
-                return (
-                  <button key={i} onClick={() => setRank(startPage + i)} $active={rank.pageno === startPage + i}>
-                    {startPage + i}
-                  </button>
-                );
-              })}
-            {totalSet > currentSet && (
-              <button onClick={() => setRank(endPage + 1)} $active={false}>
-                &gt;
-              </button>
-            )}
-          </nav>
+      <div className="card-footer clearfix">
+        <div className="pagination justify-content-center">
+          <Pagination
+            activePage={rank.pageno}
+            itemsCountPerPage={20}
+            totalItemsCount={rank.total}
+            pageRangeDisplayed={5}
+            prevPageText={'‹'}
+            nextPageText={'›'}
+            onChange={handlePageChange}
+            itemClass="page-item"
+            linkClass="page-link"
+            hideFirstLastPages
+          />
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }

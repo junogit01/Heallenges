@@ -5,9 +5,17 @@ const router = express.Router();
 const rankDAO = require('./../models/rankDAO');
 
 // 랭킹 전체 조회
+// router.get('/', async (req, res, next) => {
+//   const query = req.query;
+//   rankDAO.rankList(query, (resp) => {
+//     res.json(resp);
+//   });
+// });
+
 router.get('/', async (req, res, next) => {
-  const query = req.query;
-  rankDAO.rankList(query, (resp) => {
+  const { no, size } = req.query;
+
+  rankDAO.rankList({ no, size }, (resp) => {
     res.json(resp);
   });
 });
