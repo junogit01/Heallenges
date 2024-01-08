@@ -1,13 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Offcanvas from 'react-bootstrap/Offcanvas';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LinkContainer } from 'react-router-bootstrap';
 import { loginState } from '@recoils/login';
 import { useRecoilValue, useRecoilCallback, useSetRecoilState } from 'recoil';
+import ContactModal from './Modal/ContactModal';
 
 function NavHeader() {
   const [isLogin, setIslogin] = useState(false);
@@ -29,84 +24,92 @@ function NavHeader() {
     localStorage.removeItem('user');
     navigate('/');
   };
+
   return (
     <>
-      {['md'].map(expand => (
-        <Navbar key={expand} expand={expand} className="bg-body-tertiary">
-          <Container fluid className="align-items-center">
-            <Navbar.Brand href="/" className="fs-4 fw-bold me-5 align-items-center text-primary">
-              {'    '}
-              <img
-                src="images/Heallenges-logo-black-trophy-500.png"
-                alt=""
-                style={{ width: '200px', height: '50px' }}
-              />
-            </Navbar.Brand>
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-            <Navbar.Offcanvas
-              id={`offcanvasNavbar-expand-${expand}`}
-              aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-              placement="end">
-              <Offcanvas.Header closeButton>
-                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`} className="fs-5">
-                  더보기
-                </Offcanvas.Title>
-              </Offcanvas.Header>
-              <Offcanvas.Body className="align-items-center">
-                <Nav className="justify-content-evenly flex-grow-1 pe-3 align-items-center">
-                  <Link to="/" className="fs-5 text-decoration-none text-body-secondary">
-                    메인
+      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+        <div className="container-fluid">
+          <Link className="navbar-brand" to="/">
+            <img src="images/Heallenges-logo-black-trophy-500.png" alt="" style={{ width: '200px', height: '50px' }} />
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbar"
+            aria-controls="offcanvasNavbar"
+            aria-label="Toggle navigation">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div
+            className="offcanvas offcanvas-end"
+            tabindex="-1"
+            id="offcanvasNavbar"
+            aria-labelledby="offcanvasNavbarLabel">
+            <div className="offcanvas-header">
+              <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
+                Heallenges
+              </h5>
+              <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div className="offcanvas-body align-items-center">
+              <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 ">
+                <li className="nav-item"></li>
+                <li className="nav-item">
+                  <Link className="nav-link me-5" to="/challenges">
+                    챌린지
                   </Link>
-                  <Link to="/challenges" className="fs-5 text-decoration-none text-body-secondary">
-                    도전
-                  </Link>
-                  <Link to="/community" className="fs-5 text-decoration-none text-body-secondary">
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link me-5" to="/community">
                     커뮤니티
                   </Link>
-                  <Link to="/rank" className="fs-5 text-decoration-none text-body-secondary">
+                </li>
+                <li className="nav-item ">
+                  <Link className="nav-link me-5" to="/rank">
                     랭킹
                   </Link>
-                </Nav>
-                <Nav className="justify-content-end flex-grow-1 pe-3 me-10 align-items-center">
-                  {isLogin ? (
-                    <NavDropdown
-                      title="더보기"
-                      id={`offcanvasNavbarDropdown-expand-${expand}`}
-                      className="me-5 justify-content-center ">
-                      <LinkContainer to={'/mypage/' + loginUser?.id} className=" fs-5 text-center">
-                        <Nav.Link>마이페이지</Nav.Link>
-                      </LinkContainer>
-                      <LinkContainer to="/" className="fs-5 justify-content-center">
-                        <button
-                          type="button"
-                          className="btn btn-link text-decoration-none text-center"
-                          data-bs-toggle="modal"
-                          data-bs-target="#exampleModal"
-                          style={{}}>
-                          문의하기
-                        </button>
-                      </LinkContainer>
-                      <LinkContainer to="/" className="fs-5 text-center">
-                        <Nav.Link onClick={logout}>로그아웃</Nav.Link>
-                      </LinkContainer>
-                    </NavDropdown>
-                  ) : (
-                    // 로그인 상태가 아닌 경우 더보기 메뉴를 표시하지 않음
-                    <div className="d-flex align-items-center">
-                      <Link to="/login" className="fs-5 text-decoration-none text-body-secondary me-4">
-                        로그인
-                      </Link>
-                      <Link to="/signup" className="fs-5 text-decoration-none text-body-secondary">
-                        회원가입
-                      </Link>
-                    </div>
-                  )}
-                </Nav>
-              </Offcanvas.Body>
-            </Navbar.Offcanvas>
-          </Container>
-        </Navbar>
-      ))}
+                </li>
+                {isLogin ? (
+                  <li className="nav-item dropdown ">
+                    <Link
+                      className="nav-link dropdown-toggle me-5"
+                      to="#"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      더보기
+                    </Link>
+                    <ul className="dropdown-menu me-5">
+                      <li>
+                        <Link className="dropdown-item" to={'/mypage/' + loginUser?.id}>
+                          마이페이지
+                        </Link>
+                      </li>
+                      <li>
+                        <ContactModal />
+                      </li>
+
+                      <li>
+                        <Link className="dropdown-item" to="/" onClick={logout}>
+                          로그아웃
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
+                ) : (
+                  // 로그인 상태가 아닌 경우 더보기 메뉴를 표시하지 않음
+                  <div className="d-flex align-items-center">
+                    <Link to="/login" className="nav-link me-5">
+                      로그인
+                    </Link>
+                  </div>
+                )}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
     </>
   );
 }

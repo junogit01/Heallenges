@@ -1,5 +1,7 @@
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import FooterModal from './FooterModal';
+import ContactModal from '@components/Modal/ContactModal';
 
 function Footer() {
   return (
@@ -13,7 +15,7 @@ function Footer() {
           <div className="row mt-3">
             <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
               <h6 className="text-uppercase fw-bold mb-4">
-                <i className="fas fa-gem me-3"></i>Heallenges
+                <i className="fas fa-gem"></i>Heallenges
               </h6>
               <p>여러분의 모든 도전을 응원합니다.</p>
               <div>
@@ -51,9 +53,7 @@ function Footer() {
                 </Link>
               </p>
               <p>
-                <Link to="/contact" className="text-reset text-decoration-none">
-                  문의하기
-                </Link>
+                <ContactModal />
               </p>
             </div>
 
