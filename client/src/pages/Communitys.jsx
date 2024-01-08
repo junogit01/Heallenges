@@ -20,7 +20,7 @@ const Community = () => {
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        const response = await fetch('http://localhost:8001/community/');
+        const response = await fetch('http://localhost:8001/community');
         const data = await response.json();
         setAllPosts(data.data || []);
       } catch (error) {
