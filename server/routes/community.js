@@ -19,37 +19,34 @@ const uploadName = multer({
 });
 
 // 게시물 입력: POST /
-router.post('/', (req, res) => {
-  const data = req.body;
-  communityDAO.insert(data, (resp) => {
-    res.json(resp);
-  });
-});
-
-// router.post('/', uploadName.single('data'), async (req, res, next) => {
-//   try {
-//     const data = JSON.parse(req.body.data || '{}');
-//     const Image = req.file
-//       ? `${imageUploadPath}${req.file.filename}`
-//       : `${imageUploadPath}no_image.jpg`;
-
-//     const address = data.address || {};
-
-//     const insertData = {
-//       ...data,
-//       Image,
-//       zipcode: address.postcode || '',
-//       address: address.main || '',
-//     };
-
-//     communityDAO.insert(insertData, (resp) => {
-//       res.json(resp);
-//     });
-//   } catch (error) {
-//     console.error('Error in communityDAO.insert:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
+// router.post('/', (req, res) => {
+//   const data = req.body;
+//   communityDAO.insert(data, (resp) => {
+//     res.json(resp);
+//   });
 // });
+
+router.post('/', uploadName.single('data'), async (req, res, next) => {
+  try {
+    const data = JSON.parse(req.body.data || '{}');
+    const Image = req.file
+      ? `${imageUploadPath}${req.file.filename}`
+      : `${imageUploadPath}no_image.jpg`;
+
+    const address = data.address || {};
+
+    const insertData = {
+      ...data,
+      Image,
+    };
+
+    communityDAO.insert(insertData, (resp) => {
+      res.json(resp);
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 // 게시물 수정: PUT /:id
 router.put('/:id', async (req, res) => {
@@ -86,7 +83,7 @@ router.get('/community/:id', async (req, res, next) => {
   });
 });
 
-// 댓글 입력(뭐지 자꾸 뭐가 자꾸 바뀐다?)
+// 댓글 입력
 router.post('/comment', (req, res) => {
   const data = req.body;
   communityDAO.commentInsert(data, (resp) => {
@@ -106,24 +103,35 @@ router.delete('/comment/:comment_id', async (req, res) => {
 });
 
 // 좋아요 등록
-// router.post('/:id/:like_id', (req, res) => {
+// router.post('/like/:user_id/:post_id', (req, res) => {
 //   const data = req.body;
 //   communityDAO.like(data, (resp) => {
 //     res.json(resp);
 //   });
 // });
 
+router.post('/like/:user_id/:post_id', (req, res) => {
+  const { user_id, post_id } = req.params;
+  const data = { user_id, post_id };
+
+  communityDAO.like(data, (resp) => {
+    res.json(resp);
+  });
+});
+
 // 좋아요 취소
-// router.delete('/:id/:post_id/:user_id', (req, res) => {
+// router.delete('/dlslike/:user_id/:post_id', (req, res) => {
 //   const params = req.params;
 //   communityDAO.notlike(params, (resp) => {
 //     res.json(resp);
 //   });
 // });
 
-router.get('/search', (req, res, next) => {
-  const searchKeyword = req.query.keyword; // 검색어는 쿼리 매개변수로 전달됨
-  communityDAO.communitySearch(searchKeyword, (resp) => {
+router.delete('/dislike/:user_id/:post_id', (req, res) => {
+  const { user_id, post_id } = req.params;
+  const data = { user_id, post_id };
+
+  communityDAO.notlike(data, (resp) => {
     res.json(resp);
   });
 });

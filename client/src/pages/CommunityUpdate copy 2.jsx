@@ -30,6 +30,7 @@ function CommunityUpdate() {
       try {
         // 서버에서 데이터 가져오기
         const data = await getCommunityById(id);
+        console.log('Fetched data:', data);
         setCommunity(data);
       } catch (error) {
         console.error('Error while fetching community data:', error);

@@ -22,7 +22,7 @@ function CommunityInsert() {
     Image: '',
   });
 
-  const communityLoadable = useRecoilStateLoadable(communityState());
+  // const communityLoadable = useRecoilStateLoadable(communityState());
   const { insertCommunity } = useRecoilValue(communityListSelector);
 
   const changeBoard = e => {
@@ -62,11 +62,11 @@ function CommunityInsert() {
     [community, insertCommunity, user.id, navigate],
   );
 
-  useEffect(() => {
-    if (communityLoadable.state === 'hasValue' && communityLoadable.contents !== community) {
-      setCommunity(communityLoadable.contents);
-    }
-  }, [communityLoadable, community]);
+  // useEffect(() => {
+  //   if (communityLoadable.state === 'hasValue' && communityLoadable.contents !== community) {
+  //     setCommunity(communityLoadable.contents);
+  //   }
+  // }, [communityLoadable, community]);
 
   const getCategoryValue = categoryName => {
     switch (categoryName) {
@@ -104,9 +104,15 @@ function CommunityInsert() {
                     </td>
                   </tr>
                   <tr>
+                    {/* 선택 자유 공지 문의 인데 자유를 기본선택으로 */}
+
                     <td>카테고리</td>
                     <td>
-                      <select name="category" className="form-select" value={community.category} onChange={changeBoard}>
+                      <select
+                        name="category"
+                        className="form-select"
+                        value={community.category || '자유 게시판'}
+                        onChange={changeBoard}>
                         <option value="">카테고리 선택</option>
                         <option value="공지 게시판">공지 게시판</option>
                         <option value="자유 게시판">자유 게시판</option>

@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 
 const Board = ({ user_id, title, nickname, view_cnt, like_cnt, created_at, contents, Image }) => {
@@ -10,6 +10,7 @@ const Board = ({ user_id, title, nickname, view_cnt, like_cnt, created_at, conte
     // console.log(view_cnt);
     // console.log(created_at);
     // console.log(contents);
+    // console.log(Image);
   }, [user_id, title, nickname, view_cnt, like_cnt, created_at, contents, Image]); // 빈 배열을 두어 컴포넌트가 마운트될 때만 실행되도록 설정
 
   return (

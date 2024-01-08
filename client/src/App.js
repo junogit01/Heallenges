@@ -30,11 +30,7 @@ function App() {
         <Route path="/community/notice" element={<CommunityNotice />} />
         <Route path="/community/free" element={<CommunityFree />} />
         <Route path="/community/qna" element={<CommunityQna />} />
-<<<<<<< HEAD
-        <Route path="/community/:id/" element={<CommunityBoardDetail />} />
-=======
         <Route path="/community/:id" element={<CommunityBoardDetail />} />
->>>>>>> ae5b2aaeb362f3bfd922a4c32732c346ec0b7b89
         <Route path="/community/write" element={<CommunityInsert />} />
         <Route path="/community/update/:id" element={<CommunityUpdate />} />
       </Route>

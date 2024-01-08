@@ -24,7 +24,7 @@ function Challenges() {
 
   const challengeState = useEffect(() => {
     getChallengeList(1, 5);
-  }, []);
+  }, [getChallengeList]);
 
   // useEffect(() => {
   //   getChallengeDetail(1);

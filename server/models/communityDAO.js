@@ -42,7 +42,7 @@ const sql = {
                     WHERE c.category = ?
                     ORDER BY c.created_at DESC`,
   // 게시판 상세보기(닉네임 댓글 등)
-  board: `SELECT b.id, b.user_id, u.nickname, b.title, b.contents, b.created_at, b.like_cnt, b.view_cnt 
+  board: `SELECT b.id, b.user_id, u.nickname, b.title, b.contents, b.created_at, b.like_cnt, b.view_cnt, b.Image 
           FROM community b
             JOIN user u ON b.user_id = u.id
             LEFT JOIN community_likes l ON b.id = l.post_id
@@ -51,7 +51,7 @@ const sql = {
           WHERE b.id = ?
           GROUP BY b.id, u.nickname, b.title, b.contents, b.created_at, b.like_cnt, b.view_cnt`,
   // 댓글 목록 조회
-  getComments: `SELECT c.comment_id, c.contents, c.create_date, u.nickname, u.profile_image
+  getComments: `SELECT c.comment_id, c.contents, c.create_date, u.nickname, u.profile_image, c.user_id
                 FROM community_comment c
                 LEFT JOIN user u ON c.user_id = u.id
                 WHERE c.post_id = ?
@@ -267,36 +267,6 @@ const communityDAO = {
       if (conn !== null) conn.release();
     }
   },
-
-  // commentInsert: async (item, callback) => {
-  //   const { post_id, user_id, contents } = item;
-  //   let conn = null;
-
-  //   try {
-  //     conn = await pool.getConnection(); // DB 접속
-  //     conn.beginTransaction();
-
-  //     await conn.query(sql.commentInsert, [post_id, user_id, contents]);
-
-  //     conn.commit();
-
-  //     callback({
-  //       status: 200,
-  //       message: '정상적으로 댓글이 등록 되었습니다.',
-  //     });
-  //   } catch (error) {
-  //     console.error('댓글 입력 실패:', error);
-
-  //     // 에러 처리를 추가하고 클라이언트에게 전달할 적절한 에러 메시지를 반환합니다.
-  //     callback({
-  //       status: 500,
-  //       message: '댓글 입력 중에 오류가 발생했습니다.',
-  //       error: error,
-  //     });
-  //   } finally {
-  //     if (conn !== null) conn.release();
-  //   }
-  // },
 
   // 댓글 수정
   commentUpdate: async (item, callback) => {

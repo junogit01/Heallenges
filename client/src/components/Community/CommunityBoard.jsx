@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { communityListState, communityState } from './../../recoils/Community';
+import { communityListState } from '@recoils/Community';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
@@ -31,8 +31,8 @@ const CommunityBoard = () => {
 
   // 추가 코드: allPosts가 배열이 아니거나 비어있으면 오류 출력
   if (!Array.isArray(allPosts) || allPosts.length === 0) {
-    console.error('allPosts가 유효한 배열이 아닙니다.');
-    return null; // 또는 다른 처리를 수행할 수 있음
+    // console.error('allPosts가 유효한 배열이 아닙니다.');
+    return null;
   }
 
   if (totalPages <= maxVisiblePages) {

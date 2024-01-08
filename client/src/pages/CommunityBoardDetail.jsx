@@ -1,5 +1,7 @@
+// 이상하게 왜인지 모르겠으나 조회수가 2씩 올라감
+
 /* eslint-disable camelcase */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { communityState } from './../recoils/Community';
@@ -14,31 +16,55 @@ import { useRecoilValue } from 'recoil';
 function CommunityBoardDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  // 로그인이 안되면 로그인 페이지로 이동
   const loginUser = useRecoilValue(loginState);
-  if (!loginUser.id) navigate('/login');
-
   const [communityPost, setCommunityPost] = useRecoilState(communityState(id));
+  const [liked, setLiked] = useState(false);
+
+  const likeCommunityEvent = async () => {
+    try {
+      const response = await fetch(`http://localhost:8001/community/like/${loginUser.id}/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          post_id: id,
+          user_id: loginUser.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        console.error(`좋아요 오류: ${data.message}`);
+        return;
+      }
+
+      setLiked(true);
+      getCommunityPost();
+    } catch (error) {
+      console.error('좋아요 오류:', error);
+    }
+  };
+
+  const getCommunityPost = async () => {
+    try {
+      const response = await fetch(`http://localhost:8001/community/community/${id}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(`게시글 불러오기 오류: ${data.message}`);
+        return;
+      }
+
+      setCommunityPost(data.data);
+    } catch (error) {
+      console.error('게시글 불러오기 오류:', error);
+    }
+  };
 
   useEffect(() => {
-    const getCommunityPost = async () => {
-      try {
-        const response = await fetch(`http://localhost:8001/community/community/${id}`);
-        const data = await response.json();
-
-        if (!response.ok) {
-          console.error(`게시글 불러오기 오류: ${data.message}`);
-          return;
-        }
-
-        setCommunityPost(data.data);
-      } catch (error) {
-        console.error('게시글 불러오기 오류:', error);
-      }
-    };
-
     getCommunityPost();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, setCommunityPost]);
 
   const deleteCommunityEvent = async () => {
@@ -83,8 +109,13 @@ function CommunityBoardDetail() {
                         <tr>
                           <td>
                             <div className="mb-3" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                              <button type="button" className="btn btn-primary btn-lg" style={{ margin: '0 5px' }}>
-                                좋아요
+                              <button
+                                type="button"
+                                className={`btn btn-primary btn-lg ${liked ? 'btn-disabled' : ''}`}
+                                style={{ margin: '0 5px' }}
+                                onClick={likeCommunityEvent}
+                                disabled={liked}>
+                                {liked ? '좋아요 완료' : '좋아요'}
                               </button>
                               {isUserPostOwner && (
                                 <>

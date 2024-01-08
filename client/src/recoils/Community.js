@@ -32,11 +32,6 @@ export const communityCommentState = atom({
   default: [],
 });
 
-// export const searchKeywordState = atom({
-//   key: 'searchKeyword',
-//   default: '',
-// });
-
 export const communityListSelector = selector({
   key: 'community/communitySelector',
   get: ({ get, getCallback }) => {
@@ -78,7 +73,6 @@ export const communityListSelector = selector({
     const insertComment = getCallback(({ set }) => async comment => {
       try {
         const resp = await axios.post(`${baseURL}/comment`, comment);
-        // console.log('insertComment response:', resp.data);
 
         // resp.data.post_id 값이 있는 경우에만 getcommunity를 호출
         if (resp.data.post_id !== undefined) {
@@ -92,6 +86,17 @@ export const communityListSelector = selector({
       }
     });
 
+    const deleteComment = getCallback(({ set }) => async id => {
+      const resp = await axios.delete(`${baseURL}/comment/${id}`);
+      console.log('delete', resp);
+
+      // 댓글이 삭제된 후, 해당 댓글이 속한 게시물을 다시 불러옴
+      const postId = resp.data.post_id;
+      if (postId !== undefined) {
+        await getcommunity(postId);
+      }
+    });
+
     return {
       getcommunityList,
       getcommunity,
@@ -99,6 +104,7 @@ export const communityListSelector = selector({
       updateCommunity,
       deleteCommunity,
       insertComment,
+      deleteComment,
     };
   },
 });
