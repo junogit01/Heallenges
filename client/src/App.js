@@ -13,6 +13,7 @@ import CommunityFree from '@pages/CommunityFree';
 import CommunityQna from '@pages/CommunityQna';
 import CommunityBoardDetail from '@pages/CommunityBoardDetail';
 import CommunityInsert from '@pages/CommunityInsert';
+import CommunityUpdate from '@pages/CommunityUpdate';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/community/qna" element={<CommunityQna />} />
         <Route path="/community/:id" element={<CommunityBoardDetail />} />
         <Route path="/community/write" element={<CommunityInsert />} />
+        <Route path="/community/update/:id" element={<CommunityUpdate />} />
       </Route>
     </Routes>
   );
