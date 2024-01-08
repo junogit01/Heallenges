@@ -68,6 +68,7 @@ const challengeDAO = {
    * @param {Function} callback - 응답을 처리하기 위한 콜백 함수.
    */
   createChallenge: async (challengeData, callback) => {
+    console.log('DAO=> ', challengeData)
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속 구문

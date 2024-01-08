@@ -3,12 +3,14 @@ import 'react-calendar/dist/Calendar.css';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 
-function CalendarInput() {
+function CalendarInput({setData, data, propName}) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(new Date());
 
   const handleChange = newValue => {
     setValue(newValue);
+    const temp = { ...data, [propName]: newValue };
+    setData(temp);
     setOpen(false);
   };
 
@@ -16,7 +18,9 @@ function CalendarInput() {
     const year = date.getFullYear().toString();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const d = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${d}`;
+    const tempDate = `${year}-${month}-${d}`;
+    return tempDate;
+    
   };
 
   return (

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { atom, selector } from 'recoil';
 
-const baseURL = 'http://localhost:8001/challenges';
+const baseURL = 'http://localhost:8001/challenges/';
 
 // atom
 export const challengesListState = atom({
@@ -52,6 +52,7 @@ export const challengesBoardState = atom({
   },
 });
 
+//
 export const challengesListSelector = selector({
   key: 'challenges/challengesSelector',
   get: ({ get, getCallback }) => {
@@ -70,7 +71,7 @@ export const challengesListSelector = selector({
     });
 
     const insertChallenge = getCallback(({ set }) => async item => {
-      const resp = await axios.post(`${baseURL}`);
+      const resp = await axios.post(`${baseURL}`, item);
     });
 
     const deleteChallenge = getCallback(({ set }) => async id => {

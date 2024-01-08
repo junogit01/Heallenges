@@ -11,6 +11,7 @@ const ChallengeMainSidebar = () => {
   const handleLink = (user, id) => {
     if (!user?.email) alert('로그인이 필요한 서비스입니다.');
     else navigate(`/challenges/${id}`);
+    // navigate(`/challenges/${id}`);
   };
   return (
     <div className="col-lg-3">

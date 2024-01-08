@@ -31,31 +31,30 @@ const ChallengeAdd = () => {
   };
   const [data, setData] = useState(dataType);
   const handleClick = () => {
+    console.log('data')
+    console.log(data)
     insertChallenge(data);
   };
-
-  const updateValue = (oldData, propName, propValue) => {
-    setData({
-      ...oldData,
-      [propName]: propValue,
-    });
+  const updateValue = ({oldData, propName, propValue}) => {
+    const temp = { ...oldData, [propName]: propValue };
+    setData(temp);
   };
   return (
     <Wrapper>
       <Form>
         <Column>
           <FormItem label="도전 제목">
-            <input onChange={e => updateValue({ oldData: data, propsName: 'title', propValue: e.target.value })} />
+            <input onChange={e => updateValue({ oldData: data, propName: 'title', propValue: e.target.value })} />
           </FormItem>
           <FormItem label="도전 설명">
             <Textarea
-              onChange={e => updateValue({ oldData: data, propsName: 'description', propValue: e.target.value })}
+              onChange={e => updateValue({ oldData: data, propName: 'description', propValue: e.target.value })}
             />
           </FormItem>
           <FormItem label="도전 유형">
             <select
               name="type"
-              onChange={e => updateValue({ oldData: data, propsName: 'type', propValue: e.target.value })}>
+              onChange={e => updateValue({ oldData: data, propName: 'type', propValue: e.target.value })}>
               <option value="a">운동</option>
               <option value="b">영양</option>
               <option value="c">취미</option>
@@ -64,23 +63,19 @@ const ChallengeAdd = () => {
           <FormItem label="참여자 총 수">
             <input
               type="text"
-              onChange={e => updateValue({ oldData: data, propsName: 'total_participants', propValue: e.target.value })}
+              onChange={e => updateValue({ oldData: data, propName: 'total_participants', propValue: e.target.value })}
             />
           </FormItem>
           <FormItem label="도전 규칙">
             <input
               type="text"
-              onChange={e => updateValue({ oldData: data, propsName: 'rules', propValue: e.target.value })}
+              onChange={e => updateValue({ oldData: data, propName: 'rules', propValue: e.target.value })}
             />
           </FormItem>
           <FormItem label="도전 기간">
             <CalendarGroup>
-              <CalendarInput
-                onChange={e => updateValue({ oldData: data, propsName: 'start_date', propValue: e.target.value })}
-              />
-              <CalendarInput
-                onChange={e => updateValue({ oldData: data, propsName: 'end_date', propValue: e.target.value })}
-              />
+              <CalendarInput setData={setData} data={data} propName="start_date" />
+              <CalendarInput setData={setData} data={data} propName="end_date" />
             </CalendarGroup>
           </FormItem>
         </Column>
@@ -88,7 +83,7 @@ const ChallengeAdd = () => {
           <FormItem label="보상 내용">
             <input
               type="text"
-              onChange={e => updateValue({ oldData: data, propsName: 'reward', propValue: e.target.value })}
+              onChange={e => updateValue({ oldData: data, propName: 'reward', propValue: e.target.value })}
             />
           </FormItem>
           <FormItem label="도전 소개">

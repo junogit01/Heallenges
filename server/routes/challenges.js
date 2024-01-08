@@ -54,6 +54,7 @@ router.get('/', async (req, res, next) => {
 
 // 도전 생성
 router.post('/', async (req, res, next) => {
+  // console.log('router=> ', req.body);
   const data = req.body;
   challengesDAO.createChallenge(data, (resp) => {
     res.json(resp);
