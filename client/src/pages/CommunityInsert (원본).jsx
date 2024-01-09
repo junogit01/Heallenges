@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { loginState } from '@recoils/login';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { useRecoilCallback, useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilStateLoadable, useRecoilValue } from 'recoil';
 import { communityState, communityListSelector } from '@recoils/Community';
 import CommunityHeader from '../components/Community/CommunityHeader';
-import axios from 'axios';
-import Swal from 'sweetalert2';
 
 function CommunityInsert() {
   const navigate = useNavigate();
@@ -24,7 +21,6 @@ function CommunityInsert() {
     contents: '',
     Image: '',
   });
-  console.log(community);
 
   // const communityLoadable = useRecoilStateLoadable(communityState());
   const { insertCommunity } = useRecoilValue(communityListSelector);
@@ -39,75 +35,33 @@ function CommunityInsert() {
     setCommunity(prevCommunity => ({ ...prevCommunity, Image: file }));
   };
 
-  const {
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm({});
+  const insertCommunityEvent = useRecoilCallback(
+    ({ snapshot }) =>
+      async () => {
+        try {
+          // 제목과 내용이 비어있는지 확인
+          if (!community.title || !community.contents) {
+            alert('제목과 내용을 입력해주세요.'); // 또는 다른 사용자 피드백 방식 사용
+            return;
+          }
 
-  // const insertCommunityEvent = useRecoilCallback(
-  //   ({ snapshot }) =>
-  //     async () => {
-  //       try {
-  //         // 제목과 내용이 비어있는지 확인
-  //         if (!community.title || !community.contents) {
-  //           alert('제목과 내용을 입력해주세요.'); // 또는 다른 사용자 피드백 방식 사용
-  //           return;
-  //         }
+          const userSnapshot = await snapshot.getPromise(loginState);
+          const newData = {
+            ...community,
+            user_id: userSnapshot.id && String(userSnapshot.id), // 유효한 ID로 변환
+            category: getCategoryValue(community.category),
+          };
 
-  //         const userSnapshot = await snapshot.getPromise(loginState);
-  //         const newData = {
-  //           ...community,
-  //           user_id: userSnapshot.id && String(userSnapshot.id), // 유효한 ID로 변환
-  //           category: getCategoryValue(community.category),
-  //         };
-
-  //         console.log('Sending data to server:', newData);
-  //         insertCommunity(newData);
-  //         navigate('/community');
-  //       } catch (error) {
-  //         console.error('Error while inserting community:', error);
-  //       }
-  //     },
-  //   [community, insertCommunity, user.id, navigate],
-  // );
-
-  const submitEvent = useCallback(async data => {
-    try {
-      const formData = new FormData();
-
-      const files = document.querySelector('input[name="image"]').files;
-      formData.append('data', JSON.stringify(data));
-      formData.append('image', files[0]);
-      console.log(formData);
-      const resp = await axios({
-        method: 'post',
-        url: 'http://localhost:8001/community/',
-        headers: { 'Content-type': 'multipart/form-data' },
-        data: formData,
-      });
-      console.log(resp);
-      if (resp.data.status === 200) {
-        Swal.fire({
-          title: '수정완료', // Alert 제목
-          text: '회원정보 수정이 완료되었습니다..', // Alert 내용
-          icon: 'success', // Alert 타입
-        });
-        // setIsModify(!isModify);
-        // navigate('/mypage/' + id);
-      } else {
-        Swal.fire({
-          title: '회원정보 수정 처리 중 에러 발생', // Alert 제목
-          text: '다시 시도해주세요.', // Alert 내용
-          icon: 'error', // Alert 타입
-        });
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  }, []);
-
-  const errorEvent = error => console.error(error);
+          console.log('Sending data to server:', newData);
+          insertCommunity(newData);
+          console.log(newData);
+          navigate('/community');
+        } catch (error) {
+          console.error('Error while inserting community:', error);
+        }
+      },
+    [community, insertCommunity, user.id, navigate],
+  );
 
   // useEffect(() => {
   //   if (communityLoadable.state === 'hasValue' && communityLoadable.contents !== community) {
@@ -135,7 +89,7 @@ function CommunityInsert() {
       <section className="property-grid grid">
         <div className="container">
           <div className="row">
-            <form className="col-sm-12" onSubmit={handleSubmit(submitEvent, errorEvent)}>
+            <form className="col-sm-12">
               <table className="table">
                 <tbody>
                   <tr>
@@ -180,33 +134,14 @@ function CommunityInsert() {
                     </td>
                   </tr>
                   <tr>
-                    {/* <div className="col-sm-12 mb-4">
-                  <label htmlFor="profile" className="form-label">
-                    프로필 이미지 수정하기
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    id="profile"
-                    name="profile"
-                    accept="image/*"
-                    {...register('profile')}
-                  />
-                </div> */}
                     <td>이미지 첨부</td>
                     <td>
-                      <input
-                        type="file"
-                        className="form-control"
-                        name="image"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                      />
+                      <input type="file" name="image" accept="image/*" onChange={handleImageChange} />
                     </td>
                   </tr>
                   <tr>
                     <td colSpan="2" className="text-end">
-                      <button type="submit" className="btn btn-outline-secondary">
+                      <button type="submit" className="btn btn-outline-secondary" onClick={insertCommunityEvent}>
                         입력
                       </button>{' '}
                       <button

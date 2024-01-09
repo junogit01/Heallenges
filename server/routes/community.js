@@ -19,21 +19,20 @@ const uploadName = multer({
 });
 
 // 게시물 입력: POST /
-router.post('/', (req, res) => {
-  const data = req.body;
-  communityDAO.insert(data, (resp) => {
-    res.json(resp);
-  });
-});
+// router.post('/', (req, res) => {
+//   const data = req.body;
+//   communityDAO.insert(data, (resp) => {
+//     res.json(resp);
+//   });
+// });
 
+// 입력 1
 // router.post('/', uploadName.single('data'), async (req, res, next) => {
 //   try {
 //     const data = JSON.parse(req.body.data || '{}');
 //     const Image = req.file
 //       ? `${imageUploadPath}${req.file.filename}`
 //       : `${imageUploadPath}no_image.jpg`;
-
-//     const address = data.address || {};
 
 //     const insertData = {
 //       ...data,
@@ -47,6 +46,32 @@ router.post('/', (req, res) => {
 //     next(error);
 //   }
 // });
+
+// 입력 2
+router.post('/', uploadName.single('image'), async (req, res, next) => {
+  try {
+    const data = JSON.parse(req.body.data);
+    console.log(data);
+
+    const Image = req.file
+      ? `${imageUploadPath}${req.file.filename}`
+      : `${imageUploadPath}no_image.jpg`;
+
+    const insertData = {
+      ...data,
+      Image,
+    };
+
+    // console.log(Image);
+    console.log('Inserting data:', insertData);
+
+    communityDAO.insert(insertData, (resp) => {
+      res.json(resp);
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 // 게시물 수정: PUT /:id
 router.put('/:id', async (req, res) => {
