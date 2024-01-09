@@ -2,88 +2,49 @@
 import React, { useEffect } from 'react';
 import moment from 'moment';
 
-const Board = ({ user_id, title, nickname, view_cnt, created_at, contents }) => {
+const Board = ({ user_id, title, nickname, view_cnt, like_cnt, created_at, contents, Image }) => {
   useEffect(() => {
-    console.log('Board 컴포넌트가 마운트되었습니다.');
-    console.log(title);
-    console.log(nickname);
-    console.log(view_cnt);
-    console.log(created_at);
-    console.log(contents);
-  }, [user_id, title, nickname, view_cnt, created_at, contents]); // 빈 배열을 두어 컴포넌트가 마운트될 때만 실행되도록 설정
+    // console.log('Board 컴포넌트가 마운트되었습니다.');
+    // console.log(title);
+    // console.log(nickname);
+    // console.log(view_cnt);
+    // console.log(created_at);
+    // console.log(contents);
+    // console.log(Image);
+  }, [user_id, title, nickname, view_cnt, like_cnt, created_at, contents, Image]); // 빈 배열을 두어 컴포넌트가 마운트될 때만 실행되도록 설정
 
   return (
-    <div className="container mt-2" style={{ marginTop: '70px' }}>
-      <table className="table table-borderless">
-        <tbody>
-          {/* 제목 */}
-          <tr>
-            <td colSpan="8" className="text-center">
-              <h3 style={{ margin: '0 auto', textAlign: 'left' }}>{title}</h3>
-            </td>
-          </tr>
-          {/* 닉네임, 게시일, 조회수 */}
-          <tr
-            style={{
-              minHeight: '50px',
-              border: '1px solid #ddd',
-              padding: '0px',
-            }}>
-            <td colSpan="2" className="text-center align-items-center">
-              <strong>닉네임:</strong> {nickname || '사용자 없음'}
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td className="text-center align-items-center">
-              <strong>게시일:</strong> {moment(created_at).format('YYYY-MM-DD HH:mm:ss')}
-            </td>
-            <td className="text-center align-items-center">
-              <strong>조회수:</strong> {view_cnt || 0}
-            </td>
-          </tr>
-          {/* 내용 */}
-          <tr>
-            <td colSpan="8">
-              <div
-                style={{
-                  minHeight: '300px',
-                  fontSize: '1.5em',
-                  border: '0px solid #ddd',
-                  padding: '10px',
-                  textAlign: 'left',
-                }}>
-                <strong></strong> {contents || '내용 없음'}
+    // className="card mb-4"
+    // className="container mt-3"
+    <div className="container mt-3">
+      <div className="row">
+        <div className="col-lg-9">
+          <article>
+            <header className="mb-4">
+              <h1 className="fw-bolder mb-3">{title}</h1>
+              <div className="text-muted fst-italic mb-2">
+                <div>
+                  <h5>작성자: {nickname || '사용자 없음'}</h5>
+                </div>
+                게시일: {moment(created_at).format('YYYY-MM-DD HH:mm:ss')} / 조회수: {view_cnt} / 좋아요 {like_cnt}
               </div>
-            </td>
-          </tr>
-          {/* 좋아요, 수정, 삭제 버튼 */}
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button type="button" className="btn btn-primary btn-lg" style={{ margin: '0 5px' }}>
-                  좋아요
-                </button>
-                <button type="button" className="btn btn-warning btn-lg" style={{ margin: '0 5px' }}>
-                  수정
-                </button>
-                <button type="button" className="btn btn-danger btn-lg" style={{ margin: '0 5px' }}>
-                  삭제
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </header>
+            {/* 이미지가 존재할 때만 렌더링 */}
+            {Image && (
+              <figure className="mb-4">
+                <img className="img-fluid rounded" src={Image} alt="이미지 없음" />
+              </figure>
+            )}
+
+            <section className="mb-5" style={{ minHeight: '200px', height: 'auto', overflow: 'hidden' }}>
+              <p className="fs-5 mb-4" style={{ overflowY: 'auto' }}>
+                {contents || '내용 없음'}
+              </p>
+            </section>
+          </article>
+          <div className="card-body"></div>
+        </div>
+      </div>
     </div>
   );
 };

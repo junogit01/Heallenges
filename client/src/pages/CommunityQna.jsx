@@ -1,13 +1,20 @@
 // CommunityQna.jsx
-
 import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import CommunityHeader from '../components/Community/CommunityHeader';
 import CommunitySidebar from '../components/Community/CommunitySidebar';
 import CommunityBoard from '../components/Community/CommunityBoard';
 import { communityListState } from './../recoils/Community';
+import { loginState } from '@recoils/login';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 
 const CommunityQna = () => {
+  // 로그인이 안되면 로그인페이지로 이동
+  const navigate = useNavigate();
+  const loginUser = useRecoilValue(loginState);
+  if (loginUser?.id === '' && loginUser?.email === '') navigate('/login');
+
   const [allPosts, setAllPosts] = useRecoilState(communityListState);
 
   useEffect(() => {
@@ -15,7 +22,7 @@ const CommunityQna = () => {
       try {
         const response = await fetch('http://localhost:8001/community/3');
         const data = await response.json();
-        console.log(data); // 서버 응답 구조 확인
+        // console.log(data); // 서버 응답 구조 확인
         setAllPosts(data.data || []); // Recoil 상태 업데이트
       } catch (error) {
         console.error('데이터 가져오기 오류:', error);

@@ -6,17 +6,19 @@ const translateToKorean = name => {
   switch (name) {
     case 'community':
       return '커뮤니티';
-    // case 'board':
-    //   return '커뮤니티';
     case 'free':
       return '자유';
     case 'notice':
       return '공지';
     case 'qna':
       return '질문';
+    case 'write':
+      return '글쓰기';
+    case 'update':
+      return '글수정';
     // 필요한 경우에 계속 추가
     default:
-      return name;
+      return name + '번 게시물';
   }
 };
 
@@ -39,6 +41,8 @@ function CommunityHeader() {
               <li style={{ margin: '0 8px' }}>/</li>
               <li>
                 {index === pathSegments.length - 1 ? (
+                  translateToKorean(segment)
+                ) : segment === 'update' && index === pathSegments.length - 2 ? (
                   translateToKorean(segment)
                 ) : (
                   <Link to={`/${segment}`}>{translateToKorean(segment)}</Link>
