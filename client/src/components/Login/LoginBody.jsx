@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { loginState } from '@recoils/login';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
@@ -10,9 +10,11 @@ import { jwtDecode } from 'jwt-decode';
 
 function LoginBody2() {
   const setLogin = useSetRecoilState(loginState);
-
-  const [data, setData] = useState({ email: '', password: '' });
   const navigate = useNavigate();
+
+  // 이미 로그인 한 유저가 혹여나 로그인 페이지로 이동 시 메인페이지로 이동
+  const loginUser = useRecoilValue(loginState);
+  if (loginUser?.id !== '' && loginUser?.email !== '') navigate('/');
 
   const {
     register,
@@ -34,7 +36,6 @@ function LoginBody2() {
         navigate('/');
         return;
       } else if (resp.data.status === 401 || resp.data.status === 403 || resp.data.status === 500) {
-        setData({ email: '', password: '' });
         Swal.fire({
           title: '로그인 처리중 에러 발생', // Alert 제목
           text: '이메일 혹은 비밀번호를 다시 입력해주세요.', // Alert 내용

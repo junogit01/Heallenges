@@ -3,9 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const multer = require('multer');
 const cors = require('cors');
-const mysql = require('mysql2');
+
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const rankRouter = require('./routes/rank');
@@ -37,34 +36,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/images/users');
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname));
-  },
-});
-const upload = multer({
-  storage: storage,
-});
-
-const db = mysql.createConnection({
-  host: 'heallenges.cafe24app.com',
-  user: 'esens01',
-  password: 'gpfflswl12!',
-  database: 'esens01',
-});
-
-app.post('/upload', upload.single('image'), (req, res) => {
-  const image = req.file.filename;
-  const sql = 'UPDATE user SET profile_image = ? where id = 2';
-  db.query(sql, [image], (err, result) => {
-    if (err) return res.json({ Message: 'Error' });
-    return res.json({ Message: 'Success' });
-  });
-});
 
 // 여기다가 라우터 추가하기
 app.use('/', indexRouter);
