@@ -15,6 +15,9 @@ import CommunityBoardDetail from '@pages/CommunityBoardDetail';
 import CommunityInsert from '@pages/CommunityInsert';
 import CommunityUpdate from '@pages/CommunityUpdate';
 
+import Challenges from '@pages/Challenges';
+import ChallengeDetail from '@pages/ChallengeDetail';
+
 function App() {
   return (
     <Routes>
@@ -33,6 +36,10 @@ function App() {
         <Route path="/community/:id" element={<CommunityBoardDetail />} />
         <Route path="/community/write" element={<CommunityInsert />} />
         <Route path="/community/update/:id" element={<CommunityUpdate />} />
+
+        {/* 챌린지 */}
+        <Route path="/challenges" element={<Challenges />} />
+        <Route path="/challenges/:id" element={<ChallengeDetail />} />
       </Route>
     </Routes>
   );
