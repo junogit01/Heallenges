@@ -26,7 +26,11 @@ function PersonalInfoUpdate() {
           const resp = await axios.get('http://localhost:8001/mypage/' + id);
           set(userState, resp.data.data);
         } catch (error) {
-          console.error(error.message);
+          Swal.fire({
+            title: '회원정보 수집 중 에러 발생',
+            text: '다시 시도해주세요.',
+            icon: 'error',
+          });
         }
       },
     [],
@@ -95,16 +99,16 @@ function PersonalInfoUpdate() {
         if (resp.data.status === 200) {
           Swal.fire({
             title: '수정완료', // Alert 제목
-            text: '회원정보 수정이 완료되었습니다..', // Alert 내용
+            text: '회원정보 수정이 완료되었습니다.', // Alert 내용
             icon: 'success', // Alert 타입
           });
           setIsModify(!isModify);
           navigate('/mypage/' + id);
         } else {
           Swal.fire({
-            title: '회원정보 수정 처리 중 에러 발생', // Alert 제목
-            text: '다시 시도해주세요.', // Alert 내용
-            icon: 'error', // Alert 타입
+            title: '회원정보 수정 처리 중 에러 발생',
+            text: '다시 시도해주세요.',
+            icon: 'error',
           });
         }
       } catch (error) {
@@ -122,6 +126,9 @@ function PersonalInfoUpdate() {
 
   useEffect(() => {
     setValue('email', user?.[0]?.email, { shouldValidate: true, shouldTouch: true, shouldDirty: true });
+    setValue('nickname', user?.[0]?.nickname, { shouldValidate: true, shouldTouch: true, shouldDirty: true });
+    setValue('about_me', user?.[0]?.about_me, { shouldValidate: true, shouldTouch: true, shouldDirty: true });
+    setValue('blog_url', user?.[0]?.blog_url, { shouldValidate: true, shouldTouch: true, shouldDirty: true });
   }, [user, setValue]);
 
   return (
@@ -150,89 +157,96 @@ function PersonalInfoUpdate() {
                 <div className="content ps-lg-4">
                   <form className="row" onSubmit={handleSubmit(submitEvent, errorEvent)}>
                     <table className="table">
-                      <tr className="">
-                        <th className="fs-4">이름</th>
-                        <td>
-                          <input type="text" className="form-control" id="name" value={user[0]?.name} disabled></input>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="fs-4">이메일</th>
-                        <td>
-                          <input type="hidden" id="email" {...register('email')} />
-                          <input type="text" className="form-control" value={user[0]?.email} disabled></input>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="fs-4"> 닉네임</th>
-                        <td>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="nickname"
-                            {...register('nickname', {
-                              required: {
-                                value: true,
-                                message: '닉네임은 필수 입력 사항입니다',
-                              },
-                            })}></input>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="fs-4">자기소개</th>
-                        <td>
-                          <input type="text" className="form-control" id="about_me" {...register('about_me')}></input>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="fs-4">블로그</th>
-                        <td>
-                          <input type="text" className="form-control" id="bolg_url" {...register('blog_url')}></input>
-                        </td>
-                      </tr>
+                      <tbody>
+                        <tr className="">
+                          <th className="fs-4">이름</th>
+                          <td>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="name"
+                              value={user[0]?.name}
+                              disabled></input>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="fs-4">이메일</th>
+                          <td>
+                            <input type="hidden" id="email" {...register('email')} />
+                            <input type="text" className="form-control" value={user[0]?.email} disabled></input>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="fs-4"> 닉네임</th>
+                          <td>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="nickname"
+                              {...register('nickname', {
+                                required: {
+                                  value: true,
+                                  message: '닉네임은 필수 입력 사항입니다',
+                                },
+                              })}></input>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="fs-4">자기소개</th>
+                          <td>
+                            <input type="text" className="form-control" id="about_me" {...register('about_me')}></input>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="fs-4">블로그</th>
+                          <td>
+                            <input type="text" className="form-control" id="blog_url" {...register('blog_url')}></input>
+                          </td>
+                        </tr>
 
-                      <tr className=" form-group col-md-4">
-                        <th className="fs-4">주소</th>
-                        <td>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="postcode"
-                            readOnly
-                            {...register('address.postcode')}></input>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="fs-4">
-                          <button type="button" className="btn btn-outline-secondary" onClick={getAddress}>
-                            주소찾기
-                          </button>
-                        </th>
-                        <td>
-                          <input
-                            type="text"
-                            className="form-control "
-                            id="address"
-                            readOnly
-                            {...register('address.main', {
-                              required: {
-                                value: true,
-                                message: '주소는 필수 입력 사항입니다',
-                              },
-                            })}></input>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th className="fs-4">가입일</th>
-                        <td>
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="created_at"
-                            disabled
-                            value={user[0]?.Created}></input>
-                        </td>
-                      </tr>
+                        <tr className=" form-group col-md-4">
+                          <th className="fs-4">주소</th>
+                          <td>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="postcode"
+                              readOnly
+                              {...register('address.postcode')}></input>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="fs-4">
+                            <button type="button" className="btn btn-outline-secondary" onClick={getAddress}>
+                              주소찾기
+                            </button>
+                          </th>
+                          <td>
+                            <input
+                              type="text"
+                              className="form-control "
+                              id="address"
+                              readOnly
+                              {...register('address.main', {
+                                required: {
+                                  value: true,
+                                  message: '주소는 필수 입력 사항입니다',
+                                },
+                              })}></input>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th className="fs-4">가입일</th>
+                          <td>
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="created_at"
+                              disabled
+                              value={user[0]?.Created}></input>
+                          </td>
+                        </tr>
+                      </tbody>
                     </table>
 
                     <div className="mt-5">
