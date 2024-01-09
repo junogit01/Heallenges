@@ -1,17 +1,37 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import { useNavigate } from 'react-router-dom';
 
-const BoardCard = () => {
+const BoardCard = ({ id, image, title, start, end, created, reward }) => {
+  const navigate = useNavigate();
+  const getTimeFromDate = date => {
+    if (date === null || date === undefined) return '알 수 없음';
+    return date.substring(0, 10) + ' ' + date.substring(11, 19);
+  };
+  getTimeFromDate();
   return (
-    <Card style={{ width: '18rem', height:'18rem' }}>
+    <Card style={{ width: '18rem' }}>
+      <Card.Img
+        variant="top"
+        src={image}
+        style={{
+          height: '18rem',
+          objectFit: 'cover',
+        }}
+      />
       <Card.Body>
-        <Card.Title>Card Title</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
-        <Card.Text>
-          Some quick example text to build on the card title and make up the bulk of the card's content.
-        </Card.Text>
-        <Card.Link href="#">Card Link</Card.Link>
-        <Card.Link href="#">Another Link</Card.Link>
+        <Card.Title>{title}</Card.Title>
+        <Card.Text>{'기간: ' + getTimeFromDate(start) + '~' + getTimeFromDate(end)}</Card.Text>
+        <Card.Text>{'생성일: ' + getTimeFromDate(created)}</Card.Text>
+        <Card.Text>{'보상: ' + reward}</Card.Text>
+        <Button
+          variant="primary"
+          onClick={() => {
+            navigate(`/challenges/${id}`);
+          }}>
+          자세히 보기
+        </Button>
       </Card.Body>
     </Card>
   );

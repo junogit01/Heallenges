@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { loginState } from '@recoils/login';
 
@@ -7,11 +7,20 @@ const ChallengeMainSidebar = () => {
   const [user, setUser] = useRecoilState(loginState);
   const [id, setId] = useState(0);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleLink = (user, id) => {
     if (!user?.email) alert('로그인이 필요한 서비스입니다.');
     else navigate(`/challenges/${id}`);
     // navigate(`/challenges/${id}`);
+  };
+  const removeCategoryQuery = () => {
+    searchParams.delete('category');
+    setSearchParams(searchParams);
+  };
+  const setCategoryQuery = value => {
+    searchParams.set('category', value);
+    setSearchParams(searchParams);
   };
   return (
     <div className="col-lg-3">
@@ -40,26 +49,35 @@ const ChallengeMainSidebar = () => {
             <div className="col-sm-12">
               <ul className="list-unstyled mb-0">
                 <li>
-                  <h4>
+                  <h4 onClick={removeCategoryQuery}>
                     {/* <Link to="/community">전체 도전</Link> */}
                     전체 도전
                   </h4>
                 </li>
                 <li>{/* <Link to="/community/notice">공지사항</Link> */}</li>
                 <li>
-                  <h4>
+                  <h4
+                    onClick={() => {
+                      setCategoryQuery('운동');
+                    }}>
                     {/* <Link to="/community/notice">운동</Link> */}
                     운동
                   </h4>
                 </li>
                 <li>
-                  <h4>
+                  <h4
+                    onClick={() => {
+                      setCategoryQuery('영양');
+                    }}>
                     {/* <Link to="/community/free">영양</Link> */}
                     영양
                   </h4>
                 </li>
                 <li>
-                  <h4>
+                  <h4
+                    onClick={() => {
+                      setCategoryQuery('취미');
+                    }}>
                     {/* <Link to="/community/qna">취미</Link> */}
                     취미
                   </h4>
