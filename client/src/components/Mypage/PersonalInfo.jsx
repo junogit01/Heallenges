@@ -32,7 +32,11 @@ function PersonalInfo() {
           const resp = await axios.get('http://localhost:8001/mypage/' + id);
           set(userState, resp.data);
         } catch (error) {
-          console.error(error.message);
+          Swal.fire(
+            '정상적으로 정보가 노출되지 않을 수 있습니다.',
+            '회원정보 수정 후에도 반복시 문의하기를 남겨주세요.',
+            'warning',
+          );
         }
       },
     [],
