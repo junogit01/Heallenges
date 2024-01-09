@@ -1,8 +1,9 @@
+/* eslint-disable no-undef */
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { communityListState, communityState } from './../../recoils/Community';
+import { communityListState } from '@recoils/Community';
 import { Link } from 'react-router-dom';
-import './CommunityBoard.css';
+import moment from 'moment';
 
 const getCategoryName = categoryNumber => {
   switch (categoryNumber) {
@@ -19,13 +20,20 @@ const getCategoryName = categoryNumber => {
 
 const CommunityBoard = () => {
   const allPosts = useRecoilValue(communityListState);
-  const postsPerPage = 10;
+
   const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10;
   const totalPosts = allPosts.length;
   const totalPages = Math.ceil(totalPosts / postsPerPage);
   const maxVisiblePages = 10;
   let startPage;
   let endPage;
+
+  // 추가 코드: allPosts가 배열이 아니거나 비어있으면 오류 출력
+  if (!Array.isArray(allPosts) || allPosts.length === 0) {
+    // console.error('allPosts가 유효한 배열이 아닙니다.');
+    return null;
+  }
 
   if (totalPages <= maxVisiblePages) {
     startPage = 1;
@@ -62,8 +70,11 @@ const CommunityBoard = () => {
   };
 
   return (
-    <div className="community-board">
-      <h3>게시판 목록</h3>
+    <div className="card mb-4">
+      <div className="mt-3">
+        <h3>게시판 목록</h3>
+      </div>
+
       <table className="table">
         <thead>
           <tr>
@@ -71,21 +82,26 @@ const CommunityBoard = () => {
             <th scope="col">카테고리</th>
             <th scope="col">제목</th>
             <th scope="col">글쓴이</th>
+            <th scope="col">게시일</th>
             <th scope="col">좋아요</th>
             <th scope="col">조회수</th>
           </tr>
         </thead>
         <tbody>
           {currentPosts.map((post, index) => (
-            <tr key={post.게시판번호}>
+            <tr key={post.id}>
+              {/* 인덱스가 10개씩 잘라서 받아오니까 
+              현재 페이지 - 1 * 자른 개수(10) 0 +1 해서 값 11로 나옴  */}
               <th scope="row">{(currentPage - 1) * postsPerPage + index + 1}</th>
-              <td>{getCategoryName(post.카테고리)}</td>
+              <td>{getCategoryName(post.category)}</td>
               <td>
-                <Link to={`/board/${post.게시판번호}`}>{post.제목}</Link>
+                <Link to={`/community/${post.id}`}>{post.title}</Link>
               </td>
-              <td>{post.닉네임}</td>
-              <td>{post.좋아요}</td>
-              <td>{post.조회수}</td>
+              <td>{post.nickname}</td>
+
+              <td>{moment(post.created_at).format('YYYY-MM-DD')}</td>
+              <td>{post.like_cnt}</td>
+              <td>{post.view_cnt}</td>
             </tr>
           ))}
         </tbody>

@@ -1,44 +1,101 @@
+// 이상하게 왜인지 모르겠으나 조회수가 2씩 올라감
+
 /* eslint-disable camelcase */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-// import moment from 'moment';
-
 import { communityState } from './../recoils/Community';
 import CommunityHeader from '../components/Community/CommunityHeader';
 import CommunitySidebar from '../components/Community/CommunitySidebar';
 import Board from './../components/Community/Board';
 import Comment from './../components/Community/Comment';
-import CommentForm from './../components/Community/CommentForm';
+import CommentForm from '../components/Community/CommentInsertForm';
+import { loginState } from '@recoils/login';
+import { useRecoilValue } from 'recoil';
 
 function CommunityBoardDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const loginUser = useRecoilValue(loginState);
   const [communityPost, setCommunityPost] = useRecoilState(communityState(id));
+  const [liked, setLiked] = useState(false);
+
+  const likeCommunityEvent = async () => {
+    try {
+      const response = await fetch(`http://localhost:8001/community/like/${loginUser.id}/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          post_id: id,
+          user_id: loginUser.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        console.error(`좋아요 오류: ${data.message}`);
+        return;
+      }
+
+      setLiked(true);
+      getCommunityPost();
+    } catch (error) {
+      console.error('좋아요 오류:', error);
+    }
+  };
+
+  const dislikeCommunityEvent = async () => {
+    try {
+      const response = await fetch(`http://localhost:8001/community/dislike/${loginUser.id}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          post_id: id,
+          user_id: loginUser.id,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        console.error(`좋아요 취소 오류: ${data.message}`);
+        return;
+      }
+
+      setLiked(false);
+      getCommunityPost();
+    } catch (error) {
+      console.error('좋아요 취소 오류:', error);
+    }
+  };
+
+  const getCommunityPost = async () => {
+    try {
+      const response = await fetch(`http://localhost:8001/community/community/${id}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(`게시글 불러오기 오류: ${data.message}`);
+        return;
+      }
+
+      setCommunityPost(data.data);
+    } catch (error) {
+      console.error('게시글 불러오기 오류:', error);
+    }
+  };
 
   useEffect(() => {
-    const getCommunityPost = async () => {
-      try {
-        const response = await fetch(`http://localhost:8001/community/board/${id}`);
-        const data = await response.json();
-
-        if (!response.ok) {
-          console.error(`게시글 불러오기 오류: ${data.message}`);
-          return;
-        }
-
-        setCommunityPost(data.data);
-      } catch (error) {
-        console.error('게시글 불러오기 오류:', error);
-      }
-    };
-
     getCommunityPost();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, setCommunityPost]);
 
-  const deleteBoardEvent = async () => {
+  const deleteCommunityEvent = async () => {
     try {
-      const response = await fetch(`http://localhost:8001/community/board/${id}`, {
+      const response = await fetch(`http://localhost:8001/community/${id}`, {
         method: 'DELETE',
       });
 
@@ -60,37 +117,72 @@ function CommunityBoardDetail() {
     return <div>게시글을 찾을 수 없습니다.</div>;
   }
 
+  const isUserPostOwner = loginUser.id === communityPost.board.user_id;
+
   return (
     <>
       <CommunityHeader />
       <main id="main" style={{ marginTop: '30px' }}>
-        {/* Blog Section 부분 */}
         <section id="blog" className="blog">
           <div className="container" data-aos="fade-up">
             <div className="row g-5">
               <div className="col-lg-9" data-aos="fade-up" data-aos-delay={200}>
-                {/* row gy-2로 댓글 입력창과 댓글 간격 있음 */}
                 <div className="row gy-2 posts-list">
                   <Board {...communityPost.board} />
-                  <CommentForm key="comment-form" />
-                  <h4>댓글 내용</h4>
-                  {communityPost.comments.length === 0 ? (
-                    <p>작성된 댓글이 없습니다.</p>
-                  ) : (
-                    <>
-                      <div className="mb-3"></div>
-                      <Comment comments={communityPost.comments} />
-                    </>
-                  )}
-                  {/* 삭제 버튼 및 이벤트 핸들러 등 추가할 부분 */}
+                  <div>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <div className="mb-3" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                              <button
+                                type="button"
+                                className={`btn ${liked ? 'btn-danger' : 'btn-primary'} btn-lg`}
+                                style={{ margin: '0 5px' }}
+                                onClick={liked ? dislikeCommunityEvent : likeCommunityEvent}>
+                                {liked ? '좋아요 취소' : '좋아요'}
+                              </button>
+                              {isUserPostOwner && (
+                                <>
+                                  <button
+                                    type="button"
+                                    className="btn btn-warning btn-lg"
+                                    style={{ margin: '0 5px' }}
+                                    onClick={() => navigate(`/community/update/${id}`)}>
+                                    수정
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger btn-lg"
+                                    style={{ margin: '0 5px' }}
+                                    onClick={deleteCommunityEvent}>
+                                    삭제
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="card bg-light">
+                    <CommentForm key="comment-form" />
+                    <h4>댓글</h4>
+                    {communityPost.comments.length === 0 ? (
+                      <p>작성된 댓글이 없습니다.</p>
+                    ) : (
+                      <>
+                        <Comment comments={communityPost.comments} />
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-              {/* Sidebar 부분 */}
               <CommunitySidebar />
             </div>
           </div>
         </section>
-        {/* End Blog Section */}
       </main>
     </>
   );
