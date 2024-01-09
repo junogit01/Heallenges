@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { loginState } from '@recoils/login';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilCallback, useRecoilStateLoadable, useRecoilValue } from 'recoil';
+import { useForm } from 'react-hook-form';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { communityState, communityListSelector } from '@recoils/Community';
 import CommunityHeader from '../components/Community/CommunityHeader';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 function CommunityInsert() {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ function CommunityInsert() {
   const user = useRecoilValue(loginState);
   const [community, setCommunity] = useState({
     id: '',
-    user_id: '',
+    user_id: loginUser.id,
     title: '',
     category: '',
     contents: '',
@@ -25,7 +27,7 @@ function CommunityInsert() {
   console.log(community);
 
   // const communityLoadable = useRecoilStateLoadable(communityState());
-  const { insertCommunity } = useRecoilValue(communityListSelector);
+  // const { insertCommunity } = useRecoilValue(communityListSelector);
 
   const changeBoard = e => {
     const { name, value } = e.target;
@@ -37,75 +39,81 @@ function CommunityInsert() {
     setCommunity(prevCommunity => ({ ...prevCommunity, Image: file }));
   };
 
-  const insertCommunityEvent = useRecoilCallback(
-    ({ snapshot }) =>
-      async () => {
-        try {
-          // 제목과 내용이 비어있는지 확인
-          if (!community.title || !community.contents) {
-            alert('제목과 내용을 입력해주세요.'); // 또는 다른 사용자 피드백 방식 사용
-            return;
-          }
+  const {
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({});
 
-          const userSnapshot = await snapshot.getPromise(loginState);
-          const newData = {
-            ...community,
-            user_id: userSnapshot.id && String(userSnapshot.id), // 유효한 ID로 변환
-            category: getCategoryValue(community.category),
-          };
+  // const insertCommunityEvent = useRecoilCallback(
+  //   ({ snapshot }) =>
+  //     async () => {
+  //       try {
+  //         // 제목과 내용이 비어있는지 확인
+  //         if (!community.title || !community.contents) {
+  //           alert('제목과 내용을 입력해주세요.'); // 또는 다른 사용자 피드백 방식 사용
+  //           return;
+  //         }
 
-          console.log('Sending data to server:', newData);
-          insertCommunity(newData);
-          navigate('/community');
-        } catch (error) {
-          console.error('Error while inserting community:', error);
-        }
-      },
-    [community, insertCommunity, user.id, navigate],
-  );
+  //         const userSnapshot = await snapshot.getPromise(loginState);
+  //         const newData = {
+  //           ...community,
+  //           user_id: userSnapshot.id && String(userSnapshot.id), // 유효한 ID로 변환
+  //           category: getCategoryValue(community.category),
+  //         };
 
-  const submitEvent = useCallback(
-    async data => {
-      try {
-        const formData = new FormData();
+  //         console.log('Sending data to server:', newData);
+  //         insertCommunity(newData);
+  //         navigate('/community');
+  //       } catch (error) {
+  //         console.error('Error while inserting community:', error);
+  //       }
+  //     },
+  //   [community, insertCommunity, user.id, navigate],
+  // );
 
-        const files = document.querySelector('input[name="profile"]').files;
-        formData.append('data', JSON.stringify(data));
-        formData.append('profile', files[0]);
+  const submitEvent = useCallback(async data => {
+    try {
+      const formData = new FormData();
 
-        const resp = await axios({
-          method: 'post',
-          url: 'http://localhost:8001/community/',
-          headers: { 'Content-type': 'multipart/form-data' },
-          data: formData,
+      const files = document.querySelector('input[name="image"]').files;
+      console.log(data[4]);
+      console.log(data[3]);
+      console.log(data[2]);
+      console.log(data[1]);
+      console.log(data[0]);
+      formData.append('data', JSON.stringify(data));
+
+      formData.append('image', files[0]);
+      console.log(formData);
+      const resp = await axios({
+        method: 'post',
+        url: 'http://localhost:8001/community/',
+        headers: { 'Content-type': 'multipart/form-data' },
+        data: formData,
+      });
+      console.log(resp);
+      if (resp.data.status === 200) {
+        Swal.fire({
+          title: '수정완료', // Alert 제목
+          text: '회원정보 수정이 완료되었습니다..', // Alert 내용
+          icon: 'success', // Alert 타입
         });
-        if (resp.data.status === 200) {
-          // Swal.fire({
-          //   title: '수정완료', // Alert 제목
-          //   text: '회원정보 수정이 완료되었습니다..', // Alert 내용
-          //   icon: 'success', // Alert 타입
-          // });
-          // setIsModify(!isModify);
-          // navigate('/mypage/' + id);
-        } else {
-          // Swal.fire({
-          //   title: '회원정보 수정 처리 중 에러 발생', // Alert 제목
-          //   text: '다시 시도해주세요.', // Alert 내용
-          //   icon: 'error', // Alert 타입
-          // });
-        }
-      } catch (error) {
-        console.error(error.message);
+        // setIsModify(!isModify);
+        // navigate('/mypage/' + id);
+      } else {
+        Swal.fire({
+          title: '회원정보 수정 처리 중 에러 발생', // Alert 제목
+          text: '다시 시도해주세요.', // Alert 내용
+          icon: 'error', // Alert 타입
+        });
       }
-    },
-    // [navigate, id, isModify],
-  );
+    } catch (error) {
+      console.error(error.message);
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   if (communityLoadable.state === 'hasValue' && communityLoadable.contents !== community) {
-  //     setCommunity(communityLoadable.contents);
-  //   }
-  // }, [communityLoadable, community]);
+  const errorEvent = error => console.error(error);
 
   const getCategoryValue = categoryName => {
     switch (categoryName) {
@@ -127,7 +135,7 @@ function CommunityInsert() {
       <section className="property-grid grid">
         <div className="container">
           <div className="row">
-            <form className="col-sm-12">
+            <form className="col-sm-12" onSubmit={handleSubmit(submitEvent, errorEvent)}>
               <table className="table">
                 <tbody>
                   <tr>
@@ -198,7 +206,7 @@ function CommunityInsert() {
                   </tr>
                   <tr>
                     <td colSpan="2" className="text-end">
-                      <button type="submit" className="btn btn-outline-secondary" onClick={insertCommunityEvent}>
+                      <button type="submit" className="btn btn-outline-secondary">
                         입력
                       </button>{' '}
                       <button

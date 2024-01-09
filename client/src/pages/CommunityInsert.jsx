@@ -18,15 +18,14 @@ function CommunityInsert() {
   const user = useRecoilValue(loginState);
   const [community, setCommunity] = useState({
     id: '',
-    user_id: '',
+    user_id: loginUser.id,
     title: '',
     category: '',
     contents: '',
     Image: '',
   });
-  console.log(community);
+  console.log('useState', community);
 
-  // const communityLoadable = useRecoilStateLoadable(communityState());
   const { insertCommunity } = useRecoilValue(communityListSelector);
 
   const changeBoard = e => {
@@ -78,15 +77,22 @@ function CommunityInsert() {
 
       const files = document.querySelector('input[name="image"]').files;
       formData.append('data', JSON.stringify(data));
+
+      console.log(data[4]);
+      console.log(data[3]);
+      console.log(data[2]);
+      console.log(data[1]);
+      console.log(data[0]);
+
       formData.append('image', files[0]);
-      console.log(formData);
+      console.log('formData', formData);
       const resp = await axios({
         method: 'post',
         url: 'http://localhost:8001/community/',
         headers: { 'Content-type': 'multipart/form-data' },
         data: formData,
       });
-      console.log(resp);
+      console.log('resp', resp);
       if (resp.data.status === 200) {
         Swal.fire({
           title: '수정완료', // Alert 제목
@@ -108,12 +114,6 @@ function CommunityInsert() {
   }, []);
 
   const errorEvent = error => console.error(error);
-
-  // useEffect(() => {
-  //   if (communityLoadable.state === 'hasValue' && communityLoadable.contents !== community) {
-  //     setCommunity(communityLoadable.contents);
-  //   }
-  // }, [communityLoadable, community]);
 
   const getCategoryValue = categoryName => {
     switch (categoryName) {
