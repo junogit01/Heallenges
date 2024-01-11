@@ -164,44 +164,42 @@ function CommunityBoardDetail() {
               <div className="col-lg-9" data-aos="fade-up" data-aos-delay={200}>
                 <div className="row gy-2 posts-list">
                   <Board {...communityPost.board} />
-                  <div>
-                    <table>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <div className="mb-3" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                              <button
-                                type="button"
-                                className={`btn ${liked ? 'btn-danger' : 'btn-primary'} btn-lg`}
-                                style={{ margin: '0 5px' }}
-                                onClick={liked ? dislikeCommunityEvent : likeCommunityEvent}>
-                                {liked ? '좋아요 취소' : '좋아요'}
-                              </button>
-                              {/* 유저아이디와 게시물의 유저 아이디가 같은지 확인 후 수정 삭제 버튼 활성화 여부 결정 */}
-                              {isUserPostOwner && (
-                                <>
-                                  <button
-                                    type="button"
-                                    className="btn btn-warning btn-lg"
-                                    style={{ margin: '0 5px' }}
-                                    onClick={() => navigate(`/community/update/${id}`)}>
-                                    수정
-                                  </button>
-                                  <button
-                                    type="button"
-                                    className="btn btn-danger btn-lg"
-                                    style={{ margin: '0 5px' }}
-                                    onClick={deleteCommunityEvent}>
-                                    삭제
-                                  </button>
-                                </>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <div className="mb-3 d-flex">
+                            <button
+                              type="button"
+                              className={`btn ${liked ? 'btn-danger' : 'btn-primary'} btn-lg me-auto`}
+                              style={{ margin: '0 5px' }}
+                              onClick={liked ? dislikeCommunityEvent : likeCommunityEvent}>
+                              {liked ? '좋아요 취소' : '좋아요'}
+                            </button>
+                            {/* 유저아이디와 게시물의 유저 아이디가 같은지 확인 후 수정 삭제 버튼 활성화 여부 결정 */}
+                            {isUserPostOwner && (
+                              <>
+                                <button
+                                  type="button"
+                                  className="btn btn-warning btn-lg"
+                                  style={{ margin: '0 5px' }}
+                                  onClick={() => navigate(`/community/update/${id}`)}>
+                                  수정
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-danger btn-lg"
+                                  style={{ margin: '0 5px' }}
+                                  onClick={deleteCommunityEvent}>
+                                  삭제
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                   <div className="card bg-light">
                     {/* 댓글 입력 창 */}
                     <CommentForm key="comment-form" />
