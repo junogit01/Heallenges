@@ -8,6 +8,14 @@ import { CommunitysearchKeywordState } from '@recoils/Community';
 function CommunitySidebar() {
   const [searchKeyword, setSearchKeyword] = useRecoilState(CommunitysearchKeywordState);
 
+  // const handleCategoryChange = category => {
+  //   setSelectedCategory(category);
+  // };
+
+  // const filteredBoardList = boardList.filter(data => {
+  //   return selectedCategory === 'all' || data?.category === selectedCategory;
+  // });
+
   return (
     <div className="col-lg-3">
       {/* Search widget */}
@@ -58,20 +66,23 @@ function CommunitySidebar() {
                     <Link to="/community/qna">문의게시판</Link>
                   </h4>
                 </li>
+                {/* <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
+                  전체
+                </button>
+                <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('공지사항')}>
+                  공지사항
+                </button>
+                <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('자유')}>
+                  자유
+                </button>
+                <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('인증')}>
+                  인증
+                </button> */}
               </ul>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Side widget */}
-      {/* <div className="card mb-4">
-        <div className="card-header">Side Widget</div>
-        <div className="card-body">
-          You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5
-          card component!
-        </div>
-      </div> */}
 
       {/* Write post widget */}
       <div className="card mb-4">

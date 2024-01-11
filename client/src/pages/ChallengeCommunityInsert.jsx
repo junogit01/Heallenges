@@ -1,7 +1,7 @@
 import React from 'react';
-import ChallengesCommunityInsertHead from '@components/\bChallengesCommunityInsert/ChallengesCommunityInsertHead';
+import ChallengesCommunityInsertHead from '@components/ChallengesCommunityInsert/ChallengesCommunityInsertHead';
 
-import ChallengesCommunityInsertBody from '@components/\bChallengesCommunityInsert/ChallengesCommunityInsertBody';
+import ChallengesCommunityInsertBody from '@components/ChallengesCommunityInsert/ChallengesCommunityInsertBody';
 
 function ChallengeCommunityInsert() {
   return (

@@ -29,6 +29,15 @@ const CommunityBoard = () => {
     data: [],
   });
 
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const handleCategoryChange = category => {
+    setSelectedCategory(category);
+  };
+
+  const filteredBoardList = allPosts.filter(data => {
+    return selectedCategory === 'all' || data?.category === selectedCategory;
+  });
+
   // 검색
   const getCommunitySearch = useCallback(async () => {
     try {
@@ -108,6 +117,18 @@ const CommunityBoard = () => {
     <div className="card mb-4">
       <div className="mt-3">
         <h3>&nbsp;게시판 목록</h3>
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
+          전체
+        </button>
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('공지사항')}>
+          공지사항
+        </button>
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('자유')}>
+          자유
+        </button>
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('인증')}>
+          인증
+        </button>
       </div>
 
       {/* 게시물 목록을 표시하는 테이블 */}
