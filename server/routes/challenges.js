@@ -1,9 +1,24 @@
 const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 
+const imageUploadPath = 'http://localhost:8001/images/challenges/community/';
 const challengesDAO = require('./../models/challengesDAO');
 const challengesCommunityDAO = require('../models/challengesCommunityDAO');
+
+const uploadName = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, path.join(__dirname, '..', 'public', 'images', 'challenges', 'community')),
+        console.log('Hello world');
+    },
+
+    filename: (req, file, cb) => cb(null, `${Date.now()}_${file.originalname}`),
+  }),
+  limits: { fileSize: 1024 * 1024 * 3 },
+});
 
 // 챌린지 타이틀로 참가자 목록 조회
 router.get('/participants', async (req, res, next) => {
@@ -103,11 +118,22 @@ router.get('/:challengeId/board/:id', async (req, res, next) => {
 });
 
 // 도전별 커뮤니티 게시글 생성
-router.post('/:challengeId/board', async (req, res, next) => {
-  const data = req.body;
-  challengesCommunityDAO.challengeBoardInsert(data, (resp) => {
-    res.json(resp);
-  });
+router.post('/:challengeId/board', uploadName.single('image'), async (req, res, next) => {
+  try {
+    const data = JSON.parse(req.body.data);
+    const image = req.file ? `${imageUploadPath}${req.file.filename}` : '';
+
+    console.log(data);
+    const insertData = {
+      ...data,
+      image,
+    };
+    challengesCommunityDAO.challengeBoardInsert(insertData, (resp) => {
+      res.json(resp);
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // 도전별 커뮤니티 게시글 수정

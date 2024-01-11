@@ -5,12 +5,6 @@ import { searchKeywordState } from '@recoils/rank';
 function ChallengesDetailHead() {
   const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
 
-  // const handleSubmit = e => {
-  //   e.preventDefault();
-  //   // Recoil 상태 업데이트
-  //   setSearchKeyword(e.target.value);
-  // };
-
   return (
     <nav className="navbar navbar-light bg-light">
       <div className="container-fluid">
@@ -30,7 +24,7 @@ function ChallengesDetailHead() {
               onChange={e => setSearchKeyword(e.target.value)}
               style={{ width: '30rem' }}
             />
-            <i class="bi bi-search" style={{ fontSize: '2rem', marginLeft: '-4rem' }}></i>
+            <i className="bi bi-search" style={{ fontSize: '2rem', marginLeft: '-4rem' }}></i>
           </form>
         </div>
       </div>
