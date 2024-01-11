@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
-import React, { useEffect } from 'react';
 import moment from 'moment';
+import React, { useEffect } from 'react';
 
 const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created_at, contents, Image }) => {
   useEffect(() => {
@@ -13,6 +13,21 @@ const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created
     // console.log(contents);
     // console.log(Image);
   }, [user_id, title, nickname, category, view_cnt, like_cnt, created_at, contents, Image]); // 빈 배열을 두어 컴포넌트가 마운트될 때만 실행되도록 설정
+
+  // 카테고리 값을 변경해주는 함수 / 노드(숫자) -> 프론트(한글)
+  const getCategoryString = categoryNumber => {
+    switch (category) {
+      case 1:
+        return '공지';
+      case 2:
+        return '자유';
+      case 3:
+        return '문의';
+      default:
+        return '자유';
+    }
+  };
+  const categoryString = getCategoryString(category);
 
   return (
     // className="card mb-4"
@@ -27,7 +42,8 @@ const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created
                 <div>
                   <h5>작성자: {nickname || '사용자 없음'}</h5>
                 </div>
-                게시일: {moment(created_at).format('YYYY-MM-DD HH:mm:ss')} / 조회수: {view_cnt} / 좋아요 {like_cnt}
+                카테고리: {categoryString} / 게시일: {moment(created_at).format('YYYY-MM-DD HH:mm:ss')} / 조회수:{' '}
+                {view_cnt} / 좋아요 {like_cnt}
               </div>
             </header>
             {/* 이미지가 존재할 때만 렌더링 */}

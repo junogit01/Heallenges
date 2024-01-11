@@ -27,9 +27,7 @@ function CommunityHeader() {
   const pathSegments = location.pathname.split('/').filter(Boolean);
 
   return (
-    <div
-      className="breadcrumbs d-flex align-items-center"
-      style={{ backgroundImage: 'url("assets/img/blog-header.jpg")' }}>
+    <div className="navbar navbar-light bg-light" style={{ height: '10.5rem' }}>
       <div className="container position-relative d-flex flex-column align-items-center">
         <h2>커뮤니티</h2>
         <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', alignItems: 'center' }}>

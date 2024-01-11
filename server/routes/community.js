@@ -97,8 +97,6 @@ router.post('/comment', (req, res) => {
   });
 });
 
-// 댓글 수정
-
 // 댓글 삭제
 router.delete('/comment/:comment_id', async (req, res) => {
   const comment_id = req.params.comment_id; // 수정된 부분: params 전체 객체 대신 comment_id만을 가져옴
