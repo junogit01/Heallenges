@@ -1,20 +1,21 @@
-// Community.jsx
+// Communitys.jsx
 import React, { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import CommunityHeader from '../components/Community/CommunityHeader';
 import CommunitySidebar from '../components/Community/CommunitySidebar';
 import CommunityBoard from '../components/Community/CommunityBoard';
-import { communityListState } from './../recoils/Community';
+import { communityListState } from '../recoils/Community';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { loginState } from '@recoils/login';
-import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
 
 const Community = () => {
-  // 로그인이 안되면 로그인페이지로 이동
   const navigate = useNavigate();
+
+  // 로그인이 안되면 로그인페이지로 이동
   const loginUser = useRecoilValue(loginState);
   if (loginUser?.id === '' && loginUser?.email === '') navigate('/login');
 
+  // 전체 게시물을 리코일 (communityListState) 불러오기
   const [allPosts, setAllPosts] = useRecoilState(communityListState);
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const Community = () => {
         const data = await response.json();
         setAllPosts(data.data || []);
       } catch (error) {
-        console.error('데이터 가져오기 오류:', error);
+        // console.error('데이터 가져오기 오류:', error);
       }
     };
 
@@ -34,10 +35,10 @@ const Community = () => {
   return (
     <>
       <main id="main">
-        {/* Breadcrumbs 부분 */}
+        {/* 커뮤니티 헤더 */}
         <CommunityHeader />
 
-        {/* Blog Section 부분 */}
+        {/* 본문 */}
         <section id="blog" className="blog" style={{ marginTop: '30px' }}>
           <div className="container" data-aos="fade-up">
             <div className="row g-5">
@@ -47,12 +48,11 @@ const Community = () => {
                   <CommunityBoard posts={allPosts} />
                 </div>
               </div>
-              {/* Sidebar 부분 */}
+              {/* Sidebar */}
               <CommunitySidebar />
             </div>
           </div>
         </section>
-        {/* End Blog Section */}
       </main>
     </>
   );
