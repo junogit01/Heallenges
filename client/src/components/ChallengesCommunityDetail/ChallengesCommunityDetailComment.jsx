@@ -88,7 +88,7 @@ function ChallengesCommunityDetailComment() {
   const currentComments = commentList.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <div class="card bg-light">
+    <div className="card bg-light">
       <div className="card-body">
         <form
           className="mb-4"

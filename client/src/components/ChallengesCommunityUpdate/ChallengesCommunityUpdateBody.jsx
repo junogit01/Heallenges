@@ -1,22 +1,20 @@
 import React, { useEffect, useCallback } from 'react';
-import { useRecoilValue } from 'recoil';
-import { useParams, useNavigate } from 'react-router-dom';
-import { challengesListSelector, challengesBoardState, challengesState } from '@recoils/challenge';
-import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useParams, useNavigate } from 'react-router-dom';
 import { loginState } from '@recoils/login';
+import { useRecoilValue } from 'recoil';
+import { challengesListSelector, challengesBoardState } from '@recoils/challenge';
+import { useForm } from 'react-hook-form';
 
-function ChallengesCommunityInsertBody() {
+function ChallengesCommunityUpdateBody() {
+  const loginUser = useRecoilValue(loginState);
   const { challengeId, id } = useParams();
   const navigate = useNavigate();
-
-  const challengesBoard = useRecoilValue(challengesState);
-  const { getChallengeDetail, getChallengeBoardDetail } = useRecoilValue(challengesListSelector);
-
-  const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
+  const challengesBoard = useRecoilValue(challengesBoardState);
+  const { getChallengeDetail, getChallengeBoardDetail } = useRecoilValue(challengesListSelector);
   const {
     register,
     handleSubmit,
@@ -26,7 +24,7 @@ function ChallengesCommunityInsertBody() {
     defaultValues: {
       title: '',
       contents: '',
-      user_id: loginUser.id,
+      id: id,
       challenge_id: challengeId,
     },
     mode: 'onBlur',
@@ -46,11 +44,13 @@ function ChallengesCommunityInsertBody() {
         // 이 값을 서버에 전송한다. 이미지 업로드가 있어서 headers에 { "Content-type": "multipart/form-data" }를 지정
         // 만약 이미지 업로드가 없다면 headers 필요없고 formData로 변환할 필요없이 바로 매개변수로 받은 data를 바로 전송하면 된다
         const resp = await axios({
-          method: 'POST',
-          url: `http://localhost:8001/challenges/${challengeId}/board`,
+          method: 'put',
+          url: `http://localhost:8001/challenges/${challengeId}/board/${id}`,
           headers: { 'Content-type': 'multipart/form-data' },
           data: formData,
         });
+        console.log(resp);
+        console.log(data);
         if (resp.data.status === 501) {
           Swal.fire({
             title: '이메일 중복', // Alert 제목
@@ -64,7 +64,7 @@ function ChallengesCommunityInsertBody() {
             icon: 'error', // Alert 타입
           });
         }
-        navigate(`/challenges/${challengeId}/board`);
+        navigate(`/challenges/${challengeId}/board/${id}`);
       } catch (error) {
         console.error(error);
       }
@@ -75,6 +75,11 @@ function ChallengesCommunityInsertBody() {
 
   useEffect(() => {
     getChallengeDetail(challengeId);
+    if (challengesBoard[0]) {
+      setValue('title', challengesBoard[0]?.title);
+      setValue('category', challengesBoard[0]?.category);
+      setValue('contents', challengesBoard[0]?.contents);
+    }
   }, [challengeId]);
 
   return (
@@ -87,13 +92,35 @@ function ChallengesCommunityInsertBody() {
                 <tr>
                   <td>제목</td>
                   <td>
-                    <input type="text" className="form-control" {...register('title')} />
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="title"
+                      name="title"
+                      {...register('title', {
+                        required: {
+                          value: true,
+                          message: '제목을 입력해주세요',
+                        },
+                      })}
+                    />
+                    <span style={{ color: 'orange' }} className="fs-5">
+                      {errors.title?.message}
+                    </span>
                   </td>
                 </tr>
                 <tr>
                   <td>카테고리</td>
                   <td>
-                    <select className="form-select" {...register('category')} defaultValue="자유">
+                    <select
+                      className="form-select"
+                      {...register('category', {
+                        required: {
+                          value: true,
+                          message: '카테고리를 입력해주세요',
+                        },
+                      })}
+                      defaultValue="자유">
                       <option value="">카테고리 선택</option>
                       <option value="공지사항">공지사항</option>
                       <option value="자유">자유</option>
@@ -103,7 +130,21 @@ function ChallengesCommunityInsertBody() {
                 <tr>
                   <td>내용</td>
                   <td>
-                    <textarea cols="80" rows="10" className="form-control" {...register('contents')}></textarea>
+                    <textarea
+                      cols="80"
+                      rows="10"
+                      className="form-control"
+                      id="contents"
+                      name="contents"
+                      {...register('contents', {
+                        required: {
+                          value: true,
+                          message: '내용을 반드시 입력해주세요',
+                        },
+                      })}></textarea>
+                    <span style={{ color: 'orange' }} className="fs-5">
+                      {errors.contents?.message}
+                    </span>
                   </td>
                 </tr>
                 <tr>
@@ -120,7 +161,7 @@ function ChallengesCommunityInsertBody() {
                     <button
                       type="button"
                       className="btn btn-outline-secondary"
-                      onClick={() => navigate(`/challenges/${challengeId}/board`)}>
+                      onClick={() => navigate(`/challenges/${challengeId}/board/${id}`)}>
                       취소
                     </button>
                   </td>
@@ -134,4 +175,4 @@ function ChallengesCommunityInsertBody() {
   );
 }
 
-export default ChallengesCommunityInsertBody;
+export default ChallengesCommunityUpdateBody;

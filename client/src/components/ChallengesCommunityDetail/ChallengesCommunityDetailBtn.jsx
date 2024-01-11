@@ -12,11 +12,12 @@ function ChallengesCommunityDetailBtn() {
   const challengesBoardDetail = useRecoilValue(challengesBoardState);
   const { getChallengeBoardDetail } = useRecoilValue(challengesListSelector);
 
-  //   const deleteEvent = useCallback(async data => {
-  //     try {
-  //         const resp = await deleteChallengeBoardComment(challengeId, id, data)
-  //     }
-  //   })
+  // const deleteEvent = useCallback(async data => {
+  //   try {
+  //       const resp = await deleteChallengeBoardComment(id)
+  //   }
+  // })
+
   useEffect(() => {
     async function fetchData() {
       await getChallengeBoardDetail(challengeId, id);
