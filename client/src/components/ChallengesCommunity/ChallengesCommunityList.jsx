@@ -25,7 +25,7 @@ function ChallengesCommunityList() {
   });
 
   const [page, setPage] = useState(1);
-  const itemsPerPage = 10; // 페이지당 항목 수
+  const itemsPerPage = 5; // 페이지당 항목 수
   const totalItems = filteredBoardList.length; // 총 항목 수
 
   const handlePageChange = page => {

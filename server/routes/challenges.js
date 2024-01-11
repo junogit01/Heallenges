@@ -10,8 +10,11 @@ const challengesCommunityDAO = require('../models/challengesCommunityDAO');
 
 const uploadName = multer({
   storage: multer.diskStorage({
-    destination: (req, file, cb) =>
+    destination: (req, file, cb) => {
       cb(null, path.join(__dirname, '..', 'public', 'images', 'challenges', 'community')),
+        console.log('Hello world');
+    },
+
     filename: (req, file, cb) => cb(null, `${Date.now()}_${file.originalname}`),
   }),
   limits: { fileSize: 1024 * 1024 * 3 },
