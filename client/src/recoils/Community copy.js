@@ -40,16 +40,7 @@ export const searchKeywordState = atom({
 
 export const communityListSelector = selector({
   key: 'community/communitySelector',
-  get: ({ get }) => {
-    const searchKeyword = get(searchKeywordState);
-    const allPosts = get(communityListState);
-
-    // 검색어가 비어 있으면 전체 게시물 반환
-    if (!searchKeyword) {
-      return allPosts;
-    }
-
-    // 검색어가 포함된 게시물 필터링
-    return allPosts.filter(post => post.title.toLowerCase().includes(searchKeyword.toLowerCase()));
+  get: () => {
+    return {};
   },
 });

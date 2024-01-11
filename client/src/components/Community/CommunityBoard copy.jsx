@@ -1,11 +1,9 @@
 /* eslint-disable no-undef */
+import React, { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { communityListState } from '@recoils/Community';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import React, { useState, useCallback } from 'react';
-import { useRecoilValue } from 'recoil';
-// import { communityListState } from '@recoils/Community';
-import { searchKeywordState } from '@recoils/Community';
-import { communityListSelector } from '@recoils/Community';
 
 const getCategoryName = categoryNumber => {
   // 카테고리 번호에 따라 카테고리 이름 반환
@@ -23,23 +21,7 @@ const getCategoryName = categoryNumber => {
 
 const CommunityBoard = () => {
   // Recoil 상태로부터 전체 게시물 목록 가져오기
-  const allPosts = useRecoilValue(communityListSelector);
-  const searchKeyword = useRecoilValue(searchKeywordState); // Use useRecoilValue directly
-
-  const [CommunitySearch, setCommunitySearch] = useState({
-    data: [],
-  });
-
-  const getCommunitySearch = useCallback(async () => {
-    try {
-      const resp = await (searchKeyword
-        ? axios.get('http://localhost:8001/community/search', { params: { keyword: searchKeyword } })
-        : axios.get('http://localhost:8001/community'));
-      setCommunitySearch(resp.data);
-    } catch (error) {
-      console.error('Error fetching rank:', error);
-    }
-  }, [searchKeyword]);
+  const allPosts = useRecoilValue(communityListState);
 
   // 현재 페이지와 페이지 당 표시할 게시물 수 설정
   const [currentPage, setCurrentPage] = useState(1);

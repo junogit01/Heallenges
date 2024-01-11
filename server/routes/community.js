@@ -19,43 +19,49 @@ const uploadName = multer({
 });
 
 // 게시물 입력: POST /
-router.post('/', (req, res) => {
-  const data = req.body;
-  communityDAO.insert(data, (resp) => {
-    res.json(resp);
-  });
+router.post('/', uploadName.single('image'), async (req, res, next) => {
+  try {
+    const data = JSON.parse(req.body.data);
+    console.log(data);
+
+    const Image = req.file ? `${imageUploadPath}${req.file.filename}` : ``;
+    const insertData = {
+      ...data,
+      Image,
+    };
+
+    // console.log(Image);
+    console.log('Inserting data:', insertData);
+
+    communityDAO.insert(insertData, (resp) => {
+      res.json(resp);
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
-// router.post('/', uploadName.single('data'), async (req, res, next) => {
-//   try {
-//     const data = JSON.parse(req.body.data || '{}');
-//     const Image = req.file
-//       ? `${imageUploadPath}${req.file.filename}`
-//       : `${imageUploadPath}no_image.jpg`;
-
-//     const address = data.address || {};
-
-//     const insertData = {
-//       ...data,
-//       Image,
-//     };
-
-//     communityDAO.insert(insertData, (resp) => {
-//       res.json(resp);
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
-
 // 게시물 수정: PUT /:id
-router.put('/:id', async (req, res) => {
-  // console.log('server', req.body);
-  const data = req.body;
-  data.id = req.params.id; // 게시물 ID를 URL에서 가져와서 데이터에 추가
-  communityDAO.update(data, (resp) => {
-    res.json(resp);
-  });
+router.put('/:id', uploadName.single('image'), async (req, res, next) => {
+  try {
+    const data = JSON.parse(req.body.data);
+    console.log(data);
+
+    const Image = req.file ? `${imageUploadPath}${req.file.filename}` : ``;
+    const updateData = {
+      ...data,
+      Image,
+    };
+
+    // console.log(Image);
+    console.log('updating data:', updateData);
+
+    communityDAO.update(updateData, (resp) => {
+      res.json(resp);
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // 게시물 삭제: DELETE /:id
