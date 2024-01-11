@@ -1,94 +1,93 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 import moment from 'moment';
 import { useRecoilValue, useRecoilCallback } from 'recoil';
-import axios from 'axios';
 import { loginState } from '@recoils/login';
 import { communityCommentState } from '@recoils/Community';
 
 const Comment = ({ comments }) => {
   // console.log(comments);
 
+  // 로그인한 아이디와 댓글의 유저 아이디 확인
   const loginUser = useRecoilValue(loginState);
-  const deleteComment = useRecoilCallback(({ snapshot, set }) => async commentId => {
+  const isCommentOwner = comment => {
+    const isOwner = loginUser.id === comment.user_id;
+
+    return isOwner;
+  };
+
+  const deleteComment = useRecoilCallback(({ set }) => async commentId => {
     try {
       // 서버에 DELETE 요청 보내기
       await axios.delete(`http://localhost:8001/community/comment/${commentId}`);
 
       // 리코일 상태 업데이트
-      const commentsSnapshot = await snapshot.getPromise(communityCommentState);
-      const updatedComments = commentsSnapshot.filter(comment => comment.comment_id !== commentId);
+      const updatedComments = comments.filter(comment => comment.comment_id !== commentId);
       set(communityCommentState, updatedComments);
 
-      // 다시 로드하고 싶다면
-      // await getComments(postId);
+      // 삭제 성공 시 SweetAlert2를 사용하여 메시지 표시
+      Swal.fire({
+        title: '댓글 삭제',
+        text: '댓글이 성공적으로 삭제되었습니다.',
+        icon: 'success',
+      });
     } catch (error) {
-      console.error('Error deleting comment:', error);
+      // console.error('Error deleting comment:', error);
+
+      // 삭제 실패 시 SweetAlert2를 사용하여 에러 메시지 표시
+      Swal.fire({
+        title: '댓글 삭제 실패',
+        text: '댓글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.',
+        icon: 'error',
+      });
     }
   });
 
-  // const commentUser = useRecoilValue(communityCommentState);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const commentsPerPage = 5;
-  const totalComments = comments.length;
-  const totalPages = Math.ceil(totalComments / commentsPerPage);
-  const maxVisiblePages = 10;
-
-  // const isCommentOwner = comment => {
-  //   const isOwner = loginUser.id === comment.user_id;
-  //   console.log(
-  //     'loginUser.id:',
-  //     loginUser.id,
-  //     'comment.user_id:',
-  //     // commentUser.user_id,
-  //     'isOwner:',
-  //     isOwner,
-  //   );
-  //   return isOwner;
-  // };
-
-  const isCommentOwner = comment => {
-    const isOwner = loginUser.id === comment.user_id;
-    // console.log(comment);
-    // console.log(
-    //   'loginUser.id:',
-    //   loginUser.id,
-    //   'comment.user_id:',
-    //   comment.user_id, // 수정된 부분
-    //   'isOwner:',
-    //   isOwner,
-    // );
-    return isOwner;
-  };
-
   const handleDeleteComment = commentId => {
-    // 댓글 삭제 처리 로직을 여기에 추가
     deleteComment(commentId);
-    console.log(`Delete comment with id ${commentId}`);
+    // console.log(`Delete comment with id ${commentId}`);
   };
+
+  // 댓글 페이지로 표시에 필요한 상태들을 초기화
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 번호
+  const commentsPerPage = 5; // 1페이지 당 표시될 댓글 수
+  const totalComments = comments.length; // 전체 댓글 수
+  const totalPages = Math.ceil(totalComments / commentsPerPage); // 전체 페이지 수
+  const maxVisiblePages = 10; // 한 번에 보여질 최대 페이지 수
 
   let startPage;
   let endPage;
 
+  // 전체 페이지 수가 maxVisiblePages 이하일 때, startPage와 endPage를 설정
   if (totalPages <= maxVisiblePages) {
     startPage = 1;
     endPage = totalPages;
   } else {
+    // 한 번에 보여질 페이지 수의 절반을 계산
     const halfVisiblePages = Math.floor(maxVisiblePages / 2);
 
+    // (1~5) 현재 페이지가 화면에 5 이하의 페이지에 위치할 때
     if (currentPage <= halfVisiblePages) {
       startPage = 1;
       endPage = maxVisiblePages;
-    } else if (currentPage + halfVisiblePages >= totalPages) {
+    }
+    // (~끝) 현재 페이지가 끝 페이지의 - 5에 위치할 때
+    else if (currentPage + halfVisiblePages >= totalPages) {
       startPage = totalPages - maxVisiblePages + 1;
       endPage = totalPages;
+      // (그 외)
     } else {
-      startPage = currentPage - halfVisiblePages;
+      startPage = currentPage - halfVisiblePages + 1;
       endPage = currentPage + halfVisiblePages;
     }
   }
 
-  const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
+  // 화면에 보여질 페이지 번호 배열 생성
+  // pagenumshow 없으면 NaN만 나옴 있어야 1~10 이러고 숫자 표시됨
+  const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (pagenumshow, index) => startPage + index);
+
+  // 현재 페이지에 해당하는 댓글 목록 가져오기
   const currentComments = comments.slice((currentPage - 1) * commentsPerPage, currentPage * commentsPerPage);
 
   const renderComments = currentComments.map((comment, index) => (
@@ -106,7 +105,7 @@ const Comment = ({ comments }) => {
           <div className="ms-3">
             <div className="fw-bold">{comment.nickname || '사용자 없음'}</div>
             <p>{comment.contents}</p>
-            {/* 대댓글 기능인데 현재 쓰지 않음 */}
+            {/* 대댓글 기능인데 쓸지 안쓸지 몰라서 보류 */}
             {/* {comment.children && comment.children.length > 0 && (
               <div className="ms-4">
                 {comment.children.map((childComment, childIndex) => (
@@ -149,8 +148,11 @@ const Comment = ({ comments }) => {
     </div>
   ));
 
+  // renderPageNumbers 변수는 페이지 네비게이션의 각 페이지 번호를 렌더링하는데 사용
   const renderPageNumbers = pageNumbers.map(number => (
+    // 각 페이지 번호에 대한 <li> 요소를 생성.
     <li key={number} className={`page-item ${number === currentPage ? 'active' : ''}`}>
+      {/* 페이지 번호를 클릭할 때 해당 페이지로 이동하도록 onClick 이벤트 설정 */}
       <button className="page-link" onClick={() => paginate(number)}>
         {number}
       </button>
@@ -158,8 +160,11 @@ const Comment = ({ comments }) => {
   ));
 
   const paginate = pageNumber => {
+    // 새로운 페이지 번호를 계산
     const newPage = pageNumber < 1 ? 1 : pageNumber > totalPages ? totalPages : pageNumber;
+    // 계산된 페이지 번호로 현재 페이지를 업데이트
     setCurrentPage(newPage);
+    // console.log('newPage', newPage);
   };
 
   return (
