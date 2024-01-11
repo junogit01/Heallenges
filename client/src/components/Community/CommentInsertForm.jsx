@@ -73,7 +73,7 @@ function CommentInsertForm() {
           icon: 'success',
         });
 
-        navigate(`/community/${id}`, { replace: true });
+        window.location.replace(`/community/${id}`);
       } else {
         // 응답이 정상적으로 처리되지 않았다면 실패 알림 표시
         Swal.fire({

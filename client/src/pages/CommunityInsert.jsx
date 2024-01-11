@@ -45,6 +45,16 @@ function CommunityInsert() {
         return;
       }
 
+      // 사용자가 공지 게시판에 글을 작성할 권한이 있는지 확인
+      if (data.category === '공지 게시판' && loginUser.email !== 'admin@naver.com') {
+        Swal.fire({
+          title: '권한 없음',
+          text: '공지 게시판 글은 관리자만 작성할 수 있습니다.',
+          icon: 'error',
+        });
+        return;
+      }
+
       // 유저아이디, 제목, 내용, 카테고리 이미지 추가
       const formData = new FormData();
       formData.append(
@@ -115,7 +125,7 @@ function CommunityInsert() {
                   <tr>
                     <td>이미지 첨부</td>
                     <td>
-                      <input type="file" className="form-control" {...register('image')} />
+                      <input type="file" accept="image/*" className="form-control" {...register('image')} />
                     </td>
                   </tr>
                   <tr>
