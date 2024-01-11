@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import React, { useState, useCallback } from 'react';
 import { useRecoilValue } from 'recoil';
-// import { communityListState } from '@recoils/Community';
-import { searchKeywordState } from '@recoils/Community';
+import { CommunitysearchKeywordState } from '@recoils/Community';
 import { communityListSelector } from '@recoils/Community';
 
 const getCategoryName = categoryNumber => {
@@ -24,12 +23,13 @@ const getCategoryName = categoryNumber => {
 const CommunityBoard = () => {
   // Recoil 상태로부터 전체 게시물 목록 가져오기
   const allPosts = useRecoilValue(communityListSelector);
-  const searchKeyword = useRecoilValue(searchKeywordState); // Use useRecoilValue directly
+  const searchKeyword = useRecoilValue(CommunitysearchKeywordState);
 
-  const [CommunitySearch, setCommunitySearch] = useState({
+  const [communitySearch, setCommunitySearch] = useState({
     data: [],
   });
 
+  // 검색
   const getCommunitySearch = useCallback(async () => {
     try {
       const resp = await (searchKeyword
@@ -40,6 +40,14 @@ const CommunityBoard = () => {
       console.error('Error fetching rank:', error);
     }
   }, [searchKeyword]);
+
+  // 검색 버튼 클릭 시 호출되는 함수
+  const handleSearchButtonClick = () => {
+    getCommunitySearch(); // 검색 결과를 가져오는 함수 호출
+  };
+
+  // 검색 결과를 사용하여 목록을 필터링
+  const filteredPosts = communitySearch.data.length > 0 ? communitySearch.data : allPosts;
 
   // 현재 페이지와 페이지 당 표시할 게시물 수 설정
   const [currentPage, setCurrentPage] = useState(1);
@@ -99,7 +107,7 @@ const CommunityBoard = () => {
   return (
     <div className="card mb-4">
       <div className="mt-3">
-        <h3>게시판 목록</h3>
+        <h3>&nbsp;게시판 목록</h3>
       </div>
 
       {/* 게시물 목록을 표시하는 테이블 */}

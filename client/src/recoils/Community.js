@@ -33,7 +33,7 @@ export const communityCommentState = atom({
   default: [],
 });
 
-export const searchKeywordState = atom({
+export const CommunitysearchKeywordState = atom({
   key: 'searchKeyword',
   default: '',
 });
@@ -41,7 +41,7 @@ export const searchKeywordState = atom({
 export const communityListSelector = selector({
   key: 'community/communitySelector',
   get: ({ get }) => {
-    const searchKeyword = get(searchKeywordState);
+    const searchKeyword = get(CommunitysearchKeywordState);
     const allPosts = get(communityListState);
 
     // 검색어가 비어 있으면 전체 게시물 반환

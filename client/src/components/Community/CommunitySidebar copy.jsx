@@ -3,10 +3,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import { CommunitysearchKeywordState } from '@recoils/Community';
+import { searchKeywordState } from '@recoils/Community';
 
 function CommunitySidebar() {
-  const [searchKeyword, setSearchKeyword] = useRecoilState(CommunitysearchKeywordState);
+  const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
 
   return (
     <div className="col-lg-3">

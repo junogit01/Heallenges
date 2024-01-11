@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import moment from 'moment';
+import { useParams } from 'react-router-dom';
 import { useRecoilValue, useRecoilCallback } from 'recoil';
 import { loginState } from '@recoils/login';
 import { communityCommentState } from '@recoils/Community';
 
 const Comment = ({ comments }) => {
-  // console.log(comments);
+  // 게시물 아이디 확인 및 댓글 삭제에 사용
+  const { id } = useParams();
 
   // 로그인한 아이디와 댓글의 유저 아이디 확인
   const loginUser = useRecoilValue(loginState);
@@ -32,6 +34,7 @@ const Comment = ({ comments }) => {
         text: '댓글이 성공적으로 삭제되었습니다.',
         icon: 'success',
       });
+      window.location.replace(`/community/${id}`);
     } catch (error) {
       // console.error('Error deleting comment:', error);
 

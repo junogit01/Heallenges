@@ -42,7 +42,7 @@ const sql = {
                     WHERE c.category = ?
                     ORDER BY c.created_at DESC`,
   // 게시판 상세보기(닉네임 댓글 등)
-  board: `SELECT b.id, b.user_id, u.nickname, b.title, b.contents, b.created_at, b.like_cnt, b.view_cnt, b.Image 
+  board: `SELECT b.id, b.user_id, u.nickname, b.title, b.contents, b.created_at, b.like_cnt, b.view_cnt, b.Image, b.category 
           FROM community b
             JOIN user u ON b.user_id = u.id
             LEFT JOIN community_likes l ON b.id = l.post_id
@@ -88,7 +88,7 @@ const sql = {
                       c.like_cnt AS like_cnt
                     FROM community c
                     LEFT JOIN user u ON c.user_id = u.id 
-                    WHERE title LIKE '%?%'`,
+                    WHERE title LIKE CONCAT('%',?,'%')`,
 };
 
 const communityDAO = {
