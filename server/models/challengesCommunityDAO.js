@@ -17,10 +17,9 @@ const sql = {
                 FROM challenges c
                 JOIN challenge_community m ON c.id = m.challenge_id
                 JOIN user u ON m.user_id = u.id
-                WHERE c.id = ?
-                LIMIT ?, ?`,
+                WHERE c.id = ?`,
   // 커뮤니티 게시글 상세 조회
-  challengeBoardDetail: `SELECT c.title, c.contents, u.name, c.view_cnt, DATE_FORMAT(c.created_at, '%Y-%m-%d %h-%i-%s') as created, c.image, c.id
+  challengeBoardDetail: `SELECT c.title, c.contents, u.name, c.view_cnt, DATE_FORMAT(c.created_at, '%Y-%m-%d %h-%i-%s') as created, c.image, c.id, u.id as user_id
             FROM challenge_community c
             JOIN challenges ON c.challenge_id = challenges.id
             JOIN user u ON c.user_id = u.id
@@ -122,6 +121,7 @@ const challengesCommunityDAO = {
 
   // 도전 게시글 작성
   challengeBoardInsert: async (item, callback) => {
+    console.log(item);
     const { title, contents, image, category, challenge_id, user_id } = item;
     let conn = null;
     try {

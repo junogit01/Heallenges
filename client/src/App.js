@@ -19,6 +19,7 @@ import Challenges from '@pages/Challenges';
 import ChallengeDetail from '@pages/ChallengeDetail';
 import ChallengeCommunity from '@pages/ChallengeCommunity';
 import ChallengeCommunityDetail from '@pages/ChallengeCommunityDetail';
+import ChallengeCommunityInsert from '@pages/ChallengeCommunityInsert';
 // import ChallengeAdd from '@components/Challenge/ChallengeAdd';
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
         <Route path="/challenges/:id" element={<ChallengeDetail />} />
         <Route path="/challenges/:id/board" element={<ChallengeCommunity />} />
         <Route path="/challenges/:challengeId/board/:id" element={<ChallengeCommunityDetail />} />
+        <Route path="/challenges/:challengeId/board/insert" element={<ChallengeCommunityInsert />} />
       </Route>
     </Routes>
   );

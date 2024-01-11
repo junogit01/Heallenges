@@ -10,20 +10,20 @@ import {
   deleteChallengeBoardComment,
 } from '@recoils/challenge';
 import { userState } from '@recoils/users';
-// import './Pagination.css';
 import Pagination from 'react-js-pagination';
 import one from './Paging.module.css';
+import { loginState } from '@recoils/login';
 
 function ChallengesCommunityDetailComment() {
   const { challengeId, id } = useParams();
   const navigate = useNavigate();
-  const user = useRecoilValue(userState);
+  const loginUser = useRecoilValue(loginState);
   const board = useRecoilValue(challengesBoardState);
   const commentList = useRecoilValue(challengesBoardCommentState);
 
   const { insertChallengeBoardComment, getChallengeBoardDetail, deleteChallengeBoardComment } =
     useRecoilValue(challengesListSelector);
-  console.log();
+
   const {
     register,
     handleSubmit,
@@ -32,7 +32,7 @@ function ChallengesCommunityDetailComment() {
   } = useForm({
     defaultValues: {
       post_id: board[0].id,
-      user_id: user.data[0].id,
+      user_id: loginUser.id,
       contents: '',
     },
   });
@@ -42,19 +42,9 @@ function ChallengesCommunityDetailComment() {
       try {
         const resp = await insertChallengeBoardComment(challengeId, id, data);
         if (resp.data.status === '200') {
-          Swal.fire({
-            title: '댓글 작성 완료',
-            text: '',
-            icon: 'success',
-          });
           navigate('/');
         }
       } catch (error) {
-        Swal.fire({
-          title: '댓글 작성 중 에러 발생',
-          text: '다시 시도해주십시오',
-          icon: 'error',
-        });
         window.location.replace(`/challenges/${challengeId}/board/${id}`);
       }
     },

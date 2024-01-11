@@ -12,8 +12,7 @@ function ChallengesCommunityInsertHead() {
 
   useEffect(() => {
     getChallengeDetail(challengeId);
-    getChallengeBoardDetail(challengeId, id);
-  }, [challengeId, id]);
+  }, [challengeId]);
 
   return (
     <nav className="navbar navbar-light bg-light">

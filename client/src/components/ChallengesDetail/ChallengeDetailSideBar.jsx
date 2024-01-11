@@ -27,22 +27,12 @@ function ChallengesDetailSideBar() {
               <ul className="list-unstyled mb-0">
                 <li>
                   <h4>
-                    <Link to={`/challenges/${id}/board`}>전체 게시글</Link>
+                    <Link to={`/challenges/${id}/board`}>도전</Link>
                   </h4>
                 </li>
                 <li>
                   <h4>
-                    <Link to={`/challenges/${id}/board`}>공지사항</Link>
-                  </h4>
-                </li>
-                <li>
-                  <h4>
-                    <Link to={`/challenges/${id}/board`}>자유</Link>
-                  </h4>
-                </li>
-                <li>
-                  <h4>
-                    <Link to="/challenges/:id/board">인증</Link>
+                    <Link to={`/challenges/${id}/board`}>커뮤니티</Link>
                   </h4>
                 </li>
               </ul>
@@ -64,7 +54,7 @@ function ChallengesDetailSideBar() {
       <div className="card mb-4">
         <div className="card-header fs-3">글쓰기</div>
         <div className="card-body">
-          <Link to="/community/write" className="btn btn-primary">
+          <Link to={`/challenges/${id}/board/insert`} className="btn btn-primary">
             게시글 작성
           </Link>
         </div>
