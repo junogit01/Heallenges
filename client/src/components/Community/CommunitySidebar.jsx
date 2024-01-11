@@ -2,8 +2,12 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { searchKeywordState } from '@recoils/Community';
 
 function CommunitySidebar() {
+  const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
+
   return (
     <div className="col-lg-3">
       {/* Search widget */}
@@ -12,10 +16,12 @@ function CommunitySidebar() {
         <div className="card-body">
           <form action="" className="input-group">
             <input
-              type="text"
+              type="search"
               className="form-control"
               placeholder="검색할 내용을 작성해주세요"
               aria-label="Enter search term..."
+              value={searchKeyword}
+              onChange={e => setSearchKeyword(e.target.value)}
             />
             <button className="btn btn-primary" type="submit">
               검색

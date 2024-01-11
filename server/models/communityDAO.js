@@ -99,7 +99,13 @@ const communityDAO = {
     try {
       conn = await pool.getConnection(); // db 접속
       conn.beginTransaction();
-      const [data] = await conn.query(sql.insert, [user_id, category, title, contents, Image]);
+      const [data] = await conn.query(sql.insert, [
+        Number(user_id),
+        category,
+        title,
+        contents,
+        Image,
+      ]);
       conn.commit();
       callback({
         status: 200,

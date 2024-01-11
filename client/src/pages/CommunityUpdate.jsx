@@ -1,84 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { loginState } from '@recoils/login';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useRecoilCallback, useRecoilValue } from 'recoil';
-import { communityListSelector } from '@recoils/Community';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 import CommunityHeader from '../components/Community/CommunityHeader';
+import { useRecoilValue, useRecoilState } from 'recoil';
+import { loginState } from '@recoils/login';
+import { communityListState, communityState } from '@recoils/Community';
 
 function CommunityUpdate() {
   const navigate = useNavigate();
+
+  // 게시물아이디(http://localhost:3000/community/177(여기))를 가져오기 위해 사용
   const { id } = useParams();
-  const loginUser = useRecoilValue(loginState);
 
   // 로그인이 안되면 로그인페이지로 이동
-  if (loginUser?.id === '' && loginUser?.email === '') navigate('/login');
+  const loginUser = useRecoilValue(loginState);
+  if (!loginUser.id && !loginUser.email) navigate('/login');
 
-  const user = useRecoilValue(loginState);
-  const [community, setCommunity] = useState({
-    id: Number(id),
-    user_id: '',
-    title: '',
-    category: '',
-    contents: '',
-    Image: '',
-  });
+  // React Hook Form의 userForm 사용
+  const { register, handleSubmit, setValue } = useForm();
 
-  const { getCommunityById, updateCommunity } = useRecoilValue(communityListSelector);
+  // Recoil 상태 가져오기
+  // communityListState는 게시물리스트 불러오기 위해 사용
+  // (여기선 카테고리 값을 뽑기 위해서 사용)
+  const allPosts = useRecoilValue(communityListState);
+  // console.log(allPosts);
 
+  // communityState로 기존 게시물에 작성된 값을 가져오기 위해 사용(이상하게 카테고리만 안 나옴)
+  const [community, setCommunity] = useRecoilState(communityState(id));
+  // console.log('community', community);
+
+  // 폼 초기값 설정
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // 서버에서 데이터 가져오기
-        const data = await getCommunityById(id);
-        setCommunity(data);
-      } catch (error) {
-        console.error('Error while fetching community data:', error);
+    // 현재 게시물의 카테고리 번호를 가져오기
+    const currentPost = allPosts.find(post => post.id === Number(id));
+    const currentCategoryNumber = currentPost ? currentPost.category : null;
+    // console.log(currentCategoryNumber);
+
+    // 순서대로 기존 게시물에 있던 title, category, contents, Image 값 호출
+    if (community && community.board) {
+      setValue('title', community.board.title);
+      setValue('category', getCategoryString(currentCategoryNumber));
+      setValue('contents', community.board.contents);
+      if (community.board.Image) {
+        const imageFileName = community.board.Image;
+        setValue('image', imageFileName);
+        // 콘솔은 나오는데 화면에 어떻게 연동하는지 모르겠음(코드 수정 필요)
+        console.log('Community Image:', imageFileName);
       }
-    };
+    }
+  }, [community, setValue, allPosts, id]);
 
-    // 컴포넌트가 마운트될 때 데이터 가져오기
-    fetchData();
-  }, [id, getCommunityById]);
-
-  const changeBoard = e => {
-    const { name, value } = e.target;
-    setCommunity(prevCommunity => ({ ...prevCommunity, [name]: value }));
-  };
-
-  const handleImageChange = e => {
-    const file = e.target.files[0];
-    setCommunity(prevCommunity => ({ ...prevCommunity, Image: file }));
-  };
-
-  const handleSubmit = useRecoilCallback(
-    ({ set }) =>
-      async evt => {
-        evt.preventDefault();
-        try {
-          // 제목과 내용이 비어있는지 확인
-          if (!community.title || !community.contents) {
-            alert('제목과 내용을 입력해주세요.'); // 또는 다른 사용자 피드백 방식 사용
-            return;
-          }
-          // console.log(community);
-
-          const newData = {
-            ...community,
-            user_id: user.id && String(user.id), // 유효한 ID로 변환
-            category: getCategoryValue(community.category),
-          };
-
-          // id 값을 추가하여 업데이트 요청을 보냄(호출이 안 됨)
-          await updateCommunity(newData);
-
-          navigate('/community');
-        } catch (error) {
-          console.error('Error while updating community:', error);
-        }
-      },
-    [community, updateCommunity, user.id, navigate],
-  );
-
+  // 카테고리 값을 변경해주는 함수 / 프론트(한글) -> 노드(숫자)
   const getCategoryValue = categoryName => {
     switch (categoryName) {
       case '공지 게시판':
@@ -91,37 +65,84 @@ function CommunityUpdate() {
         return 2;
     }
   };
+  // 카테고리 값을 변경해주는 함수 / 노드(숫자) -> 프론트(한글)
+  const getCategoryString = categoryNumber => {
+    switch (categoryNumber) {
+      case 1:
+        return '공지 게시판';
+      case 2:
+        return '자유 게시판';
+      case 3:
+        return '문의 게시판';
+      default:
+        return '자유 게시판';
+    }
+  };
+
+  // 폼 제출 시 실행되는 함수 (데이터를 서버로 전송)
+  const onSubmit = async data => {
+    try {
+      // 폼 유효성 검사
+      if (!data.title || !data.contents) {
+        // 필수 필드가 비어있는 경우
+        Swal.fire({
+          title: '입력 오류',
+          text: '제목과 내용은 필수 입력 사항입니다.',
+          icon: 'error',
+        });
+        return;
+      }
+
+      // 유저아이디, 제목, 내용, 카테고리 이미지 추가
+      const formData = new FormData();
+      formData.append('data', JSON.stringify({ ...data, category: getCategoryValue(data.category), id: id }));
+      formData.append('image', data.image[0]);
+      // console.log(data);
+
+      // back으로 이동
+      const resp = await axios.put('http://localhost:8001/community/:id', formData, {
+        headers: { 'Content-type': 'multipart/form-data' },
+      });
+
+      if (resp.data.status === 200) {
+        Swal.fire({
+          title: '게시물 수정',
+          text: '게시물이 수정 되었습니다.',
+          icon: 'success',
+        });
+        // 글 작성 성공 시 http://localhost:3000/community/id로 이동
+        navigate('/community/' + id);
+      } else {
+        Swal.fire({
+          title: '게시물 수정 실패',
+          text: '다시 시도해주세요.',
+          icon: 'error',
+        });
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   return (
     <main id="main">
-      {/* Breadcrumbs 부분 */}
       <CommunityHeader />
       <section className="property-grid grid">
         <div className="container">
           <div className="row">
-            <form className="col-sm-12">
+            <form className="col-sm-12" onSubmit={handleSubmit(onSubmit)}>
               <table className="table">
                 <tbody>
                   <tr>
-                    <td>타이틀</td>
+                    <td>제목</td>
                     <td>
-                      <input
-                        type="text"
-                        className="form-control"
-                        name="title"
-                        value={community.title}
-                        onChange={changeBoard}
-                      />
+                      <input type="text" className="form-control" {...register('title')} />
                     </td>
                   </tr>
                   <tr>
                     <td>카테고리</td>
                     <td>
-                      <select
-                        name="category"
-                        className="form-select"
-                        value={community.category || '자유 게시판'}
-                        onChange={changeBoard}>
+                      <select className="form-select" {...register('category')} defaultValue="자유 게시판">
                         <option value="">카테고리 선택</option>
                         <option value="공지 게시판">공지 게시판</option>
                         <option value="자유 게시판">자유 게시판</option>
@@ -132,30 +153,24 @@ function CommunityUpdate() {
                   <tr>
                     <td>내용</td>
                     <td>
-                      <textarea
-                        cols="80"
-                        rows="10"
-                        name="contents"
-                        className="form-control"
-                        value={community.contents}
-                        onChange={changeBoard}></textarea>
+                      <textarea cols="80" rows="10" className="form-control" {...register('contents')}></textarea>
                     </td>
                   </tr>
                   <tr>
                     <td>이미지 첨부</td>
                     <td>
-                      <input type="file" name="image" accept="image/*" onChange={handleImageChange} />
+                      <input type="file" className="form-control" {...register('image')} />
                     </td>
                   </tr>
                   <tr>
                     <td colSpan="2" className="text-end">
-                      <button type="submit" className="btn btn-outline-secondary" onClick={handleSubmit}>
+                      <button type="submit" className="btn btn-outline-secondary">
                         입력
                       </button>{' '}
                       <button
                         type="button"
                         className="btn btn-outline-secondary"
-                        onClick={() => navigate('/community')}>
+                        onClick={() => navigate('/community/' + id)}>
                         취소
                       </button>
                     </td>

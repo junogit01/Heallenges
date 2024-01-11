@@ -2,16 +2,17 @@
 import React, { useEffect } from 'react';
 import moment from 'moment';
 
-const Board = ({ user_id, title, nickname, view_cnt, like_cnt, created_at, contents, Image }) => {
+const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created_at, contents, Image }) => {
   useEffect(() => {
     // console.log('Board 컴포넌트가 마운트되었습니다.');
     // console.log(title);
     // console.log(nickname);
+    // console.log(category);
     // console.log(view_cnt);
     // console.log(created_at);
     // console.log(contents);
     // console.log(Image);
-  }, [user_id, title, nickname, view_cnt, like_cnt, created_at, contents, Image]); // 빈 배열을 두어 컴포넌트가 마운트될 때만 실행되도록 설정
+  }, [user_id, title, nickname, category, view_cnt, like_cnt, created_at, contents, Image]); // 빈 배열을 두어 컴포넌트가 마운트될 때만 실행되도록 설정
 
   return (
     // className="card mb-4"
@@ -36,7 +37,7 @@ const Board = ({ user_id, title, nickname, view_cnt, like_cnt, created_at, conte
               </figure>
             )}
 
-            <section className="mb-5" style={{ minHeight: '200px', height: 'auto', overflow: 'hidden' }}>
+            <section className="mb-5" style={{ minHeight: '100px', height: 'auto', overflow: 'hidden' }}>
               <p className="fs-5 mb-4" style={{ overflowY: 'auto' }}>
                 {contents || '내용 없음'}
               </p>

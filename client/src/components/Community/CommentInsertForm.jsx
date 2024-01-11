@@ -1,72 +1,113 @@
-import React, { useState } from 'react';
-import { useRecoilValue, useRecoilCallback } from 'recoil';
-import { useParams, useNavigate } from 'react-router-dom';
+// 코드 다시 정리 해야 될듯
 
+import React, { useState } from 'react';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
+import { useParams, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 import { loginState } from '@recoils/login';
-import { communityListSelector } from '@recoils/Community';
+// import { communityListSelector } from '@recoils/Community';
 
 function CommentInsertForm() {
+  // URL 파라미터에서 게시물 ID 가져오기
   const { id } = useParams();
+
+  // 현재 로그인된 사용자 정보 가져오기
   const loginUser = useRecoilValue(loginState);
+
+  // React Router의 navigate 훅 사용
   const navigate = useNavigate();
 
-  // console.log('Current ID:', id); // 게시물 id
-  // console.log('Current ID:', loginUser.id); // 유저 id
+  // Recoil 셀렉터 가져오기
+  // const insertCommentSelector = communityListSelector.getcommunityList;
 
-  const insertComment = useRecoilValue(communityListSelector).insertComment;
-
+  // 댓글 상태 초기화
   const [comment, setComment] = useState({
     post_id: Number(id),
     user_id: Number(loginUser.id),
     contents: '',
   });
 
+  // 댓글 내용이 변경될 때 호출되는 함수
   const handleChange = event => {
     setComment(prevComment => ({ ...prevComment, contents: event.target.value }));
   };
 
-  const handleSubmit = useRecoilCallback(
+  // 댓글 삽입 콜백 함수 생성
+  const insertCommentCallback = useRecoilCallback(
     ({ set }) =>
-      async event => {
-        event.preventDefault();
-
+      async comment => {
         try {
-          // console.log('댓글 전송 데이터:', comment);
-          const response = await insertComment(comment);
-          // console.log('댓글이 성공적으로 제출되었습니다.', response);
-          // console.log('try문 안에 확인', comment);
+          // 댓글 삽입 API 호출
+          const resp = await axios.post(`http://localhost:8001/community/comment`, comment);
 
-          // 응답이 정상적으로 받아와졌을 때 처리
-          // if (response && response.status === 200) {
-          //   console.log('댓글 등록 성공:', response.message);
-
-          //   // 원하는 작업 수행
-          // } else {
-          //   console.log('댓글 등록 실패:', response.message);
-          //   // 실패한 경우에 대한 처리
-          // }
-          // /posts/${id}
-          navigate(`/community/${id}`, { replace: true });
-        } catch (error) {
-          console.error('댓글 제출 중 오류:', error);
-          if (error.response) {
-            // 서버 응답이 있을 경우 응답 내용을 출력
-            console.error('Server Response:', error.response.data);
+          // 만약 댓글이 속한 게시물의 ID가 존재한다면 해당 게시물을 다시 가져오기
+          if (resp.data.post_id !== undefined) {
+            // await insertCommentSelector();
           }
+
+          return resp.data;
+        } catch (error) {
+          // 댓글 삽입 중 에러가 발생한 경우 콘솔에 로그 출력 및 에러 전파
+          console.error('Error inserting comment:', error);
+          throw error;
         }
       },
-    [comment, insertComment],
+    [],
+    // [insertCommentSelector],
   );
+
+  // 폼 제출 시 호출되는 함수
+  const handleSubmit = async event => {
+    event.preventDefault();
+
+    try {
+      // 댓글 삽입 콜백 함수 호출
+      const response = await insertCommentCallback(comment);
+
+      // 응답이 정상적으로 처리되었다면 성공 알림 표시 및 해당 게시물 페이지로 이동
+      if (response && response.status === 200) {
+        Swal.fire({
+          title: '댓글 입력 성공',
+          text: '댓글이 성공적으로 등록되었습니다.',
+          icon: 'success',
+        });
+
+        navigate(`/community/${id}`, { replace: true });
+      } else {
+        // 응답이 정상적으로 처리되지 않았다면 실패 알림 표시
+        Swal.fire({
+          title: '댓글 입력 실패',
+          text: '댓글 입력에 실패했습니다. 다시 시도해주세요.',
+          icon: 'error',
+        });
+      }
+    } catch (error) {
+      // 댓글 삽입 중 에러가 발생한 경우 오류 알림 표시
+      Swal.fire({
+        title: '오류 발생',
+        text: '댓글 입력 중 오류가 발생했습니다. 다시 시도해주세요.',
+        icon: 'error',
+      });
+
+      // 에러가 서버 응답과 관련된 경우 서버 응답 데이터를 콘솔에 출력
+      if (error.response) {
+        // console.error('Server Response:', error.response.data);
+      }
+    }
+  };
 
   return (
     <form className="mb-4" onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="mb-4"></div>
+      {/* 댓글 내용을 입력하는 textarea */}
       <textarea
         className="form-control"
         rows="3"
         placeholder="댓글을 입력해주세요"
         value={comment.contents}
         onChange={handleChange}></textarea>
+      {/* 댓글 입력 버튼 */}
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
         <button type="submit" className="btn btn-primary">
           입력
@@ -76,4 +117,5 @@ function CommentInsertForm() {
   );
 }
 
+// 컴포넌트를 내보내기
 export default CommentInsertForm;
