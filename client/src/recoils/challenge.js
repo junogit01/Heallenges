@@ -6,7 +6,7 @@ const baseURL = 'http://localhost:8001/challenges';
 // atom
 export const challengesListState = atom({
   key: 'challenges/challengesListState',
-  default: {},
+  default: [],
 });
 
 export const challengesState = atom({
@@ -30,26 +30,17 @@ export const challengesState = atom({
 
 export const challengesBoardListState = atom({
   key: 'challenges/challengesBoardListState',
-  default: {},
+  default: [],
 });
 
 export const challengesBoardState = atom({
   key: 'challenges/challengesBoardState',
-  default: {
-    id: '',
-    title: '',
-    description: '',
-    type: '',
-    total_participants: '',
-    rules: '',
-    start_date: '',
-    end_date: '',
-    created_at: '',
-    status: '',
-    host_id: '',
-    main_image: '',
-    reward: '',
-  },
+  default: [],
+});
+
+export const challengesBoardCommentState = atom({
+  key: 'challenges/challengesBoardCommentState',
+  default: [],
 });
 
 export const challengesListSelector = selector({
@@ -61,7 +52,6 @@ export const challengesListSelector = selector({
     });
     const getChallengeDetail = getCallback(({ set }) => async id => {
       const resp = await axios.get(`${baseURL}/${id}`);
-      // console.log('challenges', resp.data.data);
       set(challengesState, resp.data.data);
     });
 
@@ -84,7 +74,9 @@ export const challengesListSelector = selector({
 
     const getChallengeBoardDetail = getCallback(({ set }) => async (challengeId, postId) => {
       const resp = await axios.get(`${baseURL}/${challengeId}/board/${postId}`);
-      // console.log(resp.data.data);
+      // console.log(resp);
+      set(challengesBoardState, resp.data.data);
+      set(challengesBoardCommentState, resp.data.comment);
     });
 
     const insertChallengeBoard = getCallback(({ set }) => async (challengeId, item) => {
@@ -101,6 +93,7 @@ export const challengesListSelector = selector({
 
     const insertChallengeBoardComment = getCallback(({ set }) => async (challengeId, postId, item) => {
       const resp = await axios.post(`${baseURL}/${challengeId}/board/${postId}`, item);
+      // console.log(resp);
     });
 
     const deleteChallengeBoardComment = getCallback(({ set }) => async (challengeId, postId, id) => {

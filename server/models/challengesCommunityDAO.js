@@ -13,20 +13,20 @@ const sql = {
   // 커뮤니티 조회수 증가
   challengeBoardincCount: `UPDATE challenge_community SET view_cnt = view_cnt + 1 WHERE id = ?`,
   // 커뮤니티 게시글 리스트 조회
-  challengeBoardList: `SELECT m.title, m.view_cnt, u.name, m.id
+  challengeBoardList: `SELECT m.title, m.view_cnt, u.name, u.nickname, m.id, m.category, DATE_FORMAT(m.created_at, '%Y-%m-%d %h-%i-%s') as created, m.image
                 FROM challenges c
                 JOIN challenge_community m ON c.id = m.challenge_id
                 JOIN user u ON m.user_id = u.id
                 WHERE c.id = ?
                 LIMIT ?, ?`,
   // 커뮤니티 게시글 상세 조회
-  challengeBoardDetail: `SELECT c.title, c.contents, u.name, c.view_cnt, DATE_FORMAT(c.created_at, '%Y-%m-%d %h-%i-%s') as created
+  challengeBoardDetail: `SELECT c.title, c.contents, u.name, c.view_cnt, DATE_FORMAT(c.created_at, '%Y-%m-%d %h-%i-%s') as created, c.image, c.id
             FROM challenge_community c
             JOIN challenges ON c.challenge_id = challenges.id
             JOIN user u ON c.user_id = u.id
             WHERE challenges.id = ? and c.id = ?`,
   // 커뮤니티 댓글 조회
-  challengeGetComment: `SELECT m.contents, u.name, m.id
+  challengeGetComment: `SELECT m.contents, m.id, u.profile_image, DATE_FORMAT(m.created_date, '%Y-%m-%d %h-%i-%s') as created, u.nickname
                  FROM challenge_community c
                  JOIN challenge_comment m ON c.id = m.post_id
                  JOIN user u ON m.user_id = u.id
@@ -68,11 +68,9 @@ const challengesCommunityDAO = {
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
-      conn.beginTransaction();
       await conn.query(sql.challengeBoardincCount, [item.id]);
       const [data] = await conn.query(sql.challengeBoardDetail, [item.challengeId, item.id]);
       const [comment] = await conn.query(sql.challengeGetComment, [item.id]);
-      conn.commit();
       callback({
         status: 200,
         message: '게시글 상세 불러오기 성공',
@@ -80,7 +78,6 @@ const challengesCommunityDAO = {
         comment: comment,
       });
     } catch (error) {
-      conn.rollback();
       callback({ status: 500, message: '불러오기 대실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
@@ -150,6 +147,7 @@ const challengesCommunityDAO = {
 
   // 도전 댓글 작성
   challengeInsertComment: async (item, callback) => {
+    console.log(item);
     const { contents, user_id, post_id } = item;
     let conn = null;
     try {

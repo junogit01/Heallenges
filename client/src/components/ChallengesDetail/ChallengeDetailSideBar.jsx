@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function ChallengesDetailSideBar() {
+  const { id } = useParams();
   return (
     <div className="col-lg-3">
       {/* Search widget */}
@@ -26,17 +27,17 @@ function ChallengesDetailSideBar() {
               <ul className="list-unstyled mb-0">
                 <li>
                   <h4>
-                    <Link to="/challenges/:id/board">전체 게시글</Link>
+                    <Link to={`/challenges/${id}/board`}>전체 게시글</Link>
                   </h4>
                 </li>
                 <li>
                   <h4>
-                    <Link to="/challenges/:id/board">공지사항</Link>
+                    <Link to={`/challenges/${id}/board`}>공지사항</Link>
                   </h4>
                 </li>
                 <li>
                   <h4>
-                    <Link to="/challenges/:id/board">자유</Link>
+                    <Link to={`/challenges/${id}/board`}>자유</Link>
                   </h4>
                 </li>
                 <li>
