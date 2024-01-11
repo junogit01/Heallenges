@@ -23,7 +23,7 @@ const getCategoryName = categoryNumber => {
 const CommunityBoard = () => {
   // Recoil 상태로부터 전체 게시물 목록 가져오기
   const allPosts = useRecoilValue(communityListSelector);
-  const searchKeyword = useRecoilValue(CommunitysearchKeywordState);
+  const CommunitysearchKeyword = useRecoilValue(CommunitysearchKeywordState);
 
   const [communitySearch, setCommunitySearch] = useState({
     data: [],
@@ -32,14 +32,14 @@ const CommunityBoard = () => {
   // 검색
   const getCommunitySearch = useCallback(async () => {
     try {
-      const resp = await (searchKeyword
-        ? axios.get('http://localhost:8001/community/search', { params: { keyword: searchKeyword } })
+      const resp = await (CommunitysearchKeyword
+        ? axios.get('http://localhost:8001/community/search', { params: { keyword: CommunitysearchKeyword } })
         : axios.get('http://localhost:8001/community'));
       setCommunitySearch(resp.data);
     } catch (error) {
       console.error('Error fetching rank:', error);
     }
-  }, [searchKeyword]);
+  }, [CommunitysearchKeyword]);
 
   // 검색 버튼 클릭 시 호출되는 함수
   const handleSearchButtonClick = () => {

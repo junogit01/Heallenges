@@ -34,22 +34,22 @@ export const communityCommentState = atom({
 });
 
 export const CommunitysearchKeywordState = atom({
-  key: 'searchKeyword',
+  key: 'CommunitysearchKeyword',
   default: '',
 });
 
 export const communityListSelector = selector({
   key: 'community/communitySelector',
   get: ({ get }) => {
-    const searchKeyword = get(CommunitysearchKeywordState);
+    const CommunitysearchKeyword = get(CommunitysearchKeywordState);
     const allPosts = get(communityListState);
 
     // 검색어가 비어 있으면 전체 게시물 반환
-    if (!searchKeyword) {
+    if (!CommunitysearchKeyword) {
       return allPosts;
     }
 
     // 검색어가 포함된 게시물 필터링
-    return allPosts.filter(post => post.title.toLowerCase().includes(searchKeyword.toLowerCase()));
+    return allPosts.filter(post => post.title.toLowerCase().includes(CommunitysearchKeyword.toLowerCase()));
   },
 });

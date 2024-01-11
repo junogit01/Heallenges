@@ -11,7 +11,8 @@ function CommunitySidebar() {
   return (
     <div className="col-lg-3">
       {/* Search widget */}
-      <div className="card mb-4">
+      {/* form을 쓰면 엔터가 되게 가능하고 div 쓰면 엔터 불가능 */}
+      <form className="card mb-4">
         <div className="card-header">검색</div>
         <div className="card-body">
           <div action="" className="input-group">
@@ -23,12 +24,12 @@ function CommunitySidebar() {
               value={searchKeyword}
               onChange={e => setSearchKeyword(e.target.value)}
             />
-            {/* <button className="btn btn-primary" type="submit">
+            <button className="btn btn-primary" type="submit">
               검색
-            </button> */}
+            </button>
           </div>
         </div>
-      </div>
+      </form>
 
       {/* Categories widget */}
       <div className="card mb-4">
