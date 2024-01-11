@@ -8,19 +8,11 @@ import { CommunitysearchKeywordState } from '@recoils/Community';
 function CommunitySidebar() {
   const [searchKeyword, setSearchKeyword] = useRecoilState(CommunitysearchKeywordState);
 
-  // const handleCategoryChange = category => {
-  //   setSelectedCategory(category);
-  // };
-
-  // const filteredBoardList = boardList.filter(data => {
-  //   return selectedCategory === 'all' || data?.category === selectedCategory;
-  // });
-
   return (
     <div className="col-lg-3">
       {/* Search widget */}
       {/* form을 쓰면 엔터가 되게 가능하고 div 쓰면 엔터 불가능 */}
-      <form className="card mb-4">
+      <div className="card mb-4">
         <div className="card-header">검색</div>
         <div className="card-body">
           <div action="" className="input-group">
@@ -32,12 +24,12 @@ function CommunitySidebar() {
               value={searchKeyword}
               onChange={e => setSearchKeyword(e.target.value)}
             />
-            <button className="btn btn-primary" type="submit">
+            {/* <button className="btn btn-primary" type="submit">
               검색
-            </button>
+            </button> */}
           </div>
         </div>
-      </form>
+      </div>
 
       {/* Categories widget */}
       <div className="card mb-4">
@@ -46,38 +38,26 @@ function CommunitySidebar() {
           <div className="row">
             <div className="col-sm-12">
               <ul className="list-unstyled mb-0">
-                <li>
-                  <h4>
-                    <Link to="/community">전체게시판</Link>
-                  </h4>
+                <li className="mb-2">
+                  <Link to="/community" className="btn btn-primary">
+                    전체게시판
+                  </Link>
                 </li>
-                <li>
-                  <h4>
-                    <Link to="/community/notice">공지게시판</Link>
-                  </h4>
+                <li className="mb-2">
+                  <Link to="/community/notice" className="btn btn-primary">
+                    공지게시판
+                  </Link>
                 </li>
-                <li>
-                  <h4>
-                    <Link to="/community/free">자유게시판</Link>
-                  </h4>
+                <li className="mb-2">
+                  <Link to="/community/free" className="btn btn-primary">
+                    자유게시판
+                  </Link>
                 </li>
-                <li>
-                  <h4>
-                    <Link to="/community/qna">문의게시판</Link>
-                  </h4>
+                <li className="mb-2">
+                  <Link to="/community/qna" className="btn btn-primary">
+                    문의게시판
+                  </Link>
                 </li>
-                {/* <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
-                  전체
-                </button>
-                <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('공지사항')}>
-                  공지사항
-                </button>
-                <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('자유')}>
-                  자유
-                </button>
-                <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('인증')}>
-                  인증
-                </button> */}
               </ul>
             </div>
           </div>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import React, { useState, useCallback } from 'react';
 import { useRecoilValue } from 'recoil';
-import { searchKeywordState } from '@recoils/Community';
+import { CommunitysearchKeywordState } from '@recoils/Community';
 import { communityListSelector } from '@recoils/Community';
 
 const getCategoryName = categoryNumber => {
@@ -23,23 +23,32 @@ const getCategoryName = categoryNumber => {
 const CommunityBoard = () => {
   // Recoil 상태로부터 전체 게시물 목록 가져오기
   const allPosts = useRecoilValue(communityListSelector);
-  const searchKeyword = useRecoilValue(searchKeywordState); // Use useRecoilValue directly
+  const CommunitysearchKeyword = useRecoilValue(CommunitysearchKeywordState);
 
   const [communitySearch, setCommunitySearch] = useState({
     data: [],
   });
 
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const handleCategoryChange = category => {
+    setSelectedCategory(category);
+  };
+
+  const filteredBoardList = allPosts.filter(data => {
+    return selectedCategory === 'all' || data?.category === selectedCategory;
+  });
+
   // 검색
   const getCommunitySearch = useCallback(async () => {
     try {
-      const resp = await (searchKeyword
-        ? axios.get('http://localhost:8001/community/search', { params: { keyword: searchKeyword } })
+      const resp = await (CommunitysearchKeyword
+        ? axios.get('http://localhost:8001/community/search', { params: { keyword: CommunitysearchKeyword } })
         : axios.get('http://localhost:8001/community'));
       setCommunitySearch(resp.data);
     } catch (error) {
       console.error('Error fetching rank:', error);
     }
-  }, [searchKeyword]);
+  }, [CommunitysearchKeyword]);
 
   // 검색 버튼 클릭 시 호출되는 함수
   const handleSearchButtonClick = () => {
@@ -108,6 +117,18 @@ const CommunityBoard = () => {
     <div className="card mb-4">
       <div className="mt-3">
         <h3>&nbsp;게시판 목록</h3>
+        {/* <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
+          전체
+        </button>
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('공지사항')}>
+          공지사항
+        </button>
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('자유')}>
+          자유
+        </button>
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('인증')}>
+          인증
+        </button> */}
       </div>
 
       {/* 게시물 목록을 표시하는 테이블 */}

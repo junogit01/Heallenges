@@ -16,7 +16,6 @@ const sql = {
   delete: 'DELETE FROM community WHERE id = ?',
 
   // 게시물 리스트 조회 (전체)
-  // as 삭제 -> 카테고리 정리하면서 listByCategory 정리
   listAll: `SELECT
               c.id AS id,
               IFNULL(u.nickname, '사용자 없음') AS nickname,

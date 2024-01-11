@@ -23,20 +23,21 @@ const getCategoryName = categoryNumber => {
 const CommunityBoard = () => {
   // Recoil 상태로부터 전체 게시물 목록 가져오기
   const allPosts = useRecoilValue(communityListSelector);
-  const CommunitysearchKeyword = useRecoilValue(CommunitysearchKeywordState);
-
-  const [communitySearch, setCommunitySearch] = useState({
-    data: [],
-  });
+  // map을 이용해서 게시물의 카테고리를 불려옴
+  console.log(allPosts.map(post => post.category));
 
   const [selectedCategory, setSelectedCategory] = useState('all');
+  // console.log(selectedCategory);
   const handleCategoryChange = category => {
     setSelectedCategory(category);
   };
 
-  const filteredBoardList = allPosts.filter(data => {
-    return selectedCategory === 'all' || data?.category === selectedCategory;
-    console.log(allPosts.filter(data));
+  const filteredBoardList = allPosts.filter(post => selectedCategory === 'all' || post.category === selectedCategory);
+
+  // 커뮤니티 검색
+  const CommunitysearchKeyword = useRecoilValue(CommunitysearchKeywordState);
+  const [communitySearch, setCommunitySearch] = useState({
+    data: [],
   });
 
   // 검색
@@ -52,9 +53,9 @@ const CommunityBoard = () => {
   }, [CommunitysearchKeyword]);
 
   // 검색 버튼 클릭 시 호출되는 함수
-  const handleSearchButtonClick = () => {
-    getCommunitySearch(); // 검색 결과를 가져오는 함수 호출
-  };
+  // const handleSearchButtonClick = () => {
+  //   getCommunitySearch(); // 검색 결과를 가져오는 함수 호출
+  // };
 
   // 검색 결과를 사용하여 목록을 필터링
   const filteredPosts = communitySearch.data.length > 0 ? communitySearch.data : allPosts;
@@ -118,18 +119,18 @@ const CommunityBoard = () => {
     <div className="card mb-4">
       <div className="mt-3">
         <h3>&nbsp;게시판 목록</h3>
-        {/* <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
           전체
         </button>
-        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('공지사항')}>
-          공지사항
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(1)}>
+          공지
         </button>
-        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('자유')}>
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(2)}>
           자유
         </button>
-        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('인증')}>
-          인증
-        </button> */}
+        <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(3)}>
+          문의
+        </button>
       </div>
 
       {/* 게시물 목록을 표시하는 테이블 */}
