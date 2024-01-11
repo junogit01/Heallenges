@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { atom, selector } from 'recoil';
-
+import Swal from 'sweetalert2';
 const baseURL = 'http://localhost:8001/challenges';
 
 // atom
 export const challengesListState = atom({
   key: 'challenges/challengesListState',
-  default: {},
+  default: [],
 });
 
 export const challengesState = atom({
@@ -30,26 +30,17 @@ export const challengesState = atom({
 
 export const challengesBoardListState = atom({
   key: 'challenges/challengesBoardListState',
-  default: {},
+  default: [],
 });
 
 export const challengesBoardState = atom({
   key: 'challenges/challengesBoardState',
-  default: {
-    id: '',
-    title: '',
-    description: '',
-    type: '',
-    total_participants: '',
-    rules: '',
-    start_date: '',
-    end_date: '',
-    created_at: '',
-    status: '',
-    host_id: '',
-    main_image: '',
-    reward: '',
-  },
+  default: [],
+});
+
+export const challengesBoardCommentState = atom({
+  key: 'challenges/challengesBoardCommentState',
+  default: [],
 });
 
 export const challengesListSelector = selector({
@@ -61,7 +52,6 @@ export const challengesListSelector = selector({
     });
     const getChallengeDetail = getCallback(({ set }) => async id => {
       const resp = await axios.get(`${baseURL}/${id}`);
-      // console.log('challenges', resp.data.data);
       set(challengesState, resp.data.data);
     });
 
@@ -84,7 +74,17 @@ export const challengesListSelector = selector({
 
     const getChallengeBoardDetail = getCallback(({ set }) => async (challengeId, postId) => {
       const resp = await axios.get(`${baseURL}/${challengeId}/board/${postId}`);
-      // console.log(resp.data.data);
+      // console.log(resp.data.status);
+      if (resp.data.status === 200) {
+        set(challengesBoardState, resp.data.data);
+        set(challengesBoardCommentState, resp.data.comment);
+      } else {
+        Swal.fire({
+          title: '게시글 불러오기 중 에러 발생',
+          text: '다시 시도해주십시오',
+          icon: 'error',
+        });
+      }
     });
 
     const insertChallengeBoard = getCallback(({ set }) => async (challengeId, item) => {
@@ -101,10 +101,37 @@ export const challengesListSelector = selector({
 
     const insertChallengeBoardComment = getCallback(({ set }) => async (challengeId, postId, item) => {
       const resp = await axios.post(`${baseURL}/${challengeId}/board/${postId}`, item);
+      if (resp.data.status === 200) {
+        Swal.fire({
+          title: '댓글 작성 완료',
+          text: '',
+          icon: 'success',
+        });
+      } else {
+        Swal.fire({
+          title: '댓글 작성 실패',
+          text: '',
+          icon: 'error',
+        });
+      }
+      // console.log(resp);
     });
 
     const deleteChallengeBoardComment = getCallback(({ set }) => async (challengeId, postId, id) => {
       const resp = await axios.delete(`${baseURL}/${challengeId}/board/${postId}/${id}`);
+      if (resp.data.status === 200) {
+        Swal.fire({
+          title: '댓글 삭제 완료',
+          text: '',
+          icon: 'success',
+        });
+      } else {
+        Swal.fire({
+          title: '댓글 삭제 실패',
+          text: '',
+          icon: 'error',
+        });
+      }
     });
 
     return {

@@ -30,7 +30,7 @@ function NavHeader() {
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            <img src="images/Heallenges-logo-black-trophy-500.png" alt="" style={{ width: '200px', height: '50px' }} />
+            <img src="images/ci_healenges_04.png" alt="" style={{ width: '170px', height: '30px' }} />
           </Link>
           <button
             className="navbar-toggler"

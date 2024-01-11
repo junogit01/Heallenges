@@ -43,7 +43,8 @@ const sql = {
             FROM challenge_community c
             JOIN challenges ON c.challenge_id = challenges.id
             JOIN user u ON c.user_id = u.id
-            WHERE challenges.id = ? and c.id = ?`,
+            WHERE challenges.id = ? and c.id = ?
+            ORDER BY c.created_at DESC`,
   // 커뮤니티 댓글 조회
   challengeGetComment: `SELECT m.contents, u.name, m.id
                  FROM challenge_community c
