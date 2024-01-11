@@ -59,6 +59,15 @@ function RankBody() {
                     src={item.profile_image}
                     alt={''}></img>
                   {item.name}
+                  {item.rank === 1 && (
+                    <img src="/images/Rank-medal-1.png" style={{ width: '2rem', height: '2rem' }} alt="1등 메달" />
+                  )}
+                  {item.rank === 2 && (
+                    <img src="/images/Rank-medal-2.png" style={{ width: '2rem', height: '2rem' }} alt="2등 메달" />
+                  )}
+                  {item.rank === 3 && (
+                    <img src="/images/Rank-medal-3.png" style={{ width: '2rem', height: '2rem' }} alt="3등 메달" />
+                  )}
                 </td>
                 <td>
                   <span>{item.reward_cnt}</span>
