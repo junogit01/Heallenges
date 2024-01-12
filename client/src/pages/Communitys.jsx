@@ -17,6 +17,7 @@ const Community = () => {
 
   // 전체 게시물을 리코일 (communityListState) 불러오기
   const [allPosts, setAllPosts] = useRecoilState(communityListState);
+  // console.log(allPosts);
 
   useEffect(() => {
     const fetchAllPosts = async () => {

@@ -54,7 +54,7 @@ const sql = {
                 FROM community_comment c
                 LEFT JOIN user u ON c.user_id = u.id
                 WHERE c.post_id = ?
-                ORDER BY c.create_date ASC`,
+                ORDER BY c.create_date DESC`,
   // 조회수 증가
   incCount: `UPDATE community SET view_cnt = view_cnt + 1 WHERE id = ?`,
 
@@ -77,17 +77,17 @@ const sql = {
   notlikeupdate: `UPDATE community SET like_cnt = GREATEST(like_cnt - 1, 0) WHERE id = ?`,
 
   // 검색
-  communitySearch: `SELECT 
-                      c.id AS id,
-                      IFNULL(u.nickname, '사용자 없음') AS nickname,
-                      c.category AS category,
-                      c.title AS title,
-                      c.created_at AS created_at,
-                      c.view_cnt AS view_cnt,
-                      c.like_cnt AS like_cnt
-                    FROM community c
-                    LEFT JOIN user u ON c.user_id = u.id 
-                    WHERE title LIKE CONCAT('%',?,'%')`,
+  // communitySearch: `SELECT
+  //                     c.id AS id,
+  //                     IFNULL(u.nickname, '사용자 없음') AS nickname,
+  //                     c.category AS category,
+  //                     c.title AS title,
+  //                     c.created_at AS created_at,
+  //                     c.view_cnt AS view_cnt,
+  //                     c.like_cnt AS like_cnt
+  //                   FROM community c
+  //                   LEFT JOIN user u ON c.user_id = u.id
+  //                   WHERE title LIKE CONCAT('%',?,'%')`,
 };
 
 const communityDAO = {
@@ -369,22 +369,22 @@ const communityDAO = {
     }
   },
 
-  communitySearch: async (item, callback) => {
-    let conn = null;
-    try {
-      conn = await pool.getConnection();
-      const [data, fieldset] = await conn.query(sql.communitySearch, [`${item}`]);
-      callback({
-        status: 200,
-        message: '검색 성공',
-        data: data,
-      });
-    } catch (error) {
-      callback({ status: 500, message: '랭킹 검색 실패', error: error });
-    } finally {
-      if (conn !== null) conn.release();
-    }
-  },
+  // communitySearch: async (item, callback) => {
+  //   let conn = null;
+  //   try {
+  //     conn = await pool.getConnection();
+  //     const [data, fieldset] = await conn.query(sql.communitySearch, [`${item}`]);
+  //     callback({
+  //       status: 200,
+  //       message: '검색 성공',
+  //       data: data,
+  //     });
+  //   } catch (error) {
+  //     callback({ status: 500, message: '랭킹 검색 실패', error: error });
+  //   } finally {
+  //     if (conn !== null) conn.release();
+  //   }
+  // },
 
   // 마지막 괄호 올라옴 방지 주석
 };

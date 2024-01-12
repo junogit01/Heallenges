@@ -104,11 +104,11 @@ function CommunityUpdate() {
       });
 
       if (resp.data.status === 200) {
-        Swal.fire({
-          title: '게시물 수정',
-          text: '게시물이 수정 되었습니다.',
-          icon: 'success',
-        });
+        // Swal.fire({
+        //   title: '게시물 수정',
+        //   text: '게시물이 수정 되었습니다.',
+        //   icon: 'success',
+        // });
         // 글 작성 성공 시 http://localhost:3000/community/id로 이동
         navigate('/community/' + id);
       } else {

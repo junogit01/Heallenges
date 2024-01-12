@@ -35,7 +35,7 @@ export const communityCommentState = atom({
 
 export const CommunitysearchKeywordState = atom({
   key: 'CommunitysearchKeyword',
-  default: '',
+  default: [],
 });
 
 export const communityListSelector = selector({
@@ -43,9 +43,11 @@ export const communityListSelector = selector({
   get: ({ get }) => {
     const CommunitysearchKeyword = get(CommunitysearchKeywordState);
     const allPosts = get(communityListState);
+    // console.log('CommunitysearchKeyword:', CommunitysearchKeyword);
 
     // 검색어가 비어 있으면 전체 게시물 반환
     if (!CommunitysearchKeyword) {
+      // console.log('nope:', CommunitysearchKeyword);
       return allPosts;
     }
 
