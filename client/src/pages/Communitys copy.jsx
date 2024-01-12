@@ -17,7 +17,6 @@ const Community = () => {
 
   // 전체 게시물을 리코일 (communityListState) 불러오기
   const [allPosts, setAllPosts] = useRecoilState(communityListState);
-  console.log(allPosts);
 
   const handleCategoryChange = category => {
     // 여기에 원하는 로직을 추가하거나 필요한 경우 상태 업데이트 등을 수행

@@ -21,14 +21,19 @@ const Comment = ({ comments }) => {
       const updatedComments = comments.filter(comment => comment.comment_id !== commentId);
       set(communityCommentState, updatedComments);
 
+      // await
       Swal.fire({
         title: '댓글 삭제',
         text: '댓글이 성공적으로 삭제되었습니다.',
         icon: 'success',
       });
-      window.location.replace(`/community/${id}`);
+      // window.location.replace(`/community/${id}`);
+      // 2초 후에 페이지 전환
+      setTimeout(() => {
+        window.location.replace(`/community/${id}`);
+      }, 1000);
     } catch (error) {
-      Swal.fire({
+      await Swal.fire({
         title: '댓글 삭제 실패',
         text: '댓글 삭제 중 오류가 발생했습니다. 다시 시도해주세요.',
         icon: 'error',

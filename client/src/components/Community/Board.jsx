@@ -14,7 +14,7 @@ const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created
     // console.log(Image);
   }, [user_id, title, nickname, category, view_cnt, like_cnt, created_at, contents, Image]); // 빈 배열을 두어 컴포넌트가 마운트될 때만 실행되도록 설정
 
-  // 카테고리 값을 변경해주는 함수 / 노드(숫자) -> 프론트(한글)
+  // 카테고리 값을 변경해주는 함수 / 노드(숫자) -> 프론트(한글)로 변경
   const getCategoryString = categoryNumber => {
     switch (category) {
       case 1:
@@ -54,8 +54,8 @@ const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created
             )}
 
             <section className="mb-5" style={{ minHeight: '100px', height: 'auto', overflow: 'hidden' }}>
-              <p className="fs-5 mb-4" style={{ overflowY: 'auto' }}>
-                {contents || '내용 없음'}
+              <p className="fs-5 mb-4" style={{ whiteSpace: 'pre' }}>
+                {contents || '내용 없음'}2
               </p>
             </section>
           </article>

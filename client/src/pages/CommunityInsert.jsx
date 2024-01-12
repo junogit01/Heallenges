@@ -70,11 +70,11 @@ function CommunityInsert() {
 
       // 게시물 성공 시 알람 창
       if (resp.data.status === 200) {
-        Swal.fire({
-          title: '게시물 추가',
-          text: '게시물이 추가 되었습니다.',
-          icon: 'success',
-        });
+        // Swal.fire({
+        //   title: '게시물 추가',
+        //   text: '게시물이 추가 되었습니다.',
+        //   icon: 'success',
+        // });
         // 글 작성 성공 시 http://localhost:3000/community/id로 이동
         navigate(`/community/${resp.data.data.insertId}`);
         // 게시물 실패 시 알람 창
