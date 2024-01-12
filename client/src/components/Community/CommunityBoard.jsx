@@ -58,21 +58,19 @@ const CommunityBoard = () => {
       <div className="mt-3">
         <h3>&nbsp;게시판 목록</h3>
         {/* 카테고리 버튼들 */}
-        <div className="mb-2 d-flex justify-content-between">
-          <div>
-            <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
-              전체
-            </button>
-            <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(1)}>
-              공지
-            </button>
-            <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(2)}>
-              자유
-            </button>
-            <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(3)}>
-              문의
-            </button>
-          </div>
+        <div className="mb-2 d-flex justify-content-end">
+          <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
+            전체
+          </button>
+          <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(1)}>
+            공지
+          </button>
+          <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(2)}>
+            자유
+          </button>
+          <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(3)}>
+            문의
+          </button>
         </div>
       </div>
 

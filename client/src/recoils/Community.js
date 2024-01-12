@@ -35,7 +35,7 @@ export const communityCommentState = atom({
 
 export const CommunitysearchKeywordState = atom({
   key: 'CommunitysearchKeyword',
-  default: '',
+  default: [],
 });
 
 export const communityListSelector = selector({

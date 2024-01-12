@@ -17,12 +17,7 @@ const Community = () => {
 
   // 전체 게시물을 리코일 (communityListState) 불러오기
   const [allPosts, setAllPosts] = useRecoilState(communityListState);
-  console.log(allPosts);
-
-  const handleCategoryChange = category => {
-    // 여기에 원하는 로직을 추가하거나 필요한 경우 상태 업데이트 등을 수행
-    console.log('Selected Category:', category);
-  };
+  // console.log(allPosts);
 
   useEffect(() => {
     const fetchAllPosts = async () => {
@@ -51,7 +46,7 @@ const Community = () => {
               <div className="col-lg-9" data-aos="fade-up" data-aos-delay={200}>
                 <div className="row gy-5 posts-list">
                   {/* CommunityBoard에 전체게시판의 글 데이터 전달 */}
-                  <CommunityBoard posts={allPosts} handleCategoryChange={handleCategoryChange} />
+                  <CommunityBoard posts={allPosts} />
                 </div>
               </div>
               {/* Sidebar */}

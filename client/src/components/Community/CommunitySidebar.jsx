@@ -18,6 +18,7 @@ function CommunitySidebar({ handleCategoryChange }) {
   };
 
   const handleChange = e => {
+    // console.log('handleCategoryChange called with category:', category);
     setInputsearchValue(e.target.value);
   };
 
@@ -38,7 +39,7 @@ function CommunitySidebar({ handleCategoryChange }) {
             <input
               type="search"
               className="form-control"
-              placeholder="검색할 내용을 작성해주세요"
+              placeholder="검색할 제목을 작성해주세요"
               aria-label="Enter search term..."
               value={inputsearchValue}
               onChange={handleChange}
@@ -51,13 +52,13 @@ function CommunitySidebar({ handleCategoryChange }) {
       </form>
 
       {/* Categories widget */}
-      <div className="card mb-4">
+      {/* <div className="card mb-4">
         <div className="card-header">카테고리</div>
         <div className="card-body">
           <div className="row">
             <div className="col-sm-12">
               <ul className="list-unstyled mb-0">
-                {/* <li className="mb-2">
+                <li className="mb-2">
                   <Link to="/community" className="btn btn-primary">
                     전체게시판
                   </Link>
@@ -77,8 +78,8 @@ function CommunitySidebar({ handleCategoryChange }) {
                     문의게시판
                   </Link>
                 </li> */}
-                {/*  */}
-                <li className="mb-2">
+      {/*  */}
+      {/* <li className="mb-2">
                   <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
                     전체게시판
                   </button>
@@ -97,12 +98,12 @@ function CommunitySidebar({ handleCategoryChange }) {
                   <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(3)}>
                     문의게시판
                   </button>
-                </li>
-              </ul>
+                </li> */}
+      {/* </ul>
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Write post widget */}
       <div className="card mb-4">
