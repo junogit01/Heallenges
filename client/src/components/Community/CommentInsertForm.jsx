@@ -67,16 +67,20 @@ function CommentInsertForm() {
 
       // 응답이 정상적으로 처리되었다면 성공 알림 표시 및 해당 게시물 페이지로 이동
       if (response && response.status === 200) {
+        // await
         Swal.fire({
           title: '댓글 입력 성공',
           text: '댓글이 성공적으로 등록되었습니다.',
           icon: 'success',
         });
 
-        window.location.replace(`/community/${id}`);
+        // window.location.replace(`/community/${id}`);
+        setTimeout(() => {
+          window.location.replace(`/community/${id}`);
+        }, 1000);
       } else {
         // 응답이 정상적으로 처리되지 않았다면 실패 알림 표시
-        Swal.fire({
+        await Swal.fire({
           title: '댓글 입력 실패',
           text: '댓글 입력에 실패했습니다. 다시 시도해주세요.',
           icon: 'error',
@@ -84,7 +88,7 @@ function CommentInsertForm() {
       }
     } catch (error) {
       // 댓글 삽입 중 에러가 발생한 경우 오류 알림 표시
-      Swal.fire({
+      await Swal.fire({
         title: '오류 발생',
         text: '댓글 입력 중 오류가 발생했습니다. 다시 시도해주세요.',
         icon: 'error',

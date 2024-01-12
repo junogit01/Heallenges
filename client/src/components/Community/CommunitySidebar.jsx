@@ -1,38 +1,58 @@
 // // CommunitySidebar.jsx
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { CommunitysearchKeywordState } from '@recoils/Community';
 
-function CommunitySidebar() {
+function CommunitySidebar({ handleCategoryChange }) {
   const [searchKeyword, setSearchKeyword] = useRecoilState(CommunitysearchKeywordState);
+  // console.log('sidebar:', searchKeyword);
+  // console.log(CommunitysearchKeywordState);
+  const [inputsearchValue, setInputsearchValue] = useState('');
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    setSearchKeyword(inputsearchValue);
+    setInputsearchValue('');
+  };
+
+  const handleChange = e => {
+    // console.log('handleCategoryChange called with category:', category);
+    setInputsearchValue(e.target.value);
+  };
+
+  useEffect(() => {
+    return () => {
+      // 컴포넌트가 언마운트 될 때 검색어 초기화
+      setSearchKeyword('');
+    };
+  }, [setSearchKeyword]);
 
   return (
     <div className="col-lg-3">
       {/* Search widget */}
-      {/* form을 쓰면 엔터가 되게 가능하고 div 쓰면 엔터 불가능 */}
-      <div className="card mb-4">
+      <form className="card mb-4" onSubmit={handleSubmit}>
         <div className="card-header">검색</div>
         <div className="card-body">
-          <div action="" className="input-group">
+          <div action="" className="input-group" onSubmit={handleSubmit}>
             <input
               type="search"
               className="form-control"
-              placeholder="검색할 내용을 작성해주세요"
+              placeholder="검색할 제목을 작성해주세요"
               aria-label="Enter search term..."
-              value={searchKeyword}
-              onChange={e => setSearchKeyword(e.target.value)}
+              value={inputsearchValue}
+              onChange={handleChange}
             />
-            {/* <button className="btn btn-primary" type="submit">
+            <button className="btn btn-primary" type="submit">
               검색
-            </button> */}
+            </button>
           </div>
         </div>
-      </div>
+      </form>
 
       {/* Categories widget */}
-      <div className="card mb-4">
+      {/* <div className="card mb-4">
         <div className="card-header">카테고리</div>
         <div className="card-body">
           <div className="row">
@@ -57,12 +77,33 @@ function CommunitySidebar() {
                   <Link to="/community/qna" className="btn btn-primary">
                     문의게시판
                   </Link>
+                </li> */}
+      {/*  */}
+      {/* <li className="mb-2">
+                  <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
+                    전체게시판
+                  </button>
                 </li>
-              </ul>
+                <li className="mb-2">
+                  <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(1)}>
+                    공지게시판
+                  </button>
+                </li>
+                <li className="mb-2">
+                  <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(2)}>
+                    자유게시판
+                  </button>
+                </li>
+                <li className="mb-2">
+                  <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(3)}>
+                    문의게시판
+                  </button>
+                </li> */}
+      {/* </ul>
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Write post widget */}
       <div className="card mb-4">
