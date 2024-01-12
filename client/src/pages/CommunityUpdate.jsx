@@ -1,3 +1,5 @@
+// CommunityUpdate.jsx
+
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -11,20 +13,18 @@ import { communityState } from '@recoils/Community';
 function CommunityUpdate() {
   const navigate = useNavigate();
 
-  // 게시물아이디(http://localhost:3000/community/177(<--))를 가져오기 위해 사용
+  // 게시물 아이디(http://localhost:3000/community/177(<--))를 가져오기 위해 사용
   const { id } = useParams();
 
-  // 로그인이 안되면 로그인페이지로 이동
+  // 로그인이 안되면 로그인 페이지로 이동
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
-  // React Hook Form의 userForm 사용
+  // React Hook Form의 useForm 사용
   const { register, handleSubmit, setValue } = useForm();
 
   // communityState로 기존 게시물에 작성된 값을 가져오기 위해 사용
-  // [community, setCommunity]
   const [community] = useRecoilState(communityState(id));
-  // console.log('community', community);
 
   // 폼 초기값 설정
   useEffect(() => {
@@ -36,7 +36,6 @@ function CommunityUpdate() {
       if (community.board.Image) {
         const imageFileName = community.board.Image;
         setValue('image', imageFileName);
-        // 콘솔은 나오는데 화면에 어떻게 연동하는지 모르겠음(코드 수정 필요)
         console.log('Community Image:', imageFileName);
       }
     }
@@ -55,6 +54,7 @@ function CommunityUpdate() {
         return 2;
     }
   };
+
   // 카테고리 값을 변경해주는 함수 / 노드(숫자) -> 프론트(한글)
   const getCategoryString = categoryNumber => {
     switch (categoryNumber) {
@@ -82,6 +82,7 @@ function CommunityUpdate() {
         });
         return;
       }
+
       // 사용자가 공지 게시판에 글을 작성할 권한이 있는지 확인
       if (data.category === '공지 게시판' && loginUser.email !== 'admin@naver.com') {
         Swal.fire({
@@ -92,26 +93,21 @@ function CommunityUpdate() {
         return;
       }
 
-      // 유저아이디, 제목, 내용, 카테고리 이미지 추가
+      // 유저 아이디, 제목, 내용, 카테고리 이미지 추가
       const formData = new FormData();
       formData.append('data', JSON.stringify({ ...data, category: getCategoryValue(data.category), id: id }));
       formData.append('image', data.image[0]);
-      // console.log(data);
 
-      // back으로 이동
-      const resp = await axios.put('http://localhost:8001/community/:id', formData, {
+      // 백엔드로 수정 요청
+      const resp = await axios.put(`http://localhost:8001/community/${id}`, formData, {
         headers: { 'Content-type': 'multipart/form-data' },
       });
 
       if (resp.data.status === 200) {
-        // Swal.fire({
-        //   title: '게시물 수정',
-        //   text: '게시물이 수정 되었습니다.',
-        //   icon: 'success',
-        // });
-        // 글 작성 성공 시 http://localhost:3000/community/id로 이동
-        navigate('/community/' + id);
+        // 수정 성공 시 알람 창
+        navigate(`/community/${id}`);
       } else {
+        // 수정 실패 시 알람 창
         Swal.fire({
           title: '게시물 수정 실패',
           text: '다시 시도해주세요.',
