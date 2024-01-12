@@ -49,8 +49,6 @@ function ChallengesCommunityUpdateBody() {
           headers: { 'Content-type': 'multipart/form-data' },
           data: formData,
         });
-        console.log(resp);
-        console.log(data);
         if (resp.data.status === 501) {
           Swal.fire({
             title: '이메일 중복', // Alert 제목

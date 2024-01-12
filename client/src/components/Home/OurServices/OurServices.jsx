@@ -29,7 +29,7 @@ function OurServices() {
             </div>
             <div>
               <h4 className="title d-flex">
-                <Link to="/communitys" className="text-decoration-none">
+                <Link to="/community" className="text-decoration-none">
                   커뮤니티
                 </Link>
               </h4>

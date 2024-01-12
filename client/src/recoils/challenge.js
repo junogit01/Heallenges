@@ -2,7 +2,6 @@ import axios from 'axios';
 import { atom, selector } from 'recoil';
 import Swal from 'sweetalert2';
 const baseURL = 'http://localhost:8001/challenges';
-
 // atom
 export const challengesListState = atom({
   key: 'challenges/challengesListState',
@@ -40,6 +39,11 @@ export const challengesBoardState = atom({
 
 export const challengesBoardCommentState = atom({
   key: 'challenges/challengesBoardCommentState',
+  default: [],
+});
+
+export const challengesSearchKeywordState = atom({
+  key: 'challenges/challengesSearchKeywordState',
   default: [],
 });
 
@@ -97,6 +101,19 @@ export const challengesListSelector = selector({
 
     const deleteChallengeBoard = getCallback(({ set }) => async (challengeId, postId) => {
       const resp = await axios.delete(`${baseURL}/${challengeId}/board/${postId}`);
+      if (resp.data.status === 200) {
+        Swal.fire({
+          title: '게시글이 삭제되었습니다.',
+          text: '',
+          icon: 'success',
+        });
+      } else {
+        Swal.fire({
+          title: '게시글 삭제 실패',
+          text: '다시 시도해주세요',
+          icon: 'error',
+        });
+      }
     });
 
     const insertChallengeBoardComment = getCallback(({ set }) => async (challengeId, postId, item) => {
@@ -104,17 +121,16 @@ export const challengesListSelector = selector({
       if (resp.data.status === 200) {
         Swal.fire({
           title: '댓글 작성 완료',
-          text: '',
+          text: '1초뒤 자동으로 사라집니다.',
           icon: 'success',
         });
       } else {
         Swal.fire({
           title: '댓글 작성 실패',
-          text: '',
+          text: '1초뒤 자동으로 사라집니다.',
           icon: 'error',
         });
       }
-      // console.log(resp);
     });
 
     const deleteChallengeBoardComment = getCallback(({ set }) => async (challengeId, postId, id) => {
@@ -122,13 +138,13 @@ export const challengesListSelector = selector({
       if (resp.data.status === 200) {
         Swal.fire({
           title: '댓글 삭제 완료',
-          text: '',
+          text: '1초뒤 자동으로 사라집니다.',
           icon: 'success',
         });
       } else {
         Swal.fire({
           title: '댓글 삭제 실패',
-          text: '',
+          text: '1초뒤 자동으로 사라집니다.',
           icon: 'error',
         });
       }

@@ -8,19 +8,22 @@ import Swal from 'sweetalert2';
 import { loginState } from '@recoils/login';
 
 function ChallengesCommunityInsertBody() {
+  // url에서 파라미터 수집
   const { challengeId, id } = useParams();
   const navigate = useNavigate();
 
+  // Recoil을 통해 상태 가져오기
   const challengesBoard = useRecoilValue(challengesState);
   const { getChallengeDetail, getChallengeBoardDetail } = useRecoilValue(challengesListSelector);
 
+  // 로그인 정보 가져와 로그인하지 않은 경우 로그인 페이지로 리다이렉트한다.
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
+  // React-hook-form을 이용한  폼 상태 관리
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -35,6 +38,15 @@ function ChallengesCommunityInsertBody() {
   const submitEvent = useCallback(
     async data => {
       try {
+        // 관리자 확인
+        if (data.category === '공지사항' && loginUser.id !== challengesBoard[0]?.host_id) {
+          Swal.fire({
+            title: '권한 없음',
+            text: '공지 게시판 글은 관리자만 작성할 수 있습니다.',
+            icon: 'error',
+          });
+          return;
+        }
         // 저는 파일 업로드를 위해 formData로 변경했습니다
         const formData = new FormData();
 
@@ -64,7 +76,8 @@ function ChallengesCommunityInsertBody() {
             icon: 'error', // Alert 타입
           });
         }
-        navigate(`/challenges/${challengeId}/board`);
+        // insertId를 통해 작성한 게시글로 이동
+        navigate(`/challenges/${challengeId}/board/${resp?.data?.data?.insertId}`);
       } catch (error) {
         console.error(error);
       }
@@ -87,23 +100,58 @@ function ChallengesCommunityInsertBody() {
                 <tr>
                   <td>제목</td>
                   <td>
-                    <input type="text" className="form-control" {...register('title')} />
+                    <input
+                      type="text"
+                      className="form-control"
+                      {...register('title', {
+                        required: {
+                          value: true,
+                          message: '제목을 입력해주세요',
+                        },
+                      })}
+                    />
+                    <span style={{ color: 'orange' }} className="fs-5">
+                      {errors.title?.message}
+                    </span>
                   </td>
                 </tr>
                 <tr>
                   <td>카테고리</td>
                   <td>
-                    <select className="form-select" {...register('category')} defaultValue="자유">
+                    <select
+                      className="form-select"
+                      {...register('category', {
+                        required: {
+                          value: true,
+                          message: '카테고리를 선택해주세요',
+                        },
+                      })}
+                      defaultValue="자유">
                       <option value="">카테고리 선택</option>
                       <option value="공지사항">공지사항</option>
                       <option value="자유">자유</option>
                     </select>
+                    <span style={{ color: 'orange' }} className="fs-5">
+                      {errors.category?.message}
+                    </span>
                   </td>
                 </tr>
                 <tr>
                   <td>내용</td>
                   <td>
-                    <textarea cols="80" rows="10" className="form-control" {...register('contents')}></textarea>
+                    <textarea
+                      cols="80"
+                      rows="10"
+                      className="form-control"
+                      {...register('contents', {
+                        required: {
+                          value: true,
+                          message: '내용을 입력해주세요',
+                        },
+                      })}></textarea>
+                    <span style={{ color: 'orange' }} className="fs-5">
+                      {errors.contents?.message}
+                    </span>
                   </td>
                 </tr>
                 <tr>
