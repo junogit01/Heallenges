@@ -21,19 +21,19 @@ function ChallengesCommunityList() {
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
-  const searchBoardList = boardList.filter(data => data.title.toLowerCase().includes(searchKeyword.toLowerCase()));
+  const searchBoardList = boardList.filter(data => data?.title.toLowerCase().includes(searchKeyword.toLowerCase()));
   useEffect(() => {
     getChallengeBoardList(id);
   }, [id, getChallengeBoardList]);
+
+  const filteredBoardList = searchBoardList.filter(data => {
+    return selectedCategory === 'all' || data?.category === selectedCategory;
+  });
 
   const handleCategoryChange = category => {
     setSelectedCategory(category);
     setPage(1);
   };
-
-  const filteredBoardList = boardList.filter(data => {
-    return selectedCategory === 'all' || data?.category === selectedCategory;
-  });
 
   const [page, setPage] = useState(1);
   const itemsPerPage = 10; // 페이지당 항목 수

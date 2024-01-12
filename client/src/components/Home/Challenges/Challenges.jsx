@@ -26,26 +26,6 @@ function Challenges() {
     getChallengeList(1, 5);
   }, []);
 
-  // useEffect(() => {
-  //   getChallengeDetail(1);
-  // }, []);
-
-  // useEffect(() => {
-  //   getChallengeBoardList(1);
-  // }, []);
-
-  // useEffect(() => {
-  //   updateChallengeBoard(1, 9, { title: 'World', contents: '안녕하세요', id: 9 });
-  // }, []);
-
-  // useEffect(() => {
-  //   insertChallengeBoardComment(1, 1, { contents: '아주 잘 보았습니다. 리코일 짱!', user_id: '54', post_id: '1' });
-  // }, []);
-
-  // useEffect(() => {
-  //   deleteChallengeBoardComment(1, 1, 23);
-  // }, []);
-
   return (
     <section id="recent-posts" className="recent-posts">
       <div className="container">

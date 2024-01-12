@@ -4,7 +4,7 @@ import { useRecoilState } from 'recoil';
 import { challengesSearchKeywordState } from '@recoils/challenge';
 
 function ChallengesDetailSideBar() {
-  const { searchKeyword, setSearchKeyword } = useRecoilState(challengesSearchKeywordState);
+  const [searchKeyword, setSearchKeyword] = useRecoilState(challengesSearchKeywordState);
   const [inputsearchValue, setInputsearchValue] = useState('');
 
   const handleSubmit = e => {
