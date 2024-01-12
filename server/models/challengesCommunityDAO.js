@@ -3,13 +3,6 @@ const pool = require('./pool');
 const sql = {
   // 커뮤니티 게시글 작성
   challengeBoardInsert: `INSERT INTO challenge_community (title, contents, image, category, challenge_id, user_id) VALUES (?, ?, ?, ?, ?, ?)`,
-  // 커뮤니티 게시글 수정
-  challengeBoardUpdate: `UPDATE challenge_community
-             SET title = ?, contents = ?
-             WHERE id = ?
-             `,
-  // 커뮤니티 게시글 삭제
-  challengeBoardDelete: `DELETE FROM challenge_community WHERE id = ?`,
   // 커뮤니티 조회수 증가
   challengeBoardincCount: `UPDATE challenge_community SET view_cnt = view_cnt + 1 WHERE id = ?`,
   // 커뮤니티 게시글 리스트 조회
@@ -17,9 +10,10 @@ const sql = {
                 FROM challenges c
                 JOIN challenge_community m ON c.id = m.challenge_id
                 JOIN user u ON m.user_id = u.id
-                WHERE c.id = ?`,
+                WHERE c.id = ?
+                ORDER BY m.created_at DESC`,
   // 커뮤니티 게시글 상세 조회
-  challengeBoardDetail: `SELECT c.title, c.contents, u.name, c.view_cnt, DATE_FORMAT(c.created_at, '%Y-%m-%d %h-%i-%s') as created, c.image, c.id, u.id as user_id
+  challengeBoardDetail: `SELECT c.title, c.contents, u.name, c.view_cnt, DATE_FORMAT(c.created_at, '%Y-%m-%d %h-%i-%s') as created, c.image, c.id, u.id as user_id, c.category
             FROM challenge_community c
             JOIN challenges ON c.challenge_id = challenges.id
             JOIN user u ON c.user_id = u.id
@@ -29,7 +23,16 @@ const sql = {
                  FROM challenge_community c
                  JOIN challenge_comment m ON c.id = m.post_id
                  JOIN user u ON m.user_id = u.id
-                 WHERE c.id = ?`,
+                 WHERE c.id = ?
+                 ORDER BY m.created_date DESC`,
+  // 커뮤니티 게시글 수정
+  challengeBoardUpdate: `UPDATE challenge_community
+                         SET title = ?, contents = ?, category = ?, image = ?
+                         WHERE id = ?`,
+  // 커뮤니티 게시글 삭제
+  challengeBoardDelete: `DELETE FROM challenge_community
+                         WHERE id = ?`,
+
   // 커뮤니티 댓글 작성
   challengeInsertComment: `INSERT INTO challenge_comment(contents, user_id, post_id) VALUES(?, ?, ?)`,
   // 커뮤니티 댓글 삭제
@@ -85,13 +88,19 @@ const challengesCommunityDAO = {
 
   // 도전 커뮤니티 게시글 수정
   challengeBoardUpdate: async (item, callback) => {
-    const { title, contents, id } = item;
+    const { title, contents, category, image, id } = item;
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
       await conn.beginTransaction(); // 쿼리가 모두 성공하고 return
       conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
-      const [resp] = await conn.query(sql.challengeBoardUpdate, [title, contents, id]);
+      const [resp] = await conn.query(sql.challengeBoardUpdate, [
+        title,
+        contents,
+        category,
+        image,
+        id,
+      ]);
       return callback({ status: 200, message: '게시글 수정 완료', data: resp });
     } catch (error) {
       conn.rollback(); // 커밋 이전 상태로 돌려야한다.
@@ -121,7 +130,6 @@ const challengesCommunityDAO = {
 
   // 도전 게시글 작성
   challengeBoardInsert: async (item, callback) => {
-    console.log(item);
     const { title, contents, image, category, challenge_id, user_id } = item;
     let conn = null;
     try {

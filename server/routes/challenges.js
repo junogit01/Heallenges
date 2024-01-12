@@ -11,8 +11,7 @@ const challengesCommunityDAO = require('../models/challengesCommunityDAO');
 const uploadName = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, path.join(__dirname, '..', 'public', 'images', 'challenges', 'community')),
-        console.log('Hello world');
+      cb(null, path.join(__dirname, '..', 'public', 'images', 'challenges', 'community'));
     },
 
     filename: (req, file, cb) => cb(null, `${Date.now()}_${file.originalname}`),
@@ -123,7 +122,6 @@ router.post('/:challengeId/board', uploadName.single('image'), async (req, res, 
     const data = JSON.parse(req.body.data);
     const image = req.file ? `${imageUploadPath}${req.file.filename}` : '';
 
-    console.log(data);
     const insertData = {
       ...data,
       image,
@@ -137,11 +135,21 @@ router.post('/:challengeId/board', uploadName.single('image'), async (req, res, 
 });
 
 // 도전별 커뮤니티 게시글 수정
-router.put('/:challengeId/board/:id', async (req, res, next) => {
-  const data = req.body;
-  challengesCommunityDAO.challengeBoardUpdate(data, (resp) => {
-    res.json(resp);
-  });
+router.put('/:challengeId/board/:id', uploadName.single('image'), async (req, res, next) => {
+  try {
+    const data = JSON.parse(req.body.data);
+    const image = req.file ? `${imageUploadPath}${req.file.filename}` : '';
+
+    const insertData = {
+      ...data,
+      image,
+    };
+    challengesCommunityDAO.challengeBoardUpdate(insertData, (resp) => {
+      res.json(resp);
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // 도전별 커뮤니티 게시글 삭제

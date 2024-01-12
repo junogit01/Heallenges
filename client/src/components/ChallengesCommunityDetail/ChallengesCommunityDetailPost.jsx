@@ -48,12 +48,12 @@ function ChallengesCommunityDetailPost() {
                 )}
 
                 <section className="mb-5" style={{ minHeight: '200px', height: 'auto', overflow: 'hidden' }}>
-                  <p className="fs-5 mb-4" style={{ overflowY: 'auto' }}>
+                  <p className="fs-5 mb-4" style={{ overflowY: 'auto', whiteSpace: 'pre-wrap' }}>
                     {challengesBoardDetail?.[0]?.contents}
                   </p>
                 </section>
               </article>
-              <div>
+              <div className="d-flex justify-content-end">
                 <table>
                   <tbody>
                     <tr>

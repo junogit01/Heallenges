@@ -1,35 +1,30 @@
 import React, { useEffect, useCallback } from 'react';
-import { useRecoilValue } from 'recoil';
-import { useParams, useNavigate } from 'react-router-dom';
-import { challengesListSelector, challengesBoardState, challengesState } from '@recoils/challenge';
-import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { useParams, useNavigate } from 'react-router-dom';
 import { loginState } from '@recoils/login';
+import { useRecoilValue } from 'recoil';
+import { challengesListSelector, challengesBoardState } from '@recoils/challenge';
+import { useForm } from 'react-hook-form';
 
-function ChallengesCommunityInsertBody() {
-  // url에서 파라미터 수집
+function ChallengesCommunityUpdateBody() {
+  const loginUser = useRecoilValue(loginState);
   const { challengeId, id } = useParams();
   const navigate = useNavigate();
-
-  // Recoil을 통해 상태 가져오기
-  const challengesBoard = useRecoilValue(challengesState);
-  const { getChallengeDetail, getChallengeBoardDetail } = useRecoilValue(challengesListSelector);
-
-  // 로그인 정보 가져와 로그인하지 않은 경우 로그인 페이지로 리다이렉트한다.
-  const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
-  // React-hook-form을 이용한  폼 상태 관리
+  const challengesBoard = useRecoilValue(challengesBoardState);
+  const { getChallengeDetail, getChallengeBoardDetail } = useRecoilValue(challengesListSelector);
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
       title: '',
       contents: '',
-      user_id: loginUser.id,
+      id: id,
       challenge_id: challengeId,
     },
     mode: 'onBlur',
@@ -38,15 +33,6 @@ function ChallengesCommunityInsertBody() {
   const submitEvent = useCallback(
     async data => {
       try {
-        // 관리자 확인
-        if (data.category === '공지사항' && loginUser.id !== challengesBoard[0]?.host_id) {
-          Swal.fire({
-            title: '권한 없음',
-            text: '공지 게시판 글은 관리자만 작성할 수 있습니다.',
-            icon: 'error',
-          });
-          return;
-        }
         // 저는 파일 업로드를 위해 formData로 변경했습니다
         const formData = new FormData();
 
@@ -58,8 +44,8 @@ function ChallengesCommunityInsertBody() {
         // 이 값을 서버에 전송한다. 이미지 업로드가 있어서 headers에 { "Content-type": "multipart/form-data" }를 지정
         // 만약 이미지 업로드가 없다면 headers 필요없고 formData로 변환할 필요없이 바로 매개변수로 받은 data를 바로 전송하면 된다
         const resp = await axios({
-          method: 'POST',
-          url: `http://localhost:8001/challenges/${challengeId}/board`,
+          method: 'put',
+          url: `http://localhost:8001/challenges/${challengeId}/board/${id}`,
           headers: { 'Content-type': 'multipart/form-data' },
           data: formData,
         });
@@ -76,8 +62,7 @@ function ChallengesCommunityInsertBody() {
             icon: 'error', // Alert 타입
           });
         }
-        // insertId를 통해 작성한 게시글로 이동
-        navigate(`/challenges/${challengeId}/board/${resp?.data?.data?.insertId}`);
+        navigate(`/challenges/${challengeId}/board/${id}`);
       } catch (error) {
         console.error(error);
       }
@@ -88,6 +73,11 @@ function ChallengesCommunityInsertBody() {
 
   useEffect(() => {
     getChallengeDetail(challengeId);
+    if (challengesBoard[0]) {
+      setValue('title', challengesBoard[0]?.title);
+      setValue('category', challengesBoard[0]?.category);
+      setValue('contents', challengesBoard[0]?.contents);
+    }
   }, [challengeId]);
 
   return (
@@ -103,6 +93,8 @@ function ChallengesCommunityInsertBody() {
                     <input
                       type="text"
                       className="form-control"
+                      id="title"
+                      name="title"
                       {...register('title', {
                         required: {
                           value: true,
@@ -123,7 +115,7 @@ function ChallengesCommunityInsertBody() {
                       {...register('category', {
                         required: {
                           value: true,
-                          message: '카테고리를 선택해주세요',
+                          message: '카테고리를 입력해주세요',
                         },
                       })}
                       defaultValue="자유">
@@ -131,9 +123,6 @@ function ChallengesCommunityInsertBody() {
                       <option value="공지사항">공지사항</option>
                       <option value="자유">자유</option>
                     </select>
-                    <span style={{ color: 'orange' }} className="fs-5">
-                      {errors.category?.message}
-                    </span>
                   </td>
                 </tr>
                 <tr>
@@ -143,10 +132,12 @@ function ChallengesCommunityInsertBody() {
                       cols="80"
                       rows="10"
                       className="form-control"
+                      id="contents"
+                      name="contents"
                       {...register('contents', {
                         required: {
                           value: true,
-                          message: '내용을 입력해주세요',
+                          message: '내용을 반드시 입력해주세요',
                         },
                       })}></textarea>
                     <span style={{ color: 'orange' }} className="fs-5">
@@ -168,7 +159,7 @@ function ChallengesCommunityInsertBody() {
                     <button
                       type="button"
                       className="btn btn-outline-secondary"
-                      onClick={() => navigate(`/challenges/${challengeId}/board`)}>
+                      onClick={() => navigate(`/challenges/${challengeId}/board/${id}`)}>
                       취소
                     </button>
                   </td>
@@ -182,4 +173,4 @@ function ChallengesCommunityInsertBody() {
   );
 }
 
-export default ChallengesCommunityInsertBody;
+export default ChallengesCommunityUpdateBody;

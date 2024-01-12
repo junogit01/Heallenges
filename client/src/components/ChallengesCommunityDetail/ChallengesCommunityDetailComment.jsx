@@ -9,7 +9,6 @@ import {
   challengesBoardState,
   deleteChallengeBoardComment,
 } from '@recoils/challenge';
-import { userState } from '@recoils/users';
 import Pagination from 'react-js-pagination';
 import one from './Paging.module.css';
 import { loginState } from '@recoils/login';
@@ -41,9 +40,9 @@ function ChallengesCommunityDetailComment() {
     async data => {
       try {
         const resp = await insertChallengeBoardComment(challengeId, id, data);
-        if (resp.data.status === '200') {
-          navigate('/');
-        }
+        setTimeout(function () {
+          window.location.replace(`/challenges/${challengeId}/board/${id}`);
+        }, 1000);
       } catch (error) {
         window.location.replace(`/challenges/${challengeId}/board/${id}`);
       }
@@ -54,7 +53,9 @@ function ChallengesCommunityDetailComment() {
   const deleteEvent = useCallback(async data => {
     try {
       const resp = await deleteChallengeBoardComment(challengeId, id, data);
-      window.location.replace(`/challenges/${challengeId}/board/${id}`);
+      setTimeout(function () {
+        window.location.replace(`/challenges/${challengeId}/board/${id}`);
+      }, 1000);
     } catch (error) {
       Swal.fire({
         title: '댓글 삭제 중 에러 발생',
@@ -62,7 +63,7 @@ function ChallengesCommunityDetailComment() {
         icon: 'error',
       });
     }
-  });
+  }, []);
 
   useEffect(() => {
     getChallengeBoardDetail(challengeId, id);
@@ -88,7 +89,7 @@ function ChallengesCommunityDetailComment() {
   const currentComments = commentList.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <div class="card bg-light">
+    <div className="card bg-light">
       <div className="card-body">
         <form
           className="mb-4"
@@ -125,7 +126,7 @@ function ChallengesCommunityDetailComment() {
                 />
                 <div className="ms-3">
                   <div className="fw-bold">{data?.nickname || '사용자 없음'}</div>
-                  <p>{data?.contents}</p>
+                  <p style={{ whiteSpace: 'pre-wrap' }}>{data?.contents}</p>
                   <div className="mt-3 d-flex flex-row">
                     <p>{data?.created}</p>
                     <button

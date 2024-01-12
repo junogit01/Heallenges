@@ -1,7 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { challengesSearchKeywordState } from '@recoils/challenge';
 
 function ChallengesDetailSideBar() {
+  const [searchKeyword, setSearchKeyword] = useRecoilState(challengesSearchKeywordState);
+  const [inputsearchValue, setInputsearchValue] = useState('');
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    setSearchKeyword(inputsearchValue);
+    setInputsearchValue('');
+  };
+
+  const handleChange = e => {
+    setInputsearchValue(e.target.value);
+  };
+
+  useEffect(() => {
+    return () => {
+      // 컴포넌트가 언마운트 될 때 검색어 초기화
+      setSearchKeyword('');
+    };
+  }, [setSearchKeyword]);
+
   const { id } = useParams();
   return (
     <div className="col-lg-3">
@@ -9,8 +31,15 @@ function ChallengesDetailSideBar() {
       <div className="card mb-4">
         <div className="card-header fs-3">검색</div>
         <div className="card-body">
-          <form action="" className="input-group">
-            <input type="text" className="form-control" placeholder="검색 내용" aria-label="Enter search term..." />
+          <form action="" className="input-group" onSubmit={handleSubmit}>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="검색할 내용을 작성해주세요"
+              aria-label="Enter search term..."
+              value={inputsearchValue}
+              onChange={handleChange}
+            />
             <button className="btn btn-primary" type="submit">
               검색
             </button>
@@ -27,7 +56,7 @@ function ChallengesDetailSideBar() {
               <ul className="list-unstyled mb-0">
                 <li>
                   <h4>
-                    <Link to={`/challenges/${id}/board`}>도전</Link>
+                    <Link to={`/challenges/${id}`}>도전</Link>
                   </h4>
                 </li>
                 <li>
