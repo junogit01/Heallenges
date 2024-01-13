@@ -163,6 +163,7 @@ export const challengesListSelector = selector({
       getChallengeBoardList,
       getChallengeBoardDetail,
       deleteChallengeBoard,
+      insertChallenge,
       insertChallengeBoardComment,
       deleteChallengeBoardComment,
     };
