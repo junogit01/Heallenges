@@ -22,7 +22,7 @@ const BoardCard = ({ id, image, title, start, end, created, reward }) => {
       onClick={() => {
         navigate(`/challenges/${id}`);
       }}>
-      <img style={{ cursor: 'pointer' }} src={image} className="card-img-top" alt="..." />
+      <img style={{ cursor: 'pointer', maxHeight: '9rem' }} src={image} className="card-img-top" alt="..." />
       <div className="card-body">
         <h5 className="card-title">{title}</h5>
       </div>
