@@ -1,12 +1,9 @@
-// 코드 다시 정리 해야 될듯
-
 import React, { useState } from 'react';
 import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { useParams, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { loginState } from '@recoils/login';
-// import { communityListSelector } from '@recoils/Community';
 
 function CommentInsertForm() {
   // URL 파라미터에서 게시물 ID 가져오기
@@ -17,9 +14,6 @@ function CommentInsertForm() {
 
   // React Router의 navigate 훅 사용
   const navigate = useNavigate();
-
-  // Recoil 셀렉터 가져오기
-  // const insertCommentSelector = communityListSelector.getcommunityList;
 
   // 댓글 상태 초기화
   const [comment, setComment] = useState({
@@ -54,7 +48,6 @@ function CommentInsertForm() {
         }
       },
     [],
-    // [insertCommentSelector],
   );
 
   // 폼 제출 시 호출되는 함수
@@ -74,7 +67,6 @@ function CommentInsertForm() {
           icon: 'success',
         });
 
-        // window.location.replace(`/community/${id}`);
         setTimeout(() => {
           window.location.replace(`/community/${id}`);
         }, 1000);
@@ -87,17 +79,12 @@ function CommentInsertForm() {
         });
       }
     } catch (error) {
-      // 댓글 삽입 중 에러가 발생한 경우 오류 알림 표시
+      // 서버로 댓글 삽입 중 에러가 발생한 경우 오류 알림 표시
       await Swal.fire({
         title: '오류 발생',
         text: '댓글 입력 중 오류가 발생했습니다. 다시 시도해주세요.',
         icon: 'error',
       });
-
-      // 에러가 서버 응답과 관련된 경우 서버 응답 데이터를 콘솔에 출력
-      if (error.response) {
-        // console.error('Server Response:', error.response.data);
-      }
     }
   };
 
@@ -121,5 +108,4 @@ function CommentInsertForm() {
   );
 }
 
-// 컴포넌트를 내보내기
 export default CommentInsertForm;
