@@ -1,27 +1,29 @@
-// // CommunitySidebar.jsx
+// CommunitySidebar.jsx
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { CommunitysearchKeywordState } from '@recoils/Community';
 
-function CommunitySidebar({ handleCategoryChange }) {
+function CommunitySidebar() {
+  // Recoil 상태를 통해 검색어와 검색어를 설정하는 함수 가져오기
   const [searchKeyword, setSearchKeyword] = useRecoilState(CommunitysearchKeywordState);
-  // console.log('sidebar:', searchKeyword);
-  // console.log(CommunitysearchKeywordState);
+  // 로컬 상태를 통해 입력된 검색어와 검색어를 설정하는 함수 가져오기
   const [inputsearchValue, setInputsearchValue] = useState('');
 
+  // 검색어 입력 폼 제출 핸들러
   const handleSubmit = e => {
     e.preventDefault();
     setSearchKeyword(inputsearchValue);
     setInputsearchValue('');
   };
 
+  // 검색어 입력 변경 핸들러
   const handleChange = e => {
-    // console.log('handleCategoryChange called with category:', category);
     setInputsearchValue(e.target.value);
   };
 
+  // 컴포넌트가 마운트 해제될 때 실행되는 useEffect
   useEffect(() => {
     return () => {
       // 컴포넌트가 언마운트 될 때 검색어 초기화
@@ -50,15 +52,16 @@ function CommunitySidebar({ handleCategoryChange }) {
           </div>
         </div>
       </form>
-
       {/* Categories widget */}
+      {/* 카테고리 관련 코드 (주석 처리되어 있음) */}
       {/* <div className="card mb-4">
         <div className="card-header">카테고리</div>
         <div className="card-body">
           <div className="row">
             <div className="col-sm-12">
-              <ul className="list-unstyled mb-0">
-                <li className="mb-2">
+              <ul className="list-unstyled mb-0"> */}
+      {/* 라우터를 이용한 버튼 */}
+      {/* <li className="mb-2">
                   <Link to="/community" className="btn btn-primary">
                     전체게시판
                   </Link>
@@ -78,7 +81,8 @@ function CommunitySidebar({ handleCategoryChange }) {
                     문의게시판
                   </Link>
                 </li> */}
-      {/*  */}
+
+      {/* 필터를 이용한 버튼() */}
       {/* <li className="mb-2">
                   <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
                     전체게시판
@@ -104,7 +108,6 @@ function CommunitySidebar({ handleCategoryChange }) {
           </div>
         </div>
       </div> */}
-
       {/* Write post widget */}
       <div className="card mb-4">
         <div className="card-header">글쓰기</div>

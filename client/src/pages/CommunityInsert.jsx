@@ -1,3 +1,5 @@
+// CommunityInsert.jsx
+
 import React from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -10,11 +12,11 @@ import CommunityHeader from '@components/Community/CommunityHeader';
 function CommunityInsert() {
   const navigate = useNavigate();
 
-  // 로그인이 안되면 로그인페이지로 이동
+  // 로그인이 안되면 로그인 페이지로 이동
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
-  // React Hook Form의 userForm 사용
+  // React Hook Form의 useForm 훅 사용
   const { register, handleSubmit } = useForm();
 
   // 카테고리 값을 변경해주는 함수 / 프론트(한글) -> 노드(숫자)
@@ -55,7 +57,7 @@ function CommunityInsert() {
         return;
       }
 
-      // 유저아이디, 제목, 내용, 카테고리 이미지 추가
+      // 유저 아이디, 제목, 내용, 카테고리 이미지 추가
       const formData = new FormData();
       formData.append(
         'data',
@@ -63,22 +65,16 @@ function CommunityInsert() {
       );
       formData.append('image', data.image[0]);
 
-      // back으로 이동
+      // 서버로 데이터 전송
       const resp = await axios.post('http://localhost:8001/community/', formData, {
         headers: { 'Content-type': 'multipart/form-data' },
       });
 
-      // 게시물 성공 시 알람 창
+      // 게시물 추가 성공 시 SweetAlert로 성공 알림
       if (resp.data.status === 200) {
-        // Swal.fire({
-        //   title: '게시물 추가',
-        //   text: '게시물이 추가 되었습니다.',
-        //   icon: 'success',
-        // });
-        // 글 작성 성공 시 http://localhost:3000/community/id로 이동
         navigate(`/community/${resp.data.data.insertId}`);
-        // 게시물 실패 시 알람 창
       } else {
+        // 게시물 추가 실패 시 SweetAlert로 에러 알림
         Swal.fire({
           title: '게시물 입력 실패',
           text: '다시 시도해주세요.',
@@ -96,18 +92,21 @@ function CommunityInsert() {
       <section className="property-grid grid">
         <div className="container">
           <div className="row">
+            {/* 폼 영역 */}
             <form className="col-sm-12" onSubmit={handleSubmit(onSubmit)}>
               <table className="table">
                 <tbody>
                   <tr>
                     <td>제목</td>
                     <td>
+                      {/* 제목 입력 필드 */}
                       <input type="text" className="form-control" {...register('title')} />
                     </td>
                   </tr>
                   <tr>
                     <td>카테고리</td>
                     <td>
+                      {/* 카테고리 선택 드롭다운 */}
                       <select className="form-select" {...register('category')} defaultValue="자유 게시판">
                         <option value="">카테고리 선택</option>
                         <option value="공지 게시판">공지 게시판</option>
@@ -119,17 +118,20 @@ function CommunityInsert() {
                   <tr>
                     <td>내용</td>
                     <td>
+                      {/* 내용 입력 텍스트 영역 */}
                       <textarea cols="80" rows="10" className="form-control" {...register('contents')}></textarea>
                     </td>
                   </tr>
                   <tr>
                     <td>이미지 첨부</td>
                     <td>
+                      {/* 이미지 업로드 필드 */}
                       <input type="file" accept="image/*" className="form-control" {...register('image')} />
                     </td>
                   </tr>
                   <tr>
                     <td colSpan="2" className="text-end">
+                      {/* 제출 및 취소 버튼 */}
                       <button type="submit" className="btn btn-outline-secondary">
                         입력
                       </button>{' '}
