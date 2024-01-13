@@ -1,18 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'react-calendar/dist/Calendar.css';
 import styled from 'styled-components';
 import Calendar from 'react-calendar';
 
-function CalendarInput({setData, data, propName}) {
+function CalendarInput({ setData, data, isStart, propName, defaultValue }) {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(new Date());
-
-  const handleChange = newValue => {
-    setValue(newValue);
-    const temp = { ...data, [propName]: newValue };
-    setData(temp);
-    setOpen(false);
-  };
 
   const formatDate = date => {
     const year = date.getFullYear().toString();
@@ -20,15 +12,25 @@ function CalendarInput({setData, data, propName}) {
     const d = date.getDate().toString().padStart(2, '0');
     const tempDate = `${year}-${month}-${d}`;
     return tempDate;
-    
+  };
+
+  const handleChange = newValue => {
+    const temp = { ...data, [propName]: formatDate(newValue) };
+    setData(temp);
+    setOpen(false);
   };
 
   return (
     <Wrapper>
-      <Button onClick={() => setOpen(!open)}>{formatDate(value)}</Button>
+      <Button onClick={() => setOpen(!open)}>
+        {(isStart ? data.start_date : data.end_date) || defaultValue?.slice(0, 10)}
+      </Button>
       {open && (
         <CalendarWrapper>
-          <Calendar onChange={handleChange} />
+          <Calendar
+            onChange={handleChange}
+            value={(isStart ? data.start_date : data.end_date) || defaultValue?.slice(0, 10)}
+          />
         </CalendarWrapper>
       )}
     </Wrapper>

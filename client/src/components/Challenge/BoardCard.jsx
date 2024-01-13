@@ -1,39 +1,37 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const BoardCard = ({ id, image, title, start, end, created, reward }) => {
   const navigate = useNavigate();
   const getTimeFromDate = date => {
     if (date === null || date === undefined) return '알 수 없음';
-    return date.substring(0, 10) + ' ' + date.substring(11, 19);
+
+    // 수정된 부분: 'yy-mm-dd' 형식으로 변경
+    const formattedDate = new Date(date).toLocaleDateString('ko-KR', {
+      year: '2-digit',
+      month: 'long',
+      day: 'numeric',
+    });
+
+    return formattedDate;
   };
-  getTimeFromDate();
   return (
-    <Card style={{ width: '18rem' }}>
-      <Card.Img
-        variant="top"
-        src={image}
-        style={{
-          height: '18rem',
-          objectFit: 'cover',
-        }}
-      />
-      <Card.Body>
-        <Card.Title>{title}</Card.Title>
-        <Card.Text>{'기간: ' + getTimeFromDate(start) + '~' + getTimeFromDate(end)}</Card.Text>
-        <Card.Text>{'생성일: ' + getTimeFromDate(created)}</Card.Text>
-        <Card.Text>{'보상: ' + reward}</Card.Text>
-        <Button
-          variant="primary"
-          onClick={() => {
-            navigate(`/challenges/${id}`);
-          }}>
-          자세히 보기
-        </Button>
-      </Card.Body>
-    </Card>
+    <div
+      className="card"
+      style={{ width: '18rem', maxHeight: '20rem', cursor: 'pointer' }}
+      onClick={() => {
+        navigate(`/challenges/${id}`);
+      }}>
+      <img style={{ cursor: 'pointer' }} src={image} className="card-img-top" alt="..." />
+      <div className="card-body">
+        <h5 className="card-title">{title}</h5>
+      </div>
+      <ul className="list-group list-group-flush ">
+        <li className="list-group mx-3">미션 기간</li>
+        <li className="list-group-item">{getTimeFromDate(start) + '~' + getTimeFromDate(end)}</li>
+        <li className="list-group-item">{'보상포인트 : ' + reward}</li>
+      </ul>
+    </div>
   );
 };
 

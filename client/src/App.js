@@ -21,7 +21,7 @@ import ChallengeCommunity from '@pages/ChallengeCommunity';
 import ChallengeCommunityDetail from '@pages/ChallengeCommunityDetail';
 import ChallengeCommunityInsert from '@pages/ChallengeCommunityInsert';
 import ChallengeCommunityUpdate from '@pages/ChallengeCommunityUpdate';
-// import ChallengeAdd from '@components/Challenge/ChallengeAdd';
+import ChallengeAdd from '@components/Challenge/ChallengeAdd';
 
 function App() {
   return (
@@ -44,7 +44,9 @@ function App() {
 
         {/* 챌린지 */}
         <Route path="/challenges" element={<Challenges />} />
-        {/* <Route path="/challenges/add" element={<ChallengeAdd />} /> */}
+        <Route path="/challenges/add" element={<ChallengeAdd />} />
+        <Route path="/challenges/edit/:id" element={<ChallengeAdd isEdit={true} />} />
+
         <Route path="/challenges/:id" element={<ChallengeDetail />} />
         <Route path="/challenges/:id/board" element={<ChallengeCommunity />} />
         <Route path="/challenges/:challengeId/board/:id" element={<ChallengeCommunityDetail />} />

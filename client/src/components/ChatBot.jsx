@@ -50,7 +50,10 @@ const ChatBot = () => {
     }
   };
 
-  // onKeyDown 속성이 한글 입력시 엔터키 두번 되는 문제 현상 해결
+  /*  onKeyUp, onKeyDown은 한글 입력 방식(조합)에 문제가 있는데
+      isComposing 속성으로 입력이 완료 되었는지 여부를 확인할 수 있다고 한다.
+      isComposing이 false여야 입력이 완료되었음을 나타낸다.
+  */
   const handleKeyDown = event => {
     if (event.key === 'Enter' && !event.nativeEvent.isComposing) {
       handleSendMessage();

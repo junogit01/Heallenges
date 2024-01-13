@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { loginState } from '@recoils/login';
 
@@ -10,8 +10,10 @@ const ChallengeMainSidebar = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleLink = (user, id) => {
-    if (!user?.email) alert('로그인이 필요한 서비스입니다.');
-    else navigate(`/challenges/${id}`);
+    if (!user?.email) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate(`/login`);
+    } else navigate(`/challenges/add`); // ${id}가 왜 사용했는지 확인 요망
     // navigate(`/challenges/${id}`);
   };
   const removeCategoryQuery = () => {
@@ -49,38 +51,43 @@ const ChallengeMainSidebar = () => {
             <div className="col-sm-12">
               <ul className="list-unstyled mb-0">
                 <li>
-                  <h4 onClick={removeCategoryQuery}>
+                  <Link
+                    onClick={removeCategoryQuery}
+                    style={{ textDecoration: 'underline', color: '#0d6efd', cursor: 'pointer' }}>
                     {/* <Link to="/community">전체 도전</Link> */}
                     전체 도전
-                  </h4>
+                  </Link>
                 </li>
                 <li>{/* <Link to="/community/notice">공지사항</Link> */}</li>
                 <li>
-                  <h4
+                  <Link
                     onClick={() => {
-                      setCategoryQuery('운동');
-                    }}>
+                      setCategoryQuery('Healthcare');
+                    }}
+                    style={{ textDecoration: 'underline', color: '#0d6efd', cursor: 'pointer' }}>
                     {/* <Link to="/community/notice">운동</Link> */}
                     운동
-                  </h4>
+                  </Link>
                 </li>
                 <li>
-                  <h4
+                  <Link
                     onClick={() => {
-                      setCategoryQuery('영양');
-                    }}>
+                      setCategoryQuery('Nutrition');
+                    }}
+                    style={{ textDecoration: 'underline', color: '#0d6efd', cursor: 'pointer' }}>
                     {/* <Link to="/community/free">영양</Link> */}
                     영양
-                  </h4>
+                  </Link>
                 </li>
                 <li>
-                  <h4
+                  <Link
                     onClick={() => {
-                      setCategoryQuery('취미');
-                    }}>
+                      setCategoryQuery('Hobby');
+                    }}
+                    style={{ textDecoration: 'underline', color: '#0d6efd', cursor: 'pointer' }}>
                     {/* <Link to="/community/qna">취미</Link> */}
                     취미
-                  </h4>
+                  </Link>
                 </li>
               </ul>
             </div>

@@ -1,26 +1,47 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ImagePlaceholder from './ImagePlaceholder';
+import { clearConfigCache } from 'prettier';
 
-function ImageInput({setData, data, propName}) {
-  const [value, setValue] = useState();
+function ImageInput({ setData, data, propName, inputData }) {
+  const [value, setValue] = useState('');
+  const [imgFile, setImgFile] = useState(null);
+
+  const imgRef = useRef();
+
+  useEffect(() => {
+    if (inputData) {
+      setValue(inputData);
+    }
+  }, [inputData]);
+
   const handleChange = event => {
+    event.preventDefault();
     const file = event.target.files[0];
+    const reader = new FileReader();
 
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setImgFile(reader.result);
+      };
+      // const imageUrl = URL.createObjectURL(file);
       setData({
         ...data,
-        [propName]: imageUrl,
+        [propName]: file,
       });
-      setValue(imageUrl);
+      setValue(file);
+    } else {
+      setData({
+        ...data,
+      });
     }
   };
 
   return (
     <Label>
-      {value ? <Img src={value} width={200} alt="도전 소개" /> : <ImagePlaceholder />}
-      <input type="file" hidden onChange={handleChange} />
+      {value ? <Img src={imgFile || value} width={200} alt="도전 이미지" /> : <ImagePlaceholder />}
+      <input type="file" hidden onChange={handleChange} ref={imgRef} />
     </Label>
   );
 }

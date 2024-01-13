@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 
 const imageUploadPath = 'http://localhost:8001/images/challenges/community/';
+const detailUploadPath = 'http://localhost:8001/images/challenges/detail/';
 const challengesDAO = require('./../models/challengesDAO');
 const challengesCommunityDAO = require('../models/challengesCommunityDAO');
 
@@ -17,6 +18,16 @@ const uploadName = multer({
     filename: (req, file, cb) => cb(null, `${Date.now()}_${file.originalname}`),
   }),
   limits: { fileSize: 1024 * 1024 * 3 },
+});
+
+const detailUpload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, path.join(__dirname, '..', 'public', 'images', 'challenges', 'detail'));
+    },
+    filename: (req, file, cb) => cb(null, `${Date.now()}_${file.originalname}`),
+  }),
+  limits: { fileSize: 1024 * 1024 * 30 },
 });
 
 // 챌린지 타이틀로 참가자 목록 조회
@@ -68,9 +79,17 @@ router.get('/', async (req, res, next) => {
 });
 
 // 도전 생성
-router.post('/', async (req, res, next) => {
-  const data = req.body;
-  challengesDAO.createChallenge(data, (resp) => {
+router.post('/', detailUpload.single('profile'), async (req, res, next) => {
+  const data = JSON.parse(req.body.data); // JSON.parse(req.body);
+  console.log('file upload=> ', data);
+
+  const profileImageName = req.file
+    ? `${detailUploadPath}${req.file.filename}`
+    : `${detailUploadPath}noimage.jpg`;
+  res.send('OK');
+  const sendData = { ...data, main_image: profileImageName };
+
+  challengesDAO.createChallenge(sendData, (resp) => {
     res.json(resp);
   });
 });
@@ -84,11 +103,21 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // 도전 수정
-router.put('/:id', async (req, res, next) => {
-  const data = req.body;
-  challengesDAO.updateChallenge(data, (resp) => {
-    res.json(resp);
-  });
+router.put('/:id', detailUpload.single('profile'), async (req, res, next) => {
+  const data = JSON.parse(req.body.data);
+
+  const profileImageName = req.file
+    ? `${detailUploadPath}${req.file.filename}`
+    : `${detailUploadPath}noimage.jpg`;
+  const sendData = { ...data, main_image: profileImageName };
+  console.log(sendData);
+  try {
+    challengesDAO.updateChallenge(sendData, (resp) => {
+      res.json(resp);
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 // 도전 삭제
