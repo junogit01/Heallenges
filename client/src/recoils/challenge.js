@@ -59,18 +59,6 @@ export const challengesListSelector = selector({
       set(challengesState, resp.data.data);
     });
 
-    const updateChallenge = getCallback(({ set }) => async (item, id) => {
-      const resp = await axios.put(`${baseURL}/${id}`);
-    });
-
-    const insertChallenge = getCallback(({ set }) => async item => {
-      const resp = await axios.post(`${baseURL}`);
-    });
-
-    const deleteChallenge = getCallback(({ set }) => async id => {
-      const resp = await axios.delete(`${baseURL}/${id}`);
-    });
-
     const getChallengeBoardList = getCallback(({ set }) => async (id, no, size) => {
       const resp = await axios.get(`${baseURL}/${id}/board`, { params: { no, size } });
       set(challengesBoardListState, resp.data.data);
@@ -89,14 +77,6 @@ export const challengesListSelector = selector({
           icon: 'error',
         });
       }
-    });
-
-    const insertChallengeBoard = getCallback(({ set }) => async (challengeId, item) => {
-      const resp = await axios.post(`${baseURL}/${challengeId}/board`, item);
-    });
-
-    const updateChallengeBoard = getCallback(({ set }) => async (challengeId, postId, item) => {
-      const resp = await axios.put(`${baseURL}/${challengeId}/board/${postId}`, item);
     });
 
     const deleteChallengeBoard = getCallback(({ set }) => async (challengeId, postId) => {
@@ -153,13 +133,8 @@ export const challengesListSelector = selector({
     return {
       getChallengeList,
       getChallengeDetail,
-      updateChallenge,
-      insertChallenge,
-      deleteChallenge,
       getChallengeBoardList,
       getChallengeBoardDetail,
-      insertChallengeBoard,
-      updateChallengeBoard,
       deleteChallengeBoard,
       insertChallengeBoardComment,
       deleteChallengeBoardComment,

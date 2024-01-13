@@ -37,7 +37,8 @@ function ChallengesCommunityDetailPost() {
                       <h5>작성자: {challengesBoardDetail?.[0]?.name}</h5>
                       {/* {challengesBoardDetail?.[0]?.name} */}
                     </div>
-                    게시일: {challengesBoardDetail?.[0]?.created} / 조회수: {challengesBoardDetail?.[0]?.view_cnt}
+                    카테고리 : {challengesBoardDetail?.[0]?.category} / 게시일: {challengesBoardDetail?.[0]?.created} /
+                    조회수: {challengesBoardDetail?.[0]?.view_cnt}
                   </div>
                 </header>
                 {/* 이미지가 존재할 때만 렌더링 */}
