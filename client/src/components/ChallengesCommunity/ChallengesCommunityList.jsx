@@ -52,16 +52,16 @@ function ChallengesCommunityList() {
       <div className="card mb-4">
         <div className="mt-3 d-flex ms-3 me-3">
           <h3 className="me-auto">게시판 목록</h3>
-          <button className="btn btn-outline-secondary me-2" onClick={() => handleCategoryChange('all')}>
+          <button className="btn btn-outline-secondary me-2 mb-2" onClick={() => handleCategoryChange('all')}>
             전체
           </button>
-          <button className="btn btn-outline-secondary me-2" onClick={() => handleCategoryChange('공지사항')}>
+          <button className="btn btn-outline-secondary me-2 mb-2" onClick={() => handleCategoryChange('공지사항')}>
             공지사항
           </button>
-          <button className="btn btn-outline-secondary me-2" onClick={() => handleCategoryChange('자유')}>
+          <button className="btn btn-outline-secondary me-2 mb-2" onClick={() => handleCategoryChange('자유')}>
             자유
           </button>
-          <button className="btn btn-outline-secondary me-2" onClick={() => handleCategoryChange('인증')}>
+          <button className="btn btn-outline-secondary me-2 mb-2" onClick={() => handleCategoryChange('인증')}>
             인증
           </button>
           {/* 추가적인 카테고리 버튼을 여기에 추가 */}
