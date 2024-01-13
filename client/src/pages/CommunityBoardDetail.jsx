@@ -34,7 +34,12 @@ function CommunityBoardDetail() {
   // 좋아요 이벤트 처리 함수
   const likeCommunityEvent = async () => {
     try {
-      const response = await fetch(`http://localhost:8001/community/like/${loginUser.id}/${id}`, {
+      // const response = await fetch(`http://localhost:8001/community/like/${loginUser.id}/${id}`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      const response = await fetch(`http://heallenges.cafe24app.com/community/like/${loginUser.id}/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +72,12 @@ function CommunityBoardDetail() {
   // 좋아요 취소 이벤트 처리 함수
   const dislikeCommunityEvent = async () => {
     try {
-      const response = await fetch(`http://localhost:8001/community/dislike/${loginUser.id}/${id}`, {
+      // const response = await fetch(`http://localhost:8001/community/dislike/${loginUser.id}/${id}`, {
+      //   method: 'DELETE',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      const response = await fetch(`http://heallenges.cafe24app.com/community/dislike/${loginUser.id}/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -100,7 +110,8 @@ function CommunityBoardDetail() {
   // 게시물 정보를 가져오는 함수
   const getCommunityPost = async () => {
     try {
-      const response = await fetch(`http://localhost:8001/community/community/${id}`);
+      // const response = await fetch(`http://localhost:8001/community/community/${id}`);
+      const response = await fetch(`http://heallenges.cafe24app.com/community/community/${id}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -134,7 +145,10 @@ function CommunityBoardDetail() {
   // 게시물 삭제 이벤트 처리 함수
   const deleteCommunityEvent = async () => {
     try {
-      const response = await fetch(`http://localhost:8001/community/${id}`, {
+      // const response = await fetch(`http://localhost:8001/community/${id}`, {
+      //   method: 'DELETE',
+      // });
+      const response = await fetch(`http://heallenges.cafe24app.com/community/${id}`, {
         method: 'DELETE',
       });
 

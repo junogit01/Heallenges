@@ -99,7 +99,10 @@ function CommunityUpdate() {
       formData.append('image', data.image[0]);
 
       // 백엔드로 수정 요청
-      const resp = await axios.put(`http://localhost:8001/community/${id}`, formData, {
+      // const resp = await axios.put(`http://localhost:8001/community/${id}`, formData, {
+      //   headers: { 'Content-type': 'multipart/form-data' },
+      // });
+      const resp = await axios.put(`http://heallenges.cafe24app.com/community/${id}`, formData, {
         headers: { 'Content-type': 'multipart/form-data' },
       });
 

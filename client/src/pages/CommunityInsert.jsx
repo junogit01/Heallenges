@@ -66,7 +66,10 @@ function CommunityInsert() {
       formData.append('image', data.image[0]);
 
       // 서버로 데이터 전송
-      const resp = await axios.post('http://localhost:8001/community/', formData, {
+      // const resp = await axios.post('http://localhost:8001/community/', formData, {
+      //   headers: { 'Content-type': 'multipart/form-data' },
+      // });
+      const resp = await axios.post('http://heallenges.cafe24app.com/community/', formData, {
         headers: { 'Content-type': 'multipart/form-data' },
       });
 
