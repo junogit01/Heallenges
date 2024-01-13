@@ -17,9 +17,9 @@ function ChallengeForm() {
         </FormItem>
         <FormItem label="도전 유형">
           <select name="type">
-            <option value="a">운동</option>
-            <option value="b">영양</option>
-            <option value="c">취미</option>
+            <option value="Healthcare">운동</option>
+            <option value="Nutrition">영양</option>
+            <option value="Hobby">취미</option>
           </select>
         </FormItem>
         <FormItem label="참여자 총 수">

@@ -64,7 +64,22 @@ export const challengesListSelector = selector({
     });
 
     const insertChallenge = getCallback(({ set }) => async item => {
-      const resp = await axios.post(`${baseURL}`);
+      console.log('item before', item);
+
+      const formData = new FormData();
+      formData.append('profile', item.main_image);
+      formData.append('data', JSON.stringify(item));
+
+      // console.log('image=> ', item.main_image[0])
+
+      const resp = await axios({
+        method: 'POST',
+        url: `${baseURL}`,
+        headers: { 'Content-type': 'multipart/form-data' },
+        data: formData,
+      });
+
+      console.log('insert=> ', resp);
     });
 
     const deleteChallenge = getCallback(({ set }) => async id => {
