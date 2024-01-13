@@ -185,9 +185,9 @@ const ChallengeAdd = ({ isEdit }) => {
               onChange={e => updateValue({ oldData: data, propName: 'type', propValue: e.target.value })}
               value={isEdit ? data.type || challengeDetail?.type : data.type}>
               <option value="">도전 유형을 선택해주세요.</option>
-              <option value="Healthcare">운동</option>
-              <option value="Nutrition">영양</option>
-              <option value="Hobby">취미</option>
+              <option value="운동">운동</option>
+              <option value="영양">영양</option>
+              <option value="취미">취미</option>
             </select>
           </FormItem>
           <FormItem label="참여자 총 수">

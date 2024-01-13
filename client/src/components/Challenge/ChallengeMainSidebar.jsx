@@ -43,57 +43,6 @@ const ChallengeMainSidebar = () => {
           </form>
         </div>
       </div>
-      {/* Categories widget */}
-      <div className="cursor-pointer card mb-4">
-        <div className="card-header">카테고리</div>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-sm-12">
-              <ul className="list-unstyled mb-0">
-                <li>
-                  <Link
-                    onClick={removeCategoryQuery}
-                    style={{ textDecoration: 'underline', color: '#0d6efd', cursor: 'pointer' }}>
-                    {/* <Link to="/community">전체 도전</Link> */}
-                    전체 도전
-                  </Link>
-                </li>
-                <li>{/* <Link to="/community/notice">공지사항</Link> */}</li>
-                <li>
-                  <Link
-                    onClick={() => {
-                      setCategoryQuery('Healthcare');
-                    }}
-                    style={{ textDecoration: 'underline', color: '#0d6efd', cursor: 'pointer' }}>
-                    {/* <Link to="/community/notice">운동</Link> */}
-                    운동
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    onClick={() => {
-                      setCategoryQuery('Nutrition');
-                    }}
-                    style={{ textDecoration: 'underline', color: '#0d6efd', cursor: 'pointer' }}>
-                    {/* <Link to="/community/free">영양</Link> */}
-                    영양
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    onClick={() => {
-                      setCategoryQuery('Hobby');
-                    }}
-                    style={{ textDecoration: 'underline', color: '#0d6efd', cursor: 'pointer' }}>
-                    {/* <Link to="/community/qna">취미</Link> */}
-                    취미
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* Side widget */}
       {/* <div className="card mb-4">
