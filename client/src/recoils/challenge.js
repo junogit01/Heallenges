@@ -106,14 +106,6 @@ export const challengesListSelector = selector({
       }
     });
 
-    const insertChallengeBoard = getCallback(({ set }) => async (challengeId, item) => {
-      const resp = await axios.post(`${baseURL}/${challengeId}/board`, item);
-    });
-
-    const updateChallengeBoard = getCallback(({ set }) => async (challengeId, postId, item) => {
-      const resp = await axios.put(`${baseURL}/${challengeId}/board/${postId}`, item);
-    });
-
     const deleteChallengeBoard = getCallback(({ set }) => async (challengeId, postId) => {
       const resp = await axios.delete(`${baseURL}/${challengeId}/board/${postId}`);
       if (resp.data.status === 200) {
@@ -168,13 +160,8 @@ export const challengesListSelector = selector({
     return {
       getChallengeList,
       getChallengeDetail,
-      updateChallenge,
-      insertChallenge,
-      deleteChallenge,
       getChallengeBoardList,
       getChallengeBoardDetail,
-      insertChallengeBoard,
-      updateChallengeBoard,
       deleteChallengeBoard,
       insertChallengeBoardComment,
       deleteChallengeBoardComment,

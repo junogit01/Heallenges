@@ -1,9 +1,6 @@
 // 리코일
 
-// import axios from 'axios';
-import { atom, atomFamily, selector } from 'recoil';
-
-// const baseURL = 'http://localhost:8001/community';
+import { atom, atomFamily } from 'recoil';
 
 export const communityListState = atom({
   key: 'communityListState',
@@ -38,20 +35,7 @@ export const CommunitysearchKeywordState = atom({
   default: [],
 });
 
-export const communityListSelector = selector({
-  key: 'community/communitySelector',
-  get: ({ get }) => {
-    const CommunitysearchKeyword = get(CommunitysearchKeywordState);
-    const allPosts = get(communityListState);
-    // console.log('CommunitysearchKeyword:', CommunitysearchKeyword);
-
-    // 검색어가 비어 있으면 전체 게시물 반환
-    if (!CommunitysearchKeyword) {
-      // console.log('nope:', CommunitysearchKeyword);
-      return allPosts;
-    }
-
-    // 검색어가 포함된 게시물 필터링
-    return allPosts.filter(post => post.title.toLowerCase().includes(CommunitysearchKeyword.toLowerCase()));
-  },
-});
+// export const communityListSelector = selector({
+//   key: 'community/communitySelector',
+//   // get: ({ get }) => {},
+// });

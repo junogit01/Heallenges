@@ -19,7 +19,7 @@ const sql = {
             JOIN user u ON c.user_id = u.id
             WHERE challenges.id = ? and c.id = ?`,
   // 커뮤니티 댓글 조회
-  challengeGetComment: `SELECT m.contents, m.id, u.profile_image, DATE_FORMAT(m.created_date, '%Y-%m-%d %h-%i-%s') as created, u.nickname
+  challengeGetComment: `SELECT m.contents, m.id, u.profile_image, DATE_FORMAT(m.created_date, '%Y-%m-%d %h-%i-%s') as created, u.nickname, u.id as user_id
                  FROM challenge_community c
                  JOIN challenge_comment m ON c.id = m.post_id
                  JOIN user u ON m.user_id = u.id
