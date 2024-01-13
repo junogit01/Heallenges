@@ -59,6 +59,33 @@ export const challengesListSelector = selector({
       set(challengesState, resp.data.data);
     });
 
+    const updateChallenge = getCallback(({ set }) => async (item, id) => {
+      const resp = await axios.put(`${baseURL}/${id}`);
+    });
+
+    const insertChallenge = getCallback(({ set }) => async item => {
+      console.log('item before', item);
+
+      const formData = new FormData();
+      formData.append('profile', item.main_image);
+      formData.append('data', JSON.stringify(item));
+
+      // console.log('image=> ', item.main_image[0])
+
+      const resp = await axios({
+        method: 'POST',
+        url: `${baseURL}`,
+        headers: { 'Content-type': 'multipart/form-data' },
+        data: formData,
+      });
+
+      console.log('insert=> ', resp);
+    });
+
+    const deleteChallenge = getCallback(({ set }) => async id => {
+      const resp = await axios.delete(`${baseURL}/${id}`);
+    });
+
     const getChallengeBoardList = getCallback(({ set }) => async (id, no, size) => {
       const resp = await axios.get(`${baseURL}/${id}/board`, { params: { no, size } });
       set(challengesBoardListState, resp.data.data);

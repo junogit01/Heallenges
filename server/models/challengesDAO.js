@@ -6,7 +6,7 @@ const sql = {
     (title, description, type, total_participants, rules, end_date, start_date, status, host_id, main_image, reward) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `,
-  getAllChallenges: `SELECT * FROM challenges limit ?, ?`,
+  getAllChallenges: `SELECT * FROM challenges ORDER BY created_at DESC limit ?, ?`,
   getChallengeById: `SELECT * FROM challenges WHERE id = ?`,
   updateChallenge: `
     UPDATE challenges 
@@ -43,8 +43,7 @@ const sql = {
             FROM challenge_community c
             JOIN challenges ON c.challenge_id = challenges.id
             JOIN user u ON c.user_id = u.id
-            WHERE challenges.id = ? and c.id = ?
-            ORDER BY c.created_at DESC`,
+            WHERE challenges.id = ? and c.id = ?`,
   // 커뮤니티 댓글 조회
   challengeGetComment: `SELECT m.contents, u.name, m.id
                  FROM challenge_community c
@@ -77,7 +76,7 @@ const challengeDAO = {
         challengeData.title,
         challengeData.description,
         challengeData.type,
-        challengeData.total_participants,
+        Number(challengeData.total_participants),
         challengeData.rules,
         challengeData.end_date,
         challengeData.start_date,
@@ -158,12 +157,12 @@ const challengeDAO = {
 
   // 챌린지 정보 수정
   updateChallenge: async (updatedChallengeData, callback) => {
+    console.log(updatedChallengeData);
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속 구문
       // 먼저 주어진 ID로 챌린지가 존재하는지 확인.
       const existingChallenge = await pool.query(sql.getChallengeById, [updatedChallengeData.id]);
-
       // 해당 ID의 챌린지가 데이터베이스에 존재하는지 확인.
       if (existingChallenge.length === 0) {
         // 존재하지 않는 경우, 콜백 함수를 호출하여 챌린지가 존재하지 않음을 알림.
@@ -239,6 +238,8 @@ const challengeDAO = {
         challengeTitle,
       ]);
 
+      console.log(challenge);
+
       // 해당 타이틀의 챌린지가 데이터베이스에 존재하는지 확인.
       if (challenge.length === 0) {
         // 존재하지 않는 경우, 콜백 함수를 호출하여 해당 챌린지가 존재하지 않음을 알림.
@@ -280,7 +281,7 @@ const challengeDAO = {
       const challenge = await pool.query(sql.getChallengeById, [participantData.challenge_id]);
 
       // 해당 챌린지가 존재하는지 또는 호스트 ID가 추가하려는 사용자의 ID와 일치하는지 확인.
-      if (challenge.length === 0 || challenge[0].host_id !== participantData.user_id) {
+      if (challenge.length === 0 || challenge[0].host_id === participantData.user_id) {
         // 챌린지가 존재하지 않거나 호스트 ID가 일치하지 않을 경우, 콜백 함수를 통해 해당 메시지를 반환.
         callback({ status: 404, message: '해당 챌린지가 존재하지 않습니다' });
       } else {
