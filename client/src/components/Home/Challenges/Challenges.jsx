@@ -13,14 +13,7 @@ import { challengesListState, challengesListSelector, challengesState } from '@r
 
 function Challenges() {
   const challengeList = useRecoilValue(challengesListState);
-  const {
-    getChallengeList,
-    // getChallengeDetail,
-    // getChallengeBoardList,
-    // updateChallengeBoard,
-    // insertChallengeBoardComment,
-    // deleteChallengeBoardComment,
-  } = useRecoilValue(challengesListSelector);
+  const { getChallengeList } = useRecoilValue(challengesListSelector);
 
   const challengeState = useEffect(() => {
     getChallengeList(1, 5);

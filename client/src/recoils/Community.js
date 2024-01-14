@@ -1,5 +1,4 @@
 // 리코일
-
 import { atom, atomFamily } from 'recoil';
 
 export const communityListState = atom({
