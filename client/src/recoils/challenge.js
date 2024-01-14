@@ -8,6 +8,16 @@ export const challengesListState = atom({
   default: [],
 });
 
+export const challengeSearchKeywordState = atom({
+  key: 'challengeSearchKeyword',
+  default: [],
+});
+
+export const participatedChallengesState = atom({
+  key: 'participatedChallengesState',
+  default: [],
+});
+
 export const challengesState = atom({
   key: 'challenges/challengesState',
   default: {
@@ -163,6 +173,8 @@ export const challengesListSelector = selector({
       getChallengeBoardList,
       getChallengeBoardDetail,
       deleteChallengeBoard,
+      updateChallenge,
+      deleteChallenge,
       insertChallenge,
       insertChallengeBoardComment,
       deleteChallengeBoardComment,

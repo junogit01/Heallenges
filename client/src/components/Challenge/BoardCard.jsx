@@ -22,11 +22,16 @@ const BoardCard = ({ id, image, title, start, end, created, reward }) => {
       onClick={() => {
         navigate(`/challenges/${id}`);
       }}>
-      <img style={{ cursor: 'pointer', maxHeight: '9rem' }} src={image} className="card-img-top" alt="..." />
-      <div className="card-body">
+      <img
+        style={{ cursor: 'pointer', maxHeight: '9rem', marginTop: '0.7rem' }}
+        src={image}
+        className="card-img-top"
+        alt="..."
+      />
+      <div className="card-body" style={{ marginBottom: '-0.5rem' }}>
         <h5 className="card-title">{title}</h5>
       </div>
-      <ul className="list-group list-group-flush ">
+      <ul className="list-group list-group-flush">
         <li className="list-group mx-3">미션 기간</li>
         <li className="list-group-item">{getTimeFromDate(start) + '~' + getTimeFromDate(end)}</li>
         <li className="list-group-item">{'보상포인트 : ' + reward}</li>

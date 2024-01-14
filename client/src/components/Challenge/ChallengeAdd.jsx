@@ -51,7 +51,7 @@ const ChallengeAdd = ({ isEdit }) => {
   };
   const [data, setData] = useState(dataType);
 
-  console.log(data);
+  // console.log(data);
 
   const navigate = useNavigate();
 
