@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -45,7 +46,8 @@ const CommunityBoard = () => {
     // API 호출하여 게시물 데이터 가져오기
     const fetchAllPosts = async () => {
       try {
-        const response = await fetch('http://localhost:8001/community');
+        // const response = await fetch('http://localhost:8001/community');
+        const response = await axios.get('http://heallenges.cafe24app.com/community');
         const data = await response.json();
         setAllPosts(data.data || []);
       } catch (error) {
@@ -58,7 +60,11 @@ const CommunityBoard = () => {
   }, []);
 
   // 검색된 게시물 필터링
-  const searchallPosts = allPosts.filter(data => data?.title.toLowerCase().includes(searchKeyword.toLowerCase()));
+  // const searchallPosts = allPosts.filter(data => data?.title.toLowerCase().includes(searchKeyword.toLowerCase()));
+  const searchallPosts = allPosts.filter(data => {
+    const title = data?.title;
+    return typeof title === 'string' && title.includes(searchKeyword);
+  });
 
   // 카테고리 변경 핸들러
   const handleCategoryChange = category => {
