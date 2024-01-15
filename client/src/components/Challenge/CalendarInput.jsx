@@ -23,7 +23,7 @@ function CalendarInput({ setData, data, isStart, propName, defaultValue }) {
   return (
     <Wrapper>
       <Button onClick={() => setOpen(!open)}>
-        {(isStart ? data.start_date : data.end_date) || defaultValue?.slice(0, 10)}
+        {(isStart ? data.start_date : data.end_date) || (defaultValue ? defaultValue.slice(0, 10) : '기간 선택')}
       </Button>
       {open && (
         <CalendarWrapper>

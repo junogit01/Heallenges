@@ -174,7 +174,7 @@ function ChallengesDetailBody({ data, title, id }) {
                     height: '300px',
                     backgroundImage: `url(${data?.main_image})`,
                     backgroundPosition: 'center',
-                    backgroundSize: 'contain',
+                    backgroundSize: 'cover', // 'contain' 대신 'cover'로 변경
                     backgroundRepeat: 'no-repeat',
                   }}></div>
                 <Container className="mt-5">
@@ -182,45 +182,51 @@ function ChallengesDetailBody({ data, title, id }) {
                     <Col>
                       <Card>
                         <Card.Body>
-                          <Card.Title style={{ fontSize: '3rem' }}>{data?.title}</Card.Title>
-                          <Card.Text>
-                            <Card.Text style={{ fontSize: '1.5rem' }}>
-                              {data?.description} <br />
-                            </Card.Text>
-                            <strong>도전 인원:</strong> {data?.total_participants}명 <br />
-                            <strong>도전 기간:</strong> {data?.start_date?.slice(0, 10)} -{' '}
-                            {data?.end_date?.slice(0, 10)} <br />
-                            <strong>도전 규칙:</strong> {data?.rules}
-                            <br />
-                            <strong>도전 보상:</strong> {data?.reward}
+                          <Card.Title style={{ fontSize: '3rem', marginBottom: '20px' }}>{data?.title}</Card.Title>
+                          <Card.Text style={{ fontSize: '1.5rem', marginBottom: '10px' }}>
+                            {data?.description}
                           </Card.Text>
-                          <div className="mb-2 d-flex" style={{ gap: '10px' }}>
-                            <Button variant="primary " onClick={handleAttend} disabled={isAttended}>
+                          <div className="d-flex align-items-center mb-3">
+                            <strong className="me-2">도전 인원:</strong>
+                            <span>{data?.total_participants}명</span>
+                          </div>
+                          <div className="d-flex align-items-center mb-3">
+                            <strong className="me-2">도전 기간:</strong>
+                            <span>
+                              {data?.start_date?.slice(0, 10)} - {data?.end_date?.slice(0, 10)}
+                            </span>
+                          </div>
+                          <div className="d-flex align-items-center mb-3">
+                            <strong className="me-2">도전 규칙:</strong>
+                            <span>{data?.rules}</span>
+                          </div>
+                          <div className="d-flex align-items-center mb-3">
+                            <strong className="me-2">도전 보상:</strong>
+                            <span>{data?.reward}</span>
+                          </div>
+                          <div className="d-flex mt-4">
+                            <Button variant="primary" onClick={handleAttend} disabled={isAttended}>
                               {buttonText}
                             </Button>
-                            <>
-                              {isAttended && (
-                                <Button variant="danger" onClick={handleCancelAttend}>
-                                  참가 취소
-                                </Button>
-                              )}
-                            </>
-                            <>
-                              {data.host_id === user.id && (
-                                <Button variant="warning ms-auto" style={{ margin: '0 5px' }}>
-                                  <Link
-                                    style={{ color: 'white', textDecoration: 'none' }}
-                                    to={`/challenges/edit/${data.id}`}>
-                                    도전 수정
-                                  </Link>
-                                </Button>
-                              )}
-                              {data.host_id === user.id && (
-                                <Button variant="danger" onClick={handleDelete}>
-                                  도전 삭제
-                                </Button>
-                              )}
-                            </>
+                            {isAttended && (
+                              <Button variant="danger" onClick={handleCancelAttend} className="ms-2">
+                                참가 취소
+                              </Button>
+                            )}
+                            {data.host_id === user.id && (
+                              <Button variant="warning ms-auto" className="ms-2">
+                                <Link
+                                  style={{ color: 'white', textDecoration: 'none' }}
+                                  to={`/challenges/edit/${data.id}`}>
+                                  도전 수정
+                                </Link>
+                              </Button>
+                            )}
+                            {data.host_id === user.id && (
+                              <Button variant="danger" onClick={handleDelete} className="ms-2">
+                                도전 삭제
+                              </Button>
+                            )}
                           </div>
                         </Card.Body>
                       </Card>
