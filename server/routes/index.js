@@ -5,7 +5,7 @@ const indexDAO = require('./../models/indexDAO');
 const multer = require('multer');
 const path = require('path');
 
-const imageUploadPath = 'http://localhost:8001/images/users/';
+const imageUploadPath = 'http://heallenges.cafe24app.com/images/users/';
 
 const uploadName = multer({
   storage: multer.diskStorage({
