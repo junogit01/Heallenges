@@ -21,25 +21,40 @@ function ChallengesCommunityList() {
   const { getChallengeBoardList, getchallengeParticipants } = useRecoilValue(challengesListSelector);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const challengeParticipants = useRecoilValue(challengesParticipantsState);
-
   const searchKeyword = useRecoilValue(challengesSearchKeywordState);
+  const [isLoading, setIsLoading] = useState(true);
 
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
-  // 도전 참가 확인 후 리다이렉트
-  if (Array.isArray(challengeParticipants) && !challengeParticipants.includes(loginUser.id)) {
-    Swal.fire({
-      title: '도전 참가 후 접속하실 수 있습니다.',
-      text: ' ',
-      icon: 'error',
-    });
-    navigate(`/challenges/${id}`);
-  }
 
   const searchBoardList = boardList.filter(data => data?.title.toLowerCase().includes(searchKeyword.toLowerCase()));
+
   useEffect(() => {
-    getChallengeBoardList(id);
-    getchallengeParticipants(id);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        await getchallengeParticipants(id);
+        if (!challengeParticipants.data.includes(loginUser.id)) {
+          Swal.fire({
+            title: '도전 참가 후 접속하실 수 있습니다.',
+            text: ' ',
+            icon: 'error',
+          });
+          navigate(`/challenges/${id}`);
+        } else {
+          await getChallengeBoardList(id);
+        }
+      } catch (error) {
+        Swal.fire({
+          title: '데이터 불러오기 실패.',
+          text: '다시 접속해주세요',
+          icon: 'error',
+        });
+        navigate(`/challenges/${id}`);
+      }
+      setIsLoading(false);
+    };
+    fetchData();
   }, [id, getChallengeBoardList, getchallengeParticipants]);
 
   const filteredBoardList = searchBoardList.filter(data => {
@@ -62,6 +77,16 @@ function ChallengesCommunityList() {
   const indexOfLastItem = page * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentList = filteredBoardList.slice(indexOfFirstItem, indexOfLastItem);
+
+  if (isLoading) {
+    return (
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    ); // 로딩 인디케이터 표시
+  }
+
+  // 도전 참가 확인 후 리다이렉트
 
   return (
     <>

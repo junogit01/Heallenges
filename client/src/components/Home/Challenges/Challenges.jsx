@@ -47,7 +47,7 @@ function Challenges() {
                   src={data?.main_image}
                   className="card-img-top img-thumbnail"
                   alt="..."
-                  style={{ height: '300px' }}
+                  style={{ height: '310px' }}
                 />
                 <div className="card-body">
                   <h5 className="card-title">{data?.title}</h5>
