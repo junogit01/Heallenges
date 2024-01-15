@@ -39,12 +39,14 @@ function ChallengesDetailBody({ data, title, id }) {
 
   useEffect(() => {
     // 사용자가 이미 참여한 도전인지 확인
-    const alreadyParticipated = participatedChallenges.includes(data.id);
+    const alreadyParticipated = participatedChallenges.some(
+      challenge => challenge.challengeId === data.id && challenge.userId === user.id,
+    );
     setIsAttended(alreadyParticipated);
     if (alreadyParticipated) {
       setButtonText('이미 참가한 도전입니다.');
     }
-  }, [data.id, participatedChallenges]);
+  }, [data.id, participatedChallenges, user.id]);
 
   // 도전 참가 버튼
   const handleAttend = async e => {
@@ -57,7 +59,7 @@ function ChallengesDetailBody({ data, title, id }) {
         });
 
         if (result.data.status === 200) {
-          const updatedParticipatedChallenges = [...participatedChallenges, data.id];
+          const updatedParticipatedChallenges = [...participatedChallenges, { challengeId: data.id, userId: user.id }];
           // 도전 참가 상태 저장
           setParticipatedChallenges(updatedParticipatedChallenges);
           setIsAttended(true);
@@ -100,7 +102,9 @@ function ChallengesDetailBody({ data, title, id }) {
 
         if (result.data.status === 200) {
           // 참가자 목록에서 제거
-          const updatedParticipatedChallenges = participatedChallenges.filter(challengeId => challengeId !== data.id);
+          const updatedParticipatedChallenges = participatedChallenges.filter(
+            challenge => challenge.challengeId !== data.id || challenge.userId !== user.id,
+          );
           // 도전 참가 상태 저장
           setParticipatedChallenges(updatedParticipatedChallenges);
           setIsAttended(false);
@@ -152,7 +156,7 @@ function ChallengesDetailBody({ data, title, id }) {
     setParticipatedChallenges(savedChallenges);
 
     // 현재 챌린지가 저장된 챌린지에 있는지 확인
-    setIsAttended(savedChallenges.includes(data.id));
+    setIsAttended(savedChallenges.some(challenge => challenge.challengeId === data.id && challenge.userId === user.id));
   }, []);
 
   // JSON 형태로 데이터를 직렬화 하여 로컬스토리지에 저장
