@@ -22,7 +22,7 @@ const ChallengeAdd = ({ isEdit }) => {
   useEffect(() => {
     const getDetailList = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:8001/challenges/${boardId}`);
+        const { data } = await axios.get(`/challenges/${boardId}`);
         setChallengeDetail(data.data[0]);
         setData(data.data[0]);
       } catch (e) {
@@ -130,7 +130,7 @@ const ChallengeAdd = ({ isEdit }) => {
           formData.append('profile', data.main_image);
           formData.append('data', JSON.stringify(data));
 
-          const response = await axios.put(`http://localhost:8001/challenges/${data.id}`, formData);
+          const response = await axios.put(`/challenges/${data.id}`, formData);
           console.log(response);
           if (response.data.status === 200) {
             Swal.fire({
