@@ -8,6 +8,7 @@ const path = require('path');
 const communityDAO = require('../models/communityDAO');
 
 const imageUploadPath = 'http://localhost:8001/images/community/';
+// const imageUploadPath = 'http://heallenges.cafe24app.com/images/community/';
 
 const uploadName = multer({
   storage: multer.diskStorage({
@@ -77,6 +78,7 @@ router.get('/:id?', (req, res) => {
   const categoryId = req.params.id || null; // 동적 라우팅 매개변수를 사용하여 카테고리 ID를 가져옵니다. 없으면 null로 설정합니다.
 
   communityDAO.boardList(categoryId, (resp) => {
+    // communityDAO.boardList((resp) => {
     res.json(resp);
   });
 });
@@ -125,12 +127,5 @@ router.delete('/dislike/:user_id/:post_id', (req, res) => {
     res.json(resp);
   });
 });
-
-// router.get('/search', (req, res, next) => {
-//   const searchKeyword = req.query.keyword || ''; // 검색어는 쿼리 매개변수로 전달됨
-//   communityDAO.communitySearch(searchKeyword, (resp) => {
-//     res.json(resp);
-//   });
-// });
 
 module.exports = router;

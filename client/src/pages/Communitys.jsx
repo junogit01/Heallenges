@@ -1,5 +1,4 @@
 // Communitys.jsx
-
 import CommunityHeader from '../components/Community/CommunityHeader';
 import CommunitySidebar from '../components/Community/CommunitySidebar';
 import CommunityBoard from '../components/Community/CommunityBoard';
