@@ -17,7 +17,11 @@ function CommunityInsert() {
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
   // React Hook Form의 useForm 훅 사용
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   // 카테고리 값을 변경해주는 함수 / 프론트(한글) -> 노드(숫자)
   const getCategoryValue = categoryName => {
@@ -26,6 +30,7 @@ function CommunityInsert() {
         return 1;
       case '자유 게시판':
         return 2;
+      // 필요 시 추가 (아래는 예시)
       // case '문의 게시판':
       //   return 3;
       default:
@@ -69,9 +74,6 @@ function CommunityInsert() {
       const resp = await axios.post('/community/', formData, {
         headers: { 'Content-type': 'multipart/form-data' },
       });
-      // const resp = await axios.post('http://heallenges.cafe24app.com/api/community/', formData, {
-      //   headers: { 'Content-type': 'multipart/form-data' },
-      // });
 
       // 게시물 추가 성공 시 SweetAlert로 성공 알림
       if (resp.data.status === 200) {
@@ -103,7 +105,10 @@ function CommunityInsert() {
                     <td>제목</td>
                     <td>
                       {/* 제목 입력 필드 */}
-                      <input type="text" className="form-control" {...register('title')} />
+                      <input type="text" className="form-control" {...register('title', { maxLength: 50 })} />
+                      {errors.title && errors.title.type === 'maxLength' && (
+                        <span className="text-danger">제목은 50자 이하여야 합니다.</span>
+                      )}
                     </td>
                   </tr>
                   <tr>
@@ -114,7 +119,7 @@ function CommunityInsert() {
                         <option value="">카테고리 선택</option>
                         <option value="공지 게시판">공지 게시판</option>
                         <option value="자유 게시판">자유 게시판</option>
-                        {/* <option value="문의 게시판">문의 게시판</option> */}
+                        {/* 필요시 추가 */}
                       </select>
                     </td>
                   </tr>

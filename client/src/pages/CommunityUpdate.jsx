@@ -21,7 +21,12 @@ function CommunityUpdate() {
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
   // React Hook Form의 useForm 사용
-  const { register, handleSubmit, setValue } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
 
   // communityState로 기존 게시물에 작성된 값을 가져오기 위해 사용
   const [community] = useRecoilState(communityState(id));
@@ -102,9 +107,6 @@ function CommunityUpdate() {
       const resp = await axios.put(`/community/${id}`, formData, {
         headers: { 'Content-type': 'multipart/form-data' },
       });
-      // const resp = await axios.put(`http://heallenges.cafe24app.com/community/${id}`, formData, {
-      //   headers: { 'Content-type': 'multipart/form-data' },
-      // });
 
       if (resp.data.status === 200) {
         // 수정 성공 시 알람 창
@@ -134,7 +136,10 @@ function CommunityUpdate() {
                   <tr>
                     <td>제목</td>
                     <td>
-                      <input type="text" className="form-control" {...register('title')} />
+                      <input type="text" className="form-control" {...register('title', { maxLength: 50 })} />
+                      {errors.title && errors.title.type === 'maxLength' && (
+                        <span className="text-danger">제목은 50자 이하여야 합니다.</span>
+                      )}
                     </td>
                   </tr>
                   <tr>
@@ -144,7 +149,7 @@ function CommunityUpdate() {
                         <option value="">카테고리 선택</option>
                         <option value="공지 게시판">공지 게시판</option>
                         <option value="자유 게시판">자유 게시판</option>
-                        {/* <option value="문의 게시판">문의 게시판</option> */}
+                        {/* 필요시 추가 */}
                       </select>
                     </td>
                   </tr>

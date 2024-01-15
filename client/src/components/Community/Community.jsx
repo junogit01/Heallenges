@@ -47,7 +47,6 @@ const CommunityBoard = () => {
     const fetchAllPosts = async () => {
       try {
         const response = await axios.get('/community');
-        // const response = await axios.get('http://heallenges.cafe24app.com/community');
         setAllPosts(response.data.data || []);
       } catch (error) {
         console.error('데이터 가져오기 오류:', error);
@@ -102,9 +101,6 @@ const CommunityBoard = () => {
           <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(2)}>
             자유
           </button>
-          {/* <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(3)}>
-            문의
-          </button> */}
         </div>
       </div>
 
