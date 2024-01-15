@@ -27,7 +27,7 @@ function NavHeader() {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+      <nav className="navbar navbar-expand-lg ">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
             <img src="images/ci_heallenges_02.png" alt="" style={{ width: '170px', height: '30px' }} />

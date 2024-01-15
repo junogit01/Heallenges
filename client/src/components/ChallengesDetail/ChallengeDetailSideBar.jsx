@@ -24,7 +24,7 @@ function ChallengesDetailSideBar() {
     };
   }, [setSearchKeyword]);
 
-  const { id } = useParams();
+  const { challengeId, id } = useParams();
   return (
     <div className="col-lg-3">
       {/* Search widget */}
@@ -61,7 +61,7 @@ function ChallengesDetailSideBar() {
                 </li>
                 <li>
                   <h4>
-                    <Link to={`/challenges/${id}/board`}>커뮤니티</Link>
+                    <Link to={`/challenges/${challengeId}/board`}>커뮤니티</Link>
                   </h4>
                 </li>
               </ul>
