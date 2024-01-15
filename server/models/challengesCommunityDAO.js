@@ -5,6 +5,13 @@ const sql = {
   challengeBoardInsert: `INSERT INTO challenge_community (title, contents, image, category, challenge_id, user_id) VALUES (?, ?, ?, ?, ?, ?)`,
   // 커뮤니티 조회수 증가
   challengeBoardincCount: `UPDATE challenge_community SET view_cnt = view_cnt + 1 WHERE id = ?`,
+  // 인증 포인트 부여
+  challengeRewardincCount: `UPDATE user SET reward_cnt = reward_cnt + ?
+                             WHERE id = ?`,
+  // 인증 포인트 확인
+  getChallengeById: `SELECT * 
+                     FROM challenges 
+                     WHERE id = ?`,
   // 커뮤니티 게시글 리스트 조회
   challengeBoardList: `SELECT m.title, m.view_cnt, u.name, u.nickname, m.id, m.category, DATE_FORMAT(m.created_at, '%Y-%m-%d %h-%i-%s') as created, m.image
                 FROM challenges c
@@ -130,7 +137,7 @@ const challengesCommunityDAO = {
 
   // 도전 게시글 작성
   challengeBoardInsert: async (item, callback) => {
-    const { title, contents, image, category, challenge_id, user_id } = item;
+    const { title, contents, image, category, challenge_id, user_id, id } = item;
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
@@ -144,6 +151,11 @@ const challengesCommunityDAO = {
         challenge_id,
         user_id,
       ]);
+      if (category === '인증') {
+        const challengeData = await conn.query(sql.getChallengeById, [id]);
+        const reward_cnt = challengeData[0][0].reward;
+        await conn.query(sql.challengeRewardincCount, [reward_cnt, user_id]);
+      }
       return callback({ status: 200, message: '게시글 작성 완료', data: resp });
     } catch (error) {
       conn.rollback(); // 커밋 이전 상태로 돌려야한다.
