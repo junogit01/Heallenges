@@ -16,8 +16,8 @@ const getCategoryName = categoryNumber => {
       return '공지';
     case 2:
       return '자유';
-    case 3:
-      return '문의';
+    // case 3:
+    //   return '문의';
     default:
       return '기타';
   }
@@ -46,10 +46,9 @@ const CommunityBoard = () => {
     // API 호출하여 게시물 데이터 가져오기
     const fetchAllPosts = async () => {
       try {
-        // const response = await fetch('http://localhost:8001/community');
-        const response = await axios.get('http://heallenges.cafe24app.com/community');
-        const data = await response.json();
-        setAllPosts(data.data || []);
+        const response = await axios.get('http://localhost:8001/community');
+        // const response = await axios.get('http://heallenges.cafe24app.com/community');
+        setAllPosts(response.data.data || []);
       } catch (error) {
         console.error('데이터 가져오기 오류:', error);
       }
@@ -60,11 +59,7 @@ const CommunityBoard = () => {
   }, []);
 
   // 검색된 게시물 필터링
-  // const searchallPosts = allPosts.filter(data => data?.title.toLowerCase().includes(searchKeyword.toLowerCase()));
-  const searchallPosts = allPosts.filter(data => {
-    const title = data?.title;
-    return typeof title === 'string' && title.includes(searchKeyword);
-  });
+  const searchallPosts = allPosts.filter(data => data?.title.includes(searchKeyword));
 
   // 카테고리 변경 핸들러
   const handleCategoryChange = category => {
@@ -107,9 +102,9 @@ const CommunityBoard = () => {
           <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(2)}>
             자유
           </button>
-          <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(3)}>
+          {/* <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(3)}>
             문의
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -117,30 +112,34 @@ const CommunityBoard = () => {
       <table className="table">
         <thead>
           <tr>
-            <th scope="col">No</th>
-            <th scope="col">카테고리</th>
-            <th scope="col">제목</th>
-            <th scope="col">글쓴이</th>
-            <th scope="col">게시일</th>
-            <th scope="col">좋아요</th>
-            <th scope="col">조회수</th>
+            <th className="text-center">No</th>
+            <th className="text-center">카테고리</th>
+            <th className="text-center">제목</th>
+            <th className="text-center">글쓴이</th>
+            <th className="text-center">게시일</th>
+            <th className="text-center">좋아요</th>
+            <th className="text-center">조회수</th>
           </tr>
         </thead>
         <tbody>
           {/* 현재 페이지에 표시할 게시물들 매핑 */}
           {currentPosts.map((post, index) => (
-            <tr key={post.id}>
+            <tr className="text-center" key={post.id}>
               {/* 게시물 정보 표시 */}
               <th scope="row">{indexOfFirstPost + index + 1}</th>
-              <td>{getCategoryName(post.category)}</td>
-              <td>
+              <td className="text-center">{getCategoryName(post.category)}</td>
+              <td className="text-center">
                 {/* 게시물 제목에 링크 추가 */}
-                <Link to={`/community/${post.id}`}>{post.title}</Link>
+                <Link to={`/community/${post.id}`}>
+                  {/* 제목이 15자 이상인 경우 15자 뒤로 "..."으로 표시 */}
+                  {/* {post.title} */}
+                  {post.title.length > 15 ? `${post.title.slice(0, 15)}...` : post.title}
+                </Link>
               </td>
-              <td>{post.nickname}</td>
-              <td>{moment(post.created_at).format('YYYY-MM-DD')}</td>
-              <td>{post.like_cnt}</td>
-              <td>{post.view_cnt}</td>
+              <td className="text-center">{post.nickname}</td>
+              <td className="text-center">{moment(post.created_at).format('YYYY-MM-DD')}</td>
+              <td className="text-center">{post.like_cnt}</td>
+              <td className="text-center">{post.view_cnt}</td>
             </tr>
           ))}
         </tbody>

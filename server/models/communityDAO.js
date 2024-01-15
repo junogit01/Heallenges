@@ -176,7 +176,6 @@ const communityDAO = {
     let conn = null;
     try {
       conn = await pool.getConnection(); // DB 연결
-      // eslint-disable-next-line prefer-const
       let query = sql.listAll;
 
       if (category) {
@@ -368,23 +367,6 @@ const communityDAO = {
       if (conn !== null) conn.release();
     }
   },
-
-  // communitySearch: async (item, callback) => {
-  //   let conn = null;
-  //   try {
-  //     conn = await pool.getConnection();
-  //     const [data, fieldset] = await conn.query(sql.communitySearch, [`${item}`]);
-  //     callback({
-  //       status: 200,
-  //       message: '검색 성공',
-  //       data: data,
-  //     });
-  //   } catch (error) {
-  //     callback({ status: 500, message: '랭킹 검색 실패', error: error });
-  //   } finally {
-  //     if (conn !== null) conn.release();
-  //   }
-  // },
 
   // 마지막 괄호 올라옴 방지 주석
 };
