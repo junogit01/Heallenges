@@ -1,3 +1,6 @@
+// CommunityList
+// 게시판 목록 조회
+
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import axios from 'axios';
