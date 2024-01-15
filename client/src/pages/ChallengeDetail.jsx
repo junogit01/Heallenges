@@ -8,8 +8,6 @@ function ChallengesDetail() {
   const [challengeDetail, setChallengeDetail] = useState([]);
   const boardId = useParams().id;
 
-  console.log(challengeDetail);
-
   useEffect(() => {
     const getDetailList = async () => {
       try {

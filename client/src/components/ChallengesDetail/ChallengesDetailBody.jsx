@@ -12,8 +12,11 @@ function ChallengesDetailBody({ data, title, id }) {
   const user = useRecoilValue(loginState);
   const [challengeUserInfo, setChallengeUserInfo] = useState([]);
   const navigate = useNavigate();
+  // 참가 여부에 따른 버튼 활성화,비활성화 저장
   const [isAttended, setIsAttended] = useState(false);
+  // 참가 여부에 따른 버튼 텍스트 변화
   const [buttonText, setButtonText] = useState('도전 참여');
+  // 참가한 챌린지 저장
   const [participatedChallenges, setParticipatedChallenges] = useRecoilState(participatedChallengesState);
 
   useEffect(() => {
@@ -55,9 +58,11 @@ function ChallengesDetailBody({ data, title, id }) {
 
         if (result.data.status === 200) {
           const updatedParticipatedChallenges = [...participatedChallenges, data.id];
+          // 도전 참가 상태 저장
           setParticipatedChallenges(updatedParticipatedChallenges);
           setIsAttended(true);
           setButtonText('참여 완료');
+          // 로컬 스토리지에도 저장
           saveToLocalStorage(updatedParticipatedChallenges);
 
           Swal.fire({
@@ -66,7 +71,7 @@ function ChallengesDetailBody({ data, title, id }) {
           });
         } else {
           Swal.fire({
-            text: '이 챌린지는 참가자가 초과되었습니다.', // Alert 내용
+            text: '모집인원이 마감되었습니다', // Alert 내용
             icon: 'error', // Alert 타입
           });
         }
@@ -96,9 +101,11 @@ function ChallengesDetailBody({ data, title, id }) {
         if (result.data.status === 200) {
           // 참가자 목록에서 제거
           const updatedParticipatedChallenges = participatedChallenges.filter(challengeId => challengeId !== data.id);
+          // 도전 참가 상태 저장
           setParticipatedChallenges(updatedParticipatedChallenges);
           setIsAttended(false);
           setButtonText('도전 참여');
+          // 로컬 스토리지에도 저장
           saveToLocalStorage(updatedParticipatedChallenges);
           Swal.fire({
             text: '참가가 취소되었습니다.',
@@ -148,9 +155,11 @@ function ChallengesDetailBody({ data, title, id }) {
     setIsAttended(savedChallenges.includes(data.id));
   }, []);
 
+  // JSON 형태로 데이터를 직렬화 하여 로컬스토리지에 저장
   const saveToLocalStorage = challenges => {
     localStorage.setItem('participatedChallenges', JSON.stringify(challenges));
   };
+
   return (
     <>
       <main id="main" style={{ marginTop: '30px' }}>

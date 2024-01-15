@@ -16,12 +16,14 @@ function ChallengesDetailHead({ title }) {
   return (
     <nav className="navbar navbar-light ">
       <Container className="d-flex justify-content-center">
-        <div className="text-center mx-auto mb-4 " style={{ width: 'fit-content' }}>
+        <div
+          className="text-center mx-auto mb-5 "
+          style={{ width: 'fit-content', paddingTop: '3rem', marginBottom: '1rem' }}>
           <p className="navbar-brand " style={{ fontSize: '36px' }}>
             {title}
           </p>
         </div>
-        <div className="d-flex justify-content-end">
+        {/* <div className="d-flex justify-content-end">
           <form className="d-flex " style={{ width: '20rem', marginTop: '7rem', marginRight: '1.5rem' }}>
             <input
               className="form-control"
@@ -34,7 +36,7 @@ function ChallengesDetailHead({ title }) {
             />
             <i class="bi bi-search" style={{ fontSize: '2rem', marginLeft: '-4rem' }}></i>
           </form>
-        </div>
+        </div> */}
       </Container>
     </nav>
   );

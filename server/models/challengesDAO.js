@@ -21,6 +21,8 @@ const sql = {
   getChallengesByCategory: `SELECT * FROM challenges WHERE type = ?`,
   // 챌린지 참가자 조회
   getParticipantsCount: `SELECT COUNT(*) AS participant_count FROM challenge_participants WHERE challenge_id = ?`,
+  // 챌린지 참가 여부 조회
+  participatedChallenge: `SELECT COUNT(*) AS participanted FROM challenge_participants WHERE user_id = ? AND challenge_id = ?`,
   // 커뮤니티 게시글 작성
   challengeBoardInsert: `INSERT INTO challenge_community (title, contents, image, category, challenge_id, user_id) VALUES (?, ?, ?, ?, ?, ?)`,
   // 커뮤니티 게시글 수정
@@ -319,6 +321,25 @@ const challengeDAO = {
     } catch (error) {
       // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출.
       callback({ status: 500, message: '참가자 추가 실패', error: error });
+    }
+  },
+  // 참가 여부 조회
+  participatedChallenge: async (challengeId, userId, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속 구문
+      const challenge = await pool.query(sql.participatedChallenge, [userId, challengeId]);
+      // 참가자 삭제 후, 성공 메시지를 콜백 함수를 통해 반환.
+      callback({
+        status: 200,
+        message: '참가여부가 성공적으로 조회되었습니다.',
+        data: challenge[0][0].participanted,
+      });
+    } catch (error) {
+      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출.
+      callback({ status: 500, message: '참가여부 조회 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 연결 종료
     }
   },
 
