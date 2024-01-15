@@ -34,7 +34,7 @@ function CommunityBoardDetail() {
   // 좋아요 이벤트 처리 함수
   const likeCommunityEvent = async () => {
     try {
-      const response = await fetch(`http://localhost:8001/community/like/${loginUser.id}/${id}`, {
+      const response = await fetch(`http://localhost:8001/api/community/like/${loginUser.id}/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ function CommunityBoardDetail() {
   // 좋아요 취소 이벤트 처리 함수
   const dislikeCommunityEvent = async () => {
     try {
-      const response = await fetch(`http://localhost:8001/community/dislike/${loginUser.id}/${id}`, {
+      const response = await fetch(`http://localhost:8001/api/community/dislike/${loginUser.id}/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ function CommunityBoardDetail() {
   // 게시물 정보를 가져오는 함수
   const getCommunityPost = async () => {
     try {
-      const response = await axios.get(`http://localhost:8001/community/community/${id}`);
+      const response = await axios.get(`/community/community/${id}`);
       // const response = await axios.get(`http://heallenges.cafe24app.com/community/community/${id}`);
 
       if (response.status !== 200) {
@@ -145,7 +145,7 @@ function CommunityBoardDetail() {
   // 게시물 삭제 이벤트 처리 함수
   const deleteCommunityEvent = async () => {
     try {
-      const response = await axios.delete(`http://localhost:8001/community/${id}`);
+      const response = await axios.delete(`/community/${id}`);
       // const response = await axios.delete(`http://heallenges.cafe24app.com/community/${id}`);
 
       if (response.status !== 200) {

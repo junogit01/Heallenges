@@ -99,7 +99,7 @@ function CommunityUpdate() {
       formData.append('image', data.image[0]);
 
       // 백엔드로 수정 요청
-      const resp = await axios.put(`http://localhost:8001/community/${id}`, formData, {
+      const resp = await axios.put(`/community/${id}`, formData, {
         headers: { 'Content-type': 'multipart/form-data' },
       });
       // const resp = await axios.put(`http://heallenges.cafe24app.com/community/${id}`, formData, {
@@ -144,7 +144,7 @@ function CommunityUpdate() {
                         <option value="">카테고리 선택</option>
                         <option value="공지 게시판">공지 게시판</option>
                         <option value="자유 게시판">자유 게시판</option>
-                        <option value="문의 게시판">문의 게시판</option>
+                        {/* <option value="문의 게시판">문의 게시판</option> */}
                       </select>
                     </td>
                   </tr>
