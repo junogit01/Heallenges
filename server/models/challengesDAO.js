@@ -6,7 +6,7 @@ const sql = {
     (title, description, type, total_participants, rules, end_date, start_date, status, host_id, main_image, reward) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `,
-  getAllChallenges: `SELECT * FROM challenges ORDER BY created_at DESC limit ?, ?`,
+  getAllChallenges: `SELECT * FROM challenges ORDER BY created_at DESC`,
   getChallengeById: `SELECT * FROM challenges WHERE id = ?`,
   updateChallenge: `
     UPDATE challenges 
@@ -19,7 +19,10 @@ const sql = {
   removeParticipant: `DELETE FROM challenge_participants WHERE challenge_id = ? AND user_id = ?`,
   completeChallenge: `UPDATE challenges SET status = 'Completed' WHERE id = ?`,
   getChallengesByCategory: `SELECT * FROM challenges WHERE type = ?`,
-
+  // 챌린지 참가자 조회
+  getParticipantsCount: `SELECT COUNT(*) AS participant_count FROM challenge_participants WHERE challenge_id = ?`,
+  // 챌린지 참가 여부 조회
+  participatedChallenge: `SELECT COUNT(*) AS participanted FROM challenge_participants WHERE user_id = ? AND challenge_id = ?`,
   // 커뮤니티 게시글 작성
   challengeBoardInsert: `INSERT INTO challenge_community (title, contents, image, category, challenge_id, user_id) VALUES (?, ?, ?, ?, ?, ?)`,
   // 커뮤니티 게시글 수정
@@ -238,7 +241,7 @@ const challengeDAO = {
         challengeTitle,
       ]);
 
-      console.log(challenge);
+      // console.log(challenge);
 
       // 해당 타이틀의 챌린지가 데이터베이스에 존재하는지 확인.
       if (challenge.length === 0) {
@@ -252,12 +255,12 @@ const challengeDAO = {
         const participants = await pool.query(sql.getParticipants, [challenge[0].id]);
 
         // 참가자 목록을 콘솔에 출력.
-        console.log('참가자 목록:');
-        participants.forEach((participant) => {
-          console.log(
-            `ID: ${participant.id}, USER_ID: ${participant.user_id}, CHALLENGE_ID: ${participant.challenge_id}`,
-          );
-        });
+        // console.log('참가자 목록:');
+        // participants.forEach((participant) => {
+        //   console.log(
+        //     `ID: ${participant.id}, USER_ID: ${participant.user_id}, CHALLENGE_ID: ${participant.challenge_id}`,
+        //   );
+        // });
 
         // 조회된 참가자 목록을 콜백 함수를 통해 반환.
         callback({
@@ -291,54 +294,66 @@ const challengeDAO = {
           participantData.user_id,
         ]);
 
-        // 참가자 추가 후, 성공 메시지를 콜백 함수를 통해 반환.
-        callback({
-          status: 200,
-          message: '참가자가 성공적으로 추가되었습니다',
-        });
+        // 참가자 추가 후, 챌린지의 참가자 수 확인.
+        const participantsCount = await pool.query(sql.getParticipantsCount, [
+          participantData.challenge_id,
+        ]);
+        // 챌린지의 total_participants를 초과하는지 확인.
+        if (participantsCount[0][0].participant_count > challenge[0][0].total_participants) {
+          // 초과할 경우 참가를 취소하고 메시지를 반환.
+          await pool.query(sql.removeParticipant, [
+            participantData.challenge_id,
+            participantData.user_id,
+          ]);
+
+          callback({
+            status: 400,
+            message: '이 챌린지는 참가자 수가 초과되었습니다.',
+          });
+        } else {
+          // 초과하지 않으면 성공 메시지를 콜백 함수를 통해 반환.
+          callback({
+            status: 200,
+            message: '참가자가 성공적으로 추가되었습니다',
+          });
+        }
       }
     } catch (error) {
       // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출.
       callback({ status: 500, message: '참가자 추가 실패', error: error });
     }
   },
-
-  // 참가자 삭제
-  removeParticipant: async (challengeId, participantId, callback) => {
+  // 참가 여부 조회
+  participatedChallenge: async (challengeId, userId, callback) => {
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속 구문
-      // 먼저 주어진 ID로 챌린지가 존재하는지 확인.
-      const challengeExists = await pool.query(sql.getChallengeById, [challengeId]);
+      const challenge = await pool.query(sql.participatedChallenge, [userId, challengeId]);
+      // 참가자 삭제 후, 성공 메시지를 콜백 함수를 통해 반환.
+      callback({
+        status: 200,
+        message: '참가여부가 성공적으로 조회되었습니다.',
+        data: challenge[0][0].participanted,
+      });
+    } catch (error) {
+      // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출.
+      callback({ status: 500, message: '참가여부 조회 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 연결 종료
+    }
+  },
 
-      // 해당 챌린지가 존재하는지 확인합니다.
-      if (challengeExists.length === 0) {
-        // 챌린지가 존재하지 않을 경우, 콜백 함수를 호출하여 해당 메시지를 반환.
-        callback({ status: 404, message: '해당 챌린지가 존재하지 않습니다' });
-      } else {
-        // 챌린지가 존재하는 경우, 주어진 참가자 ID가 해당 챌린지의 참가자 목록에 있는지 확인.
-        const participantExists = await pool.query(sql.getParticipants, [challengeId]);
-        const isParticipant = participantExists.some(
-          (participant) => participant.id === participantId,
-        );
-
-        if (!isParticipant) {
-          // 참가자가 해당 챌린지의 참가자 목록에 없는 경우, 콜백 함수를 호출하여 해당 메시지를 반환.
-          callback({
-            status: 404,
-            message: '해당 참가자가 챌린지에 존재하지 않습니다',
-          });
-        } else {
-          // 참가자가 존재하는 경우, 해당 참가자를 삭제.
-          await pool.query(sql.removeParticipant, [challengeId, participantId]);
-
-          // 참가자 삭제 후, 성공 메시지를 콜백 함수를 통해 반환.
-          callback({
-            status: 200,
-            message: '참가자가 성공적으로 삭제되었습니다',
-          });
-        }
-      }
+  // 참가자 삭제
+  removeParticipant: async (challengeId, userId, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속 구문
+      const challenge = await pool.query(sql.removeParticipant, [challengeId, userId]);
+      // 참가자 삭제 후, 성공 메시지를 콜백 함수를 통해 반환.
+      callback({
+        status: 200,
+        message: '참가자가 성공적으로 삭제되었습니다',
+      });
     } catch (error) {
       // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출.
       callback({ status: 500, message: '참가자 삭제 실패', error: error });

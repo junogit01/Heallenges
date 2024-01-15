@@ -4,6 +4,8 @@ import BoardCard from './BoardCard';
 import axios from 'axios';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
+import { challengeSearchKeywordState } from '@recoils/challenge';
+import { useRecoilValue } from 'recoil';
 
 const Board = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,6 +16,7 @@ const Board = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const category = queryParams.get('category');
+  const searchKeyword = useRecoilValue(challengeSearchKeywordState);
 
   const getFilter = category => {
     if (category === null) return 'All';
@@ -51,7 +54,15 @@ const Board = () => {
 
   const indexOfLastItem = page * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = list.slice(indexOfFirstItem, indexOfLastItem);
+
+  const searchFilteredPosts = list.filter(data => {
+    // 타이틀에서 키워드 검색
+    const titleKeyword = data?.title.toLowerCase().includes(searchKeyword.toLowerCase());
+    // 현재 페이지 범위에 속하는지 확인, 페이지네이션을 위함
+    const isPageRange = list.indexOf(data) >= indexOfFirstItem && list.indexOf(data) < indexOfLastItem;
+
+    return searchKeyword ? titleKeyword : isPageRange;
+  });
 
   const handlePageChange = page => {
     setPage(page);
@@ -65,7 +76,7 @@ const Board = () => {
   return (
     <>
       <CardWrapper className="row gap-x-2.5 card">
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-end" style={{ maxHeight: '3rem' }}>
           <button className="btn btn-outline-secondary me-2 mb-2" onClick={() => handleCategoryChange('all')}>
             전체
           </button>
@@ -80,7 +91,7 @@ const Board = () => {
           </button>
           {/* 추가적인 카테고리 버튼을 여기에 추가 */}
         </div>
-        {currentItems.map(el => (
+        {searchFilteredPosts.map(el => (
           <BoardCard
             key={el.id}
             id={el.id}

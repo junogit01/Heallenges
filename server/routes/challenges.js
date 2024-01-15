@@ -46,10 +46,18 @@ router.post('/participants', async (req, res, next) => {
   });
 });
 
+// 참가 여부 조회
+router.get('/check-participation', async (req, res, next) => {
+  const { challengeId, userId } = req.body;
+  challengesDAO.participatedChallenge(challengeId, userId, (resp) => {
+    res.json(resp);
+  });
+});
+
 // 참가자 삭제
 router.delete('/participants', async (req, res, next) => {
-  const { challengeId, participantId } = req.body;
-  challengesDAO.removeParticipant(challengeId, participantId, (resp) => {
+  const { challengeId, userId } = req.body;
+  challengesDAO.removeParticipant(challengeId, userId, (resp) => {
     res.json(resp);
   });
 });

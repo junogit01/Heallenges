@@ -18,7 +18,7 @@ function RankHead() {
   };
 
   return (
-    <nav className="navbar navbar-light bg-light">
+    <nav className="navbar navbar-light">
       <div className="container-fluid">
         <div className="text-center mx-auto mb-4 " style={{ width: 'fit-content' }}>
           <p className="navbar-brand " style={{ fontSize: '36px', wordSpacing: '17rem' }}>

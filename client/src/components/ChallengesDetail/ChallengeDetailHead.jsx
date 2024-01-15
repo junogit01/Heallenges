@@ -1,19 +1,29 @@
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { searchKeywordState } from '@recoils/rank';
+import styled from 'styled-components';
+import { Container } from 'react-bootstrap';
 
-function ChallengesDetailHead() {
+function ChallengesDetailHead({ title }) {
   const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
 
+  // const handleSubmit = e => {
+  //   e.preventDefault();
+  //   // Recoil 상태 업데이트
+  //   setSearchKeyword(e.target.value);
+  // };
+
   return (
-    <nav className="navbar navbar-light bg-light">
-      <div className="container-fluid">
-        <div className="text-center mx-auto mb-4 " style={{ width: 'fit-content' }}>
-          <p className="navbar-brand " style={{ fontSize: '36px', wordSpacing: '17rem' }}>
-            &nbsp;도전
+    <nav className="navbar navbar-light ">
+      <Container className="d-flex justify-content-center">
+        <div
+          className="text-center mx-auto mb-5 "
+          style={{ width: 'fit-content', paddingTop: '3rem', marginBottom: '1rem' }}>
+          <p className="navbar-brand " style={{ fontSize: '36px' }}>
+            {title}
           </p>
         </div>
-        <div className="d-flex justify-content-end">
+        {/* <div className="d-flex justify-content-end">
           <form className="d-flex " style={{ width: '20rem', marginTop: '7rem', marginRight: '1.5rem' }}>
             <input
               className="form-control"
@@ -24,10 +34,10 @@ function ChallengesDetailHead() {
               onChange={e => setSearchKeyword(e.target.value)}
               style={{ width: '30rem' }}
             />
-            <i className="bi bi-search" style={{ fontSize: '2rem', marginLeft: '-4rem' }}></i>
+            <i class="bi bi-search" style={{ fontSize: '2rem', marginLeft: '-4rem' }}></i>
           </form>
-        </div>
-      </div>
+        </div> */}
+      </Container>
     </nav>
   );
 }
