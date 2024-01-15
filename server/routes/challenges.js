@@ -4,8 +4,8 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 
-const imageUploadPath = 'http://localhost:8001/images/challenges/community/';
-const detailUploadPath = 'http://localhost:8001/images/challenges/detail/';
+const imageUploadPath = 'http://heallenges.cafe24app.com/images/challenges/community/';
+const detailUploadPath = 'http://heallenges.cafe24app.com/images/challenges/detail/';
 const challengesDAO = require('./../models/challengesDAO');
 const challengesCommunityDAO = require('../models/challengesCommunityDAO');
 

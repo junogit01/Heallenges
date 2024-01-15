@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { atom, selector } from 'recoil';
 import Swal from 'sweetalert2';
-const baseURL = 'http://localhost:8001/challenges';
+// const baseURL = 'http://localhost:8001/challenges';
 // atom
 export const challengesListState = atom({
   key: 'challenges/challengesListState',
@@ -51,16 +51,16 @@ export const challengesListSelector = selector({
   key: 'challenges/challengesSelector',
   get: ({ get, getCallback }) => {
     const getChallengeList = getCallback(({ set }) => async (no, size) => {
-      const resp = await axios.get(`${baseURL}`, { params: { no, size } });
+      const resp = await axios.get(`/challenges`, { params: { no, size } });
       set(challengesListState, resp.data);
     });
     const getChallengeDetail = getCallback(({ set }) => async id => {
-      const resp = await axios.get(`${baseURL}/${id}`);
+      const resp = await axios.get(`/challenges/${id}`);
       set(challengesState, resp.data.data);
     });
 
     const updateChallenge = getCallback(({ set }) => async (item, id) => {
-      const resp = await axios.put(`${baseURL}/${id}`);
+      const resp = await axios.put(`/challenges/${id}`);
     });
 
     const insertChallenge = getCallback(({ set }) => async item => {
@@ -74,7 +74,7 @@ export const challengesListSelector = selector({
 
       const resp = await axios({
         method: 'POST',
-        url: `${baseURL}`,
+        url: `/challenges`,
         headers: { 'Content-type': 'multipart/form-data' },
         data: formData,
       });
@@ -83,16 +83,16 @@ export const challengesListSelector = selector({
     });
 
     const deleteChallenge = getCallback(({ set }) => async id => {
-      const resp = await axios.delete(`${baseURL}/${id}`);
+      const resp = await axios.delete(`/challenges/${id}`);
     });
 
     const getChallengeBoardList = getCallback(({ set }) => async (id, no, size) => {
-      const resp = await axios.get(`${baseURL}/${id}/board`, { params: { no, size } });
+      const resp = await axios.get(`/challenges/${id}/board`, { params: { no, size } });
       set(challengesBoardListState, resp.data.data);
     });
 
     const getChallengeBoardDetail = getCallback(({ set }) => async (challengeId, postId) => {
-      const resp = await axios.get(`${baseURL}/${challengeId}/board/${postId}`);
+      const resp = await axios.get(`/challenges/${challengeId}/board/${postId}`);
       // console.log(resp.data.status);
       if (resp.data.status === 200) {
         set(challengesBoardState, resp.data.data);
@@ -107,7 +107,7 @@ export const challengesListSelector = selector({
     });
 
     const deleteChallengeBoard = getCallback(({ set }) => async (challengeId, postId) => {
-      const resp = await axios.delete(`${baseURL}/${challengeId}/board/${postId}`);
+      const resp = await axios.delete(`/challenges/${challengeId}/board/${postId}`);
       if (resp.data.status === 200) {
         Swal.fire({
           title: '게시글이 삭제되었습니다.',
@@ -124,7 +124,7 @@ export const challengesListSelector = selector({
     });
 
     const insertChallengeBoardComment = getCallback(({ set }) => async (challengeId, postId, item) => {
-      const resp = await axios.post(`${baseURL}/${challengeId}/board/${postId}`, item);
+      const resp = await axios.post(`/challenges/${challengeId}/board/${postId}`, item);
       if (resp.data.status === 200) {
         Swal.fire({
           title: '댓글 작성 완료',
@@ -141,7 +141,7 @@ export const challengesListSelector = selector({
     });
 
     const deleteChallengeBoardComment = getCallback(({ set }) => async (challengeId, postId, id) => {
-      const resp = await axios.delete(`${baseURL}/${challengeId}/board/${postId}/${id}`);
+      const resp = await axios.delete(`/challenges/${challengeId}/board/${postId}/${id}`);
       if (resp.data.status === 200) {
         Swal.fire({
           title: '댓글 삭제 완료',

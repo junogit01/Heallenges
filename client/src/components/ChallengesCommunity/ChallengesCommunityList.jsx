@@ -84,7 +84,9 @@ function ChallengesCommunityList() {
                 <td className="text-center">{data?.id}</td>
                 <td className="text-center">{data?.category}</td>
                 <td className="text-center">
-                  <Link to={`/challenges/${id}/board/${data?.id}`}>{data?.title}</Link>
+                  <Link to={`/challenges/${id}/board/${data?.id}`}>
+                    {data?.title.length > 15 ? `${data?.title.slice(0, 15)}...` : data?.title}
+                  </Link>
                 </td>
                 <td className="text-center">{data?.nickname}</td>
                 <td className="text-center">{data?.created}</td>
