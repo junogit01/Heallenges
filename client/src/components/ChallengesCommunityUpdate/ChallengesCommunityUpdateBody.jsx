@@ -100,6 +100,10 @@ function ChallengesCommunityUpdateBody() {
                           value: true,
                           message: '제목을 입력해주세요',
                         },
+                        pattern: {
+                          value: /^.{1,50}$/,
+                          message: '50자이상 입력이 불가합니다.',
+                        },
                       })}
                     />
                     <span style={{ color: 'orange' }} className="fs-5">
@@ -122,6 +126,7 @@ function ChallengesCommunityUpdateBody() {
                       <option value="">카테고리 선택</option>
                       <option value="공지사항">공지사항</option>
                       <option value="자유">자유</option>
+                      <option value="인증">인증</option>
                     </select>
                   </td>
                 </tr>
