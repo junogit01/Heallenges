@@ -46,7 +46,7 @@ const CommunityBoard = () => {
     // API 호출하여 게시물 데이터 가져오기
     const fetchAllPosts = async () => {
       try {
-        const response = await axios.get('http://localhost:8001/community');
+        const response = await axios.get('/community');
         // const response = await axios.get('http://heallenges.cafe24app.com/community');
         setAllPosts(response.data.data || []);
       } catch (error) {
