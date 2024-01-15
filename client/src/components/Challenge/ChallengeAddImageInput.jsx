@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import ImagePlaceholder from './ChallengeAddImagePlaceholder';
-import { clearConfigCache } from 'prettier';
 
 function ImageInput({ setData, data, propName, inputData }) {
   const [value, setValue] = useState('');

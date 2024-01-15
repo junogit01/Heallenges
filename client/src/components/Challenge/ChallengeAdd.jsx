@@ -173,7 +173,8 @@ const ChallengeAdd = ({ isEdit }) => {
     <Wrapper>
       <Form>
         <Column>
-          <FormItem label="도전 제목">
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 제목</label>
             <StyledInput
               onChange={handleInputChange}
               defaultValue={isEdit && challengeDetail?.title}
@@ -183,14 +184,16 @@ const ChallengeAdd = ({ isEdit }) => {
               {data.title.length}/{maxLength}
             </MaxLengthIndicator>
           </FormItem>
-          <FormItem label="도전 설명">
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 설명</label>
             <StyledTextarea
               onChange={e => updateValue({ oldData: data, propName: 'description', propValue: e.target.value })}
               defaultValue={isEdit && challengeDetail?.description}
               value={data.description}
             />
           </FormItem>
-          <FormItem label="도전 유형">
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 유형</label>
             <SelectContainer>
               <StyledSelect
                 name="type"
@@ -203,7 +206,8 @@ const ChallengeAdd = ({ isEdit }) => {
               </StyledSelect>
             </SelectContainer>
           </FormItem>
-          <FormItem label="참여자 총 수">
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>참여자 총 수</label>
             <StyledInput
               type="number"
               style={{ padding: '0.5rem', width: '5rem' }}
@@ -212,7 +216,8 @@ const ChallengeAdd = ({ isEdit }) => {
               value={data.total_participants}
             />
           </FormItem>
-          <FormItem label="도전 규칙">
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 규칙</label>
             <StyledInput
               type="text"
               onChange={e => updateValue({ oldData: data, propName: 'rules', propValue: e.target.value })}
@@ -220,8 +225,8 @@ const ChallengeAdd = ({ isEdit }) => {
               value={data.rules}
             />
           </FormItem>
-          <FormItem label="도전 기간" style={{ marginBottom: '20px' }}>
-            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}></label>
+          <FormItem label="" style={{ marginBottom: '20px' }}>
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 기간</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div style={{ position: 'relative', width: '150px' }}>
                 <input
@@ -274,7 +279,8 @@ const ChallengeAdd = ({ isEdit }) => {
               </div>
             </div>
           </FormItem>
-          <FormItem label="보상 포인트">
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>보상 포인트</label>
             <input
               type="number"
               onChange={e => updateValue({ oldData: data, propName: 'reward', propValue: e.target.value })}
@@ -285,7 +291,8 @@ const ChallengeAdd = ({ isEdit }) => {
           </FormItem>
         </Column>
         <Column>
-          <FormItem label="도전 썸네일">
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 썸네일</label>
             <ImageInput
               setData={setData}
               data={data}
