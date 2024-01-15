@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import FormItem from '@components/Challenge/FormItem';
-// import RadioGroup from '@components/Challenge/RadioGroup';
-import CalendarInput from '@components/Challenge/CalendarInput';
 import ImageInput from '@components/Challenge/ImageInput';
 import { challengesListSelector } from '@recoils/challenge';
 import { useRecoilState } from 'recoil';
@@ -306,18 +304,6 @@ const ChallengeAdd = ({ isEdit }) => {
 
 export default ChallengeAdd;
 
-const Img = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-`;
-
-const Label = styled.label`
-  cursor: pointer;
-  width: 300px;
-  height: 200px;
-`;
-
 const Form = styled.form`
   display: flex;
   flex-direction: row;
@@ -339,20 +325,6 @@ const Column = styled.div`
   border: 1px solid #dddddd; /* 테두리 추가 */
   border-radius: 10px; /* 테두리 둥글게 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-`;
-
-const RadioButtonGroup = styled.div`
-  display: flex;
-  gap: 6px;
-`;
-
-const CalendarGroup = styled.div`
-  display: flex;
-  gap: 6px;
-`;
-
-const Textarea = styled.textarea`
-  resize: none;
 `;
 
 const Wrapper = styled.div`
@@ -392,13 +364,6 @@ const StyledSelect = styled.select`
 const SelectContainer = styled.div`
   position: relative;
   width: 100%;
-`;
-
-const ArrowIcon = styled.span`
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
 `;
 
 const StyledTextarea = styled.textarea`
