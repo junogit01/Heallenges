@@ -20,6 +20,7 @@ import ChallengeCommunityInsert from '@pages/ChallengeCommunityInsert';
 import ChallengeCommunityUpdate from '@pages/ChallengeCommunityUpdate';
 import ChallengeAdd from '@components/Challenge/ChallengeAdd';
 
+import './App.css';
 function App() {
   return (
     <Routes>
