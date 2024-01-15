@@ -44,7 +44,7 @@ function ChallengesCommunityDetailPost() {
                   </div>
                 </header>
                 {/* 이미지가 존재할 때만 렌더링 */}
-                {challengesBoardDetail?.[0].image && (
+                {challengesBoardDetail?.[0]?.image && (
                   <figure className="mb-4">
                     <img className="img-fluid rounded" src={challengesBoardDetail?.[0]?.image} alt="이미지 없음" />
                   </figure>
@@ -68,9 +68,7 @@ function ChallengesCommunityDetailPost() {
                 <table>
                   <tbody>
                     <tr>
-                      <td>
-                        <ChallengesCommunityDetailBtn />
-                      </td>
+                      <td>{challengesBoardDetail?.[0]?.category !== '인증' ? <ChallengesCommunityDetailBtn /> : ''}</td>
                     </tr>
                   </tbody>
                 </table>

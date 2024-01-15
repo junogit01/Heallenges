@@ -158,15 +158,23 @@ function PersonalInfo() {
                 </tr>
               </thead>
               <tbody>
-                {user?.challenge?.map(challenge => (
-                  <tr key={challenge?.id}>
-                    <th className="text-center">{challenge?.id}</th>
-                    <td className="text-center">
-                      <Link to={'/challenges/' + challenge?.id}>{challenge?.title}</Link>
-                    </td>
-                    <td className="text-center">{challenge?.type}</td>
+                {user?.challenge.length ? (
+                  user?.challenge?.map(challenge => (
+                    <tr key={challenge?.id}>
+                      <th className="text-center">{challenge?.id}</th>
+                      <td className="text-center">
+                        <Link to={'/challenges/' + challenge?.id}>{challenge?.title || '참가중인 도전 없음'}</Link>
+                      </td>
+                      <td className="text-center">{challenge?.type}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <th className="text-center"></th>
+                    <td className="text-center">참가중인 도전 없음</td>
+                    <td className="text-center"></td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
             <div className="mt-5 d-flex justify-content-center">
