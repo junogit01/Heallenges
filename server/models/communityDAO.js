@@ -27,19 +27,7 @@ const sql = {
             FROM community c
             LEFT JOIN user u ON c.user_id = u.id
             ORDER BY c.created_at DESC`,
-  // 게시물 리스트 조회 (특정 카테고리)
-  listByCategory: `SELECT
-                    c.id AS id,
-                    IFNULL(u.nickname, '사용자 없음') AS nickname,
-                    c.category AS category,
-                    c.title AS title,
-                    c.created_at AS created_at,
-                    c.view_cnt AS view_cnt,
-                    c.like_cnt AS like_cnt
-                    FROM community c
-                    LEFT JOIN user u ON c.user_id = u.id
-                    WHERE c.category = ?
-                    ORDER BY c.created_at DESC`,
+
   // 게시판 상세보기(닉네임 댓글 등)
   board: `SELECT b.id, b.user_id, u.nickname, b.title, b.contents, b.created_at, b.like_cnt, b.view_cnt, b.Image, b.category 
           FROM community b
@@ -75,19 +63,6 @@ const sql = {
   // 좋아요 취소 (GREATEST로 0미만 못가게 방지)
   notlike: `DELETE FROM community_likes WHERE post_id = ? AND user_id = ?`,
   notlikeupdate: `UPDATE community SET like_cnt = GREATEST(like_cnt - 1, 0) WHERE id = ?`,
-
-  // 검색
-  // communitySearch: `SELECT
-  //                     c.id AS id,
-  //                     IFNULL(u.nickname, '사용자 없음') AS nickname,
-  //                     c.category AS category,
-  //                     c.title AS title,
-  //                     c.created_at AS created_at,
-  //                     c.view_cnt AS view_cnt,
-  //                     c.like_cnt AS like_cnt
-  //                   FROM community c
-  //                   LEFT JOIN user u ON c.user_id = u.id
-  //                   WHERE title LIKE CONCAT('%',?,'%')`,
 };
 
 const communityDAO = {
@@ -172,17 +147,13 @@ const communityDAO = {
   },
 
   // 게시물 리스트 조회 (전체 또는 특정 카테고리)
-  boardList: async (category, callback) => {
+  boardList: async (callback) => {
     let conn = null;
     try {
       conn = await pool.getConnection(); // DB 연결
-      let query = sql.listAll;
+      const query = sql.listAll; // 항상 listAll을 사용하도록 변경
 
-      if (category) {
-        query = sql.listByCategory;
-      }
-
-      const [data] = await conn.query(query, category ? [category] : []);
+      const [data] = await conn.query(query);
       callback({
         status: 200,
         message: '게시물 리스트 조회 성공',
@@ -253,10 +224,7 @@ const communityDAO = {
       callback({
         status: 200,
         message: '정상적으로 댓글이 등록 되었습니다.',
-        data: {
-          // 원하는 경우 추가적인 데이터를 전달할 수 있습니다.
-          // 예: comment_id, created_at 등
-        },
+        data: {},
       });
     } catch (error) {
       console.error('댓글 입력 실패:', error);
@@ -335,10 +303,10 @@ const communityDAO = {
       conn.beginTransaction();
       // 좋아요 등록
       await conn.query(sql.like, [post_id, user_id]);
-      // 좋아요 수 업데이트
+      // 좋아요를 게시물에 업데이트
       await conn.query(sql.likeupdate, [post_id]);
       conn.commit();
-      callback({ status: 200, message: 'OK' });
+      callback({ status: 200, message: 'OK', ok: true });
     } catch (error) {
       conn.rollback();
       callback({ status: 500, message: '좋아요 등록 실패', error: error });
@@ -356,10 +324,10 @@ const communityDAO = {
       conn.beginTransaction();
       // 좋아요 취소
       await conn.query(sql.notlike, [post_id, user_id]);
-      // 좋아요 수 업데이트
+      // 좋아요 취솔를 게시물에 업데이트
       await conn.query(sql.notlikeupdate, [post_id]);
       conn.commit();
-      callback({ status: 200, message: 'OK' });
+      callback({ status: 200, message: 'OK', ok: true });
     } catch (error) {
       conn.rollback();
       callback({ status: 500, message: '좋아요 취소 실패', error: error });
@@ -367,8 +335,6 @@ const communityDAO = {
       if (conn !== null) conn.release();
     }
   },
-
-  // 마지막 괄호 올라옴 방지 주석
 };
 
 module.exports = communityDAO;

@@ -24,7 +24,6 @@ const Comment = ({ comments }) => {
     try {
       // 서버에 댓글 삭제 요청
       await axios.delete(`/community/comment/${commentId}`);
-      // await axios.delete(`http://heallenges.cafe24app.com/api/community/comment/${commentId}`);
 
       // 삭제된 댓글을 제외한 업데이트된 댓글 목록 생성
       const updatedComments = comments.filter(comment => comment.comment_id !== commentId);
