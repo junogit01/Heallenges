@@ -109,8 +109,8 @@ function ChallengesCommunityInsertBody() {
                           message: '제목을 입력해주세요',
                         },
                         pattern: {
-                          value: /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{1,50}$/,
-                          message: '30자를 초과해서 입력이 불가합니다.',
+                          value: /^.{1,50}$/,
+                          message: '50자이상 입력이 불가합니다.',
                         },
                       })}
                     />
