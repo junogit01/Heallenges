@@ -88,7 +88,7 @@ function Signup() {
         // 만약 이미지 업로드가 없다면 headers 필요없고 formData로 변환할 필요없이 바로 매개변수로 받은 data를 바로 전송하면 된다
         const resp = await axios({
           method: 'POST',
-          url: 'http://localhost:8001/signup',
+          url: '/signup',
           headers: { 'Content-type': 'multipart/form-data' },
           data: formData,
         });
