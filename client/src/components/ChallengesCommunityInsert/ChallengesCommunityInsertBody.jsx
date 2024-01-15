@@ -16,7 +16,7 @@ function ChallengesCommunityInsertBody() {
   const challengesBoard = useRecoilValue(challengesState);
   const { getChallengeDetail, getChallengeBoardDetail } = useRecoilValue(challengesListSelector);
 
-  // 로그인 정보 가져와 로그인하지 않은 경우 로그인 페이지로 리다이렉트한다.
+  // 로그인 정보 가져와 로그인하지 않은 경우 로그인 페이지로 리다이렉트.
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
@@ -31,6 +31,7 @@ function ChallengesCommunityInsertBody() {
       contents: '',
       user_id: loginUser.id,
       challenge_id: challengeId,
+      id: challengeId,
     },
     mode: 'onBlur',
   });
@@ -114,6 +115,7 @@ function ChallengesCommunityInsertBody() {
                         },
                       })}
                     />
+                    <input type="hidden" value={challengeId} {...register('id')} />
                     <span style={{ color: 'orange' }} className="fs-5">
                       {errors.title?.message}
                     </span>

@@ -8,7 +8,6 @@ import { challengesListSelector } from '@recoils/challenge';
 
 function ChallengesCommunityHead() {
   const { id } = useParams();
-  const [searchKeyword, setSearchKeyword] = useRecoilState(searchKeywordState);
 
   const challengesBoard = useRecoilValue(challengesState);
   const { getChallengeDetail } = useRecoilValue(challengesListSelector);
@@ -20,7 +19,7 @@ function ChallengesCommunityHead() {
   }, [id]);
 
   return (
-    <nav className="navbar navbar-light bg-light">
+    <nav className="navbar navbar-light">
       <div className="container-fluid">
         <div className="text-center mx-auto mb-4 " style={{ width: 'fit-content' }}>
           <p className="navbar-brand " style={{ fontSize: '36px', justifyContent: 'center' }}>

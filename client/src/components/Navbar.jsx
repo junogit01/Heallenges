@@ -26,7 +26,7 @@ function NavHeader() {
   };
 
   return (
-    <>
+    <div className="container-md">
       <nav className="navbar navbar-expand-lg ">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
@@ -56,24 +56,24 @@ function NavHeader() {
               <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 ">
                 <li className="nav-item"></li>
                 <li className="nav-item">
-                  <Link className="nav-link me-5" to="/challenges">
+                  <Link className="nav-link me-2" to="/challenges">
                     챌린지
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link me-5" to="/community">
+                  <Link className="nav-link me-2" to="/community">
                     커뮤니티
                   </Link>
                 </li>
                 <li className="nav-item ">
-                  <Link className="nav-link me-5" to="/rank">
+                  <Link className="nav-link me-2" to="/rank">
                     랭킹
                   </Link>
                 </li>
                 {isLogin ? (
                   <li className="nav-item dropdown ">
                     <Link
-                      className="nav-link dropdown-toggle me-5"
+                      className="nav-link dropdown-toggle"
                       to="#"
                       role="button"
                       data-bs-toggle="dropdown"
@@ -110,7 +110,7 @@ function NavHeader() {
           </div>
         </div>
       </nav>
-    </>
+    </div>
   );
 }
 

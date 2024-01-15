@@ -30,7 +30,7 @@ function LoginBody2() {
 
   const submitEvent = useCallback(
     async data => {
-      const resp = await axios.post('http://localhost:8001/login', data);
+      const resp = await axios.post('/login', data);
       if (resp.data.status === 200) {
         setLogin(resp.data.data);
         navigate('/');
