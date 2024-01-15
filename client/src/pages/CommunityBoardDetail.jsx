@@ -2,16 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { communityState } from './../recoils/Community';
-import CommunityHeader from '../components/Community/CommunityHeader';
-import CommunitySidebar from '../components/Community/CommunitySidebar';
-import Board from './../components/Community/Board';
-import Comment from './../components/Community/Comment';
-import CommentForm from '../components/Community/CommentInsertForm';
+import Board from '@components/Community/Board';
+import Comment from '@components/Community/Comment';
+import CommentForm from '@components/Community/CommentInsertForm';
+import CommunityHeader from '@components/Community/CommunityHeader';
+import CommunitySidebar from '@components/Community/CommunitySidebar';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { loginState } from '@recoils/login';
-import { useRecoilValue } from 'recoil';
+import { communityState } from '@recoils/Community';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 function CommunityBoardDetail() {
   // 게시물 아이디 가져오기
@@ -34,16 +34,16 @@ function CommunityBoardDetail() {
   // 좋아요 이벤트 처리 함수
   const likeCommunityEvent = async () => {
     try {
-      // const response = await fetch(`http://localhost:8001/community/like/${loginUser.id}/${id}`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      const response = await fetch(`http://heallenges.cafe24app.com/community/like/${loginUser.id}/${id}`, {
+      const response = await fetch(`http://localhost:8001/community/like/${loginUser.id}/${id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        // const response = await fetch(`http://heallenges.cafe24app.com/community/like/${loginUser.id}/${id}`, {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
         body: JSON.stringify({
           post_id: id,
           user_id: loginUser.id,
@@ -72,16 +72,16 @@ function CommunityBoardDetail() {
   // 좋아요 취소 이벤트 처리 함수
   const dislikeCommunityEvent = async () => {
     try {
-      // const response = await fetch(`http://localhost:8001/community/dislike/${loginUser.id}/${id}`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      const response = await fetch(`http://heallenges.cafe24app.com/community/dislike/${loginUser.id}/${id}`, {
+      const response = await fetch(`http://localhost:8001/community/dislike/${loginUser.id}/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
+        // const response = await fetch(`http://heallenges.cafe24app.com/community/dislike/${loginUser.id}/${id}`, {
+        //   method: 'DELETE',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
         body: JSON.stringify({
           post_id: id,
           user_id: loginUser.id,
@@ -110,18 +110,18 @@ function CommunityBoardDetail() {
   // 게시물 정보를 가져오는 함수
   const getCommunityPost = async () => {
     try {
-      // const response = await fetch(`http://localhost:8001/community/community/${id}`);
-      const response = await fetch(`http://heallenges.cafe24app.com/community/community/${id}`);
-      const data = await response.json();
+      const response = await axios.get(`http://localhost:8001/community/community/${id}`);
+      // const response = await axios.get(`http://heallenges.cafe24app.com/community/community/${id}`);
 
-      if (!response.ok) {
+      if (response.status !== 200) {
+        const data = response.data;
         // 게시글 불러오기 오류 처리
         console.error(`게시글 불러오기 오류: ${data.message}`);
         return;
       }
 
       // 게시물 정보 갱신
-      setCommunityPost(data.data);
+      setCommunityPost(response.data.data);
     } catch (error) {
       // 게시글 불러오기 중 오류 발생 시 처리
       console.error('게시글 불러오기 오류:', error);
@@ -145,16 +145,11 @@ function CommunityBoardDetail() {
   // 게시물 삭제 이벤트 처리 함수
   const deleteCommunityEvent = async () => {
     try {
-      // const response = await fetch(`http://localhost:8001/community/${id}`, {
-      //   method: 'DELETE',
-      // });
-      const response = await fetch(`http://heallenges.cafe24app.com/community/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await axios.delete(`http://localhost:8001/community/${id}`);
+      // const response = await axios.delete(`http://heallenges.cafe24app.com/community/${id}`);
 
-      if (!response.ok) {
-        const data = await response.json();
-        console.error(`게시글 삭제 오류: ${data.message}`);
+      if (response.status !== 200) {
+        console.error(`게시글 삭제 오류: ${response.data.message}`);
         // 게시물 삭제 오류 시 SweetAlert로 에러 알림
         Swal.fire({
           title: '오류',

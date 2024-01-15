@@ -26,8 +26,8 @@ function CommunityInsert() {
         return 1;
       case '자유 게시판':
         return 2;
-      case '문의 게시판':
-        return 3;
+      // case '문의 게시판':
+      //   return 3;
       default:
         return 2;
     }
@@ -66,12 +66,12 @@ function CommunityInsert() {
       formData.append('image', data.image[0]);
 
       // 서버로 데이터 전송
-      // const resp = await axios.post('http://localhost:8001/community/', formData, {
-      //   headers: { 'Content-type': 'multipart/form-data' },
-      // });
-      const resp = await axios.post('http://heallenges.cafe24app.com/community/', formData, {
+      const resp = await axios.post('http://localhost:8001/community/', formData, {
         headers: { 'Content-type': 'multipart/form-data' },
       });
+      // const resp = await axios.post('http://heallenges.cafe24app.com/community/', formData, {
+      //   headers: { 'Content-type': 'multipart/form-data' },
+      // });
 
       // 게시물 추가 성공 시 SweetAlert로 성공 알림
       if (resp.data.status === 200) {
@@ -114,7 +114,7 @@ function CommunityInsert() {
                         <option value="">카테고리 선택</option>
                         <option value="공지 게시판">공지 게시판</option>
                         <option value="자유 게시판">자유 게시판</option>
-                        <option value="문의 게시판">문의 게시판</option>
+                        {/* <option value="문의 게시판">문의 게시판</option> */}
                       </select>
                     </td>
                   </tr>

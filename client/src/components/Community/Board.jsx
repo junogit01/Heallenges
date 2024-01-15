@@ -15,8 +15,8 @@ const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created
         return '공지';
       case 2:
         return '자유';
-      case 3:
-        return '문의';
+      // case 3:
+      //   return '문의';
       default:
         return '자유';
     }
@@ -27,13 +27,15 @@ const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created
     // 게시물(보드)에 해당하는 내용
     <div className="container mt-3">
       <div className="row">
-        <div className="col-lg-9">
+        <div className="col-lg-11">
           <article>
             <header className="mb-4">
               {/* 제목 */}
-              <h1 className="fw-bolder mb-3">{title}</h1>
+              <h1 className="fw-bolder mb-3" style={{ wordWrap: 'break-word', wordBreak: 'keep-all' }}>
+                {title}
+              </h1>
+              {/* 작성자 */}
               <div className="text-muted fst-italic mb-2">
-                {/* 작성자 */}
                 <div>
                   <h5>작성자: {nickname || '사용자 없음'}</h5>
                 </div>
@@ -49,10 +51,16 @@ const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created
               </figure>
             )}
             {/* 내용 */}
-            <section className="mb-5" style={{ minHeight: '100px', height: 'auto', overflow: 'hidden' }}>
-              <p className="fs-5 mb-4" style={{ whiteSpace: 'pre' }}>
-                {contents || '내용 없음'}2
-              </p>
+            <section
+              className="mb-5"
+              style={{
+                minHeight: '100px',
+                height: 'auto',
+                whiteSpace: 'pre-wrap', // 공백을 유지하면서 줄바꿈 허용
+                wordWrap: 'break-word', // 긴 단어를 잘라서 강제로 줄바꿈
+                wordBreak: 'keep-all', // 한글 띄어쓰기에 맞게 잘라주기
+              }}>
+              <p className="fs-5 mb-4">{contents || '내용 없음'}</p>
             </section>
           </article>
           <div className="card-body"></div>
