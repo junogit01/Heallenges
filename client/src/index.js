@@ -18,9 +18,9 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { RecoilRoot } from 'recoil';
 
-// axios.defaults.baseURL = 'http://heallenges.cafe24app.com/api';
+axios.defaults.baseURL = 'http://heallenges.cafe24app.com/api';
 
-axios.defaults.baseURL = 'http://localhost:8001/api';
+// axios.defaults.baseURL = 'http://localhost:8001/api';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

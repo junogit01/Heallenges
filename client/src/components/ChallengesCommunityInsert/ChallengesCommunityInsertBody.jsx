@@ -134,6 +134,7 @@ function ChallengesCommunityInsertBody() {
                       <option value="">카테고리 선택</option>
                       <option value="공지사항">공지사항</option>
                       <option value="자유">자유</option>
+                      <option value="인증">인증</option>
                     </select>
                     <span style={{ color: 'orange' }} className="fs-5">
                       {errors.category?.message}
