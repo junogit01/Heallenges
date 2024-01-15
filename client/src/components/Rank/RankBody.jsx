@@ -21,8 +21,8 @@ function RankBody() {
     async (no = 1, size = 20) => {
       try {
         const resp = await (searchKeyword
-          ? axios.get('http://localhost:8001/Rank/search', { params: { no, size, keyword: searchKeyword } })
-          : axios.get('http://localhost:8001/Rank', { params: { no, size } }));
+          ? axios.get('/Rank/search', { params: { no, size, keyword: searchKeyword } })
+          : axios.get('/Rank', { params: { no, size } }));
         setRank(resp.data);
       } catch (error) {
         console.error('Error fetching rank:', error);

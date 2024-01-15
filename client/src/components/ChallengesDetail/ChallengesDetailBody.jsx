@@ -23,7 +23,7 @@ function ChallengesDetailBody({ data, title, id }) {
     const getChallengeUserInfo = async () => {
       try {
         if (title) {
-          const result = await axios.get(`http://localhost:8001/challenges/participants?title=${title}`, {
+          const result = await axios.get(`/challenges/participants?title=${title}`, {
             params: {
               challengeTitle: title,
             },
@@ -51,7 +51,7 @@ function ChallengesDetailBody({ data, title, id }) {
     e.preventDefault();
     try {
       if (user.id) {
-        const result = await axios.post(`http://localhost:8001/challenges/participants`, {
+        const result = await axios.post(`/challenges/participants`, {
           challenge_id: data.id,
           user_id: user.id,
         });
@@ -91,7 +91,7 @@ function ChallengesDetailBody({ data, title, id }) {
     e.preventDefault();
     try {
       if (user.id) {
-        const result = await axios.delete(`http://localhost:8001/challenges/participants`, {
+        const result = await axios.delete(`/challenges/participants`, {
           data: {
             challengeId: data.id,
             userId: user.id,
@@ -134,7 +134,7 @@ function ChallengesDetailBody({ data, title, id }) {
     const prompt = window.confirm('정말로 삭제 하시겠습니까?');
     if (prompt) {
       try {
-        const result = await axios.delete(`http://localhost:8001/challenges/${data.id}`);
+        const result = await axios.delete(`/challenges/${data.id}`);
         Swal.fire({
           text: '삭제 되었습니다.', // Alert 내용
           icon: 'success', // Alert 타입

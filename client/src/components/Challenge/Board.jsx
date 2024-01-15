@@ -28,7 +28,7 @@ const Board = () => {
   useEffect(() => {
     const getList = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:8001/challenges`, {
+        const { data } = await axios.get(`/challenges`, {
           params: {
             category: selectedCategory !== 'all' ? selectedCategory : '',
           },
