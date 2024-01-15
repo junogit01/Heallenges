@@ -11,7 +11,7 @@ function ChallengesDetail() {
   useEffect(() => {
     const getDetailList = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:8001/challenges/${boardId}`);
+        const { data } = await axios.get(`/challenges/${boardId}`);
         setChallengeDetail(data.data[0]);
       } catch (e) {
         console.error(e);
