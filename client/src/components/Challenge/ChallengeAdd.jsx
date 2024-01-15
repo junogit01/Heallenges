@@ -167,7 +167,25 @@ const ChallengeAdd = ({ isEdit }) => {
         <Column>
           <FormItem label="도전 제목">
             <input
-              onChange={e => updateValue({ oldData: data, propName: 'title', propValue: e.target.value })}
+              onChange={e => {
+                const inputValue = e.target.value;
+                // 원하는 글자수 제한을 설정
+                const maxLength = 15;
+
+                // 입력된 텍스트가 길이 제한을 초과하지 않도록 자르기
+                if (inputValue.length <= maxLength) {
+                  updateValue({ oldData: data, propName: 'title', propValue: inputValue });
+                }
+
+                // 길이 제한을 초과하는 경우 경고 메시지 표시
+                if (inputValue.length > maxLength) {
+                  Swal.fire({
+                    title: '제목 길이 초과', // Alert 제목
+                    text: `최대 ${maxLength}자까지 입력 가능합니다.`, // Alert 내용
+                    icon: 'error', // Alert 타입
+                  });
+                }
+              }}
               defaultValue={isEdit && challengeDetail?.title}
               value={data.title}
             />
