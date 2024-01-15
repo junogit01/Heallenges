@@ -92,7 +92,7 @@ function PersonalInfoUpdate() {
 
         const resp = await axios({
           method: 'put',
-          url: 'http://localhost:8001/mypage/' + id,
+          url: '/mypage/' + id,
           headers: { 'Content-type': 'multipart/form-data' },
           data: formData,
         });
