@@ -31,7 +31,9 @@ function ChallengesCommunityDetailPost() {
             <div className="col-lg-9" style={{ width: '100%' }}>
               <article>
                 <header className="mb-4">
-                  <h1 className="fw-bolder mb-3">{challengesBoardDetail?.[0]?.title}</h1>
+                  <h1 className="fw-bolder mb-3" style={{ wordWrap: 'break-word', wordBreak: 'keep-all' }}>
+                    {challengesBoardDetail?.[0]?.title}
+                  </h1>
                   <div className="text-muted fst-italic mb-2">
                     <div>
                       <h5>작성자: {challengesBoardDetail?.[0]?.name}</h5>
@@ -48,7 +50,15 @@ function ChallengesCommunityDetailPost() {
                   </figure>
                 )}
 
-                <section className="mb-5" style={{ minHeight: '200px', height: 'auto', overflow: 'hidden' }}>
+                <section
+                  className="mb-5"
+                  style={{
+                    minHeight: '200px',
+                    height: 'auto',
+                    whiteSpace: 'pre-wrap', // 공백을 유지하면서 줄바꿈 허용
+                    wordWrap: 'break-word', // 긴 단어를 잘라서 강제로 줄바꿈
+                    wordBreak: 'keep-all',
+                  }}>
                   <p className="fs-5 mb-4" style={{ overflowY: 'auto', whiteSpace: 'pre-wrap' }}>
                     {challengesBoardDetail?.[0]?.contents}
                   </p>
