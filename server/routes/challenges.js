@@ -70,6 +70,8 @@ router.get('/category', async (req, res, next) => {
   });
 });
 
+// 참가자 조회
+
 // 도전 목록 조회
 router.get('/', async (req, res, next) => {
   const query = req.query;
@@ -132,6 +134,14 @@ router.delete('/:id', async (req, res, next) => {
 router.get('/:id/board', async (req, res, next) => {
   const params = req.params;
   challengesCommunityDAO.challengeBoardList(params, (resp) => {
+    res.json(resp);
+  });
+});
+
+// 도전별 참가자 조회
+router.get('/:challengeId/participants', async (req, res, next) => {
+  const params = req.params;
+  challengesCommunityDAO.challengeParticipants(params, (resp) => {
     res.json(resp);
   });
 });

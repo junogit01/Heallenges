@@ -8,7 +8,7 @@ import ChallengesCommunityDetailBtn from './ChallengesCommunityDetailBtn';
 
 function ChallengesCommunityDetailBody() {
   return (
-    <>
+    <div className="container-md">
       <main id="main" style={{ marginTop: '30px' }}>
         <section id="blog" className="blog">
           <div className="container">
@@ -25,7 +25,7 @@ function ChallengesCommunityDetailBody() {
           </div>
         </section>
       </main>
-    </>
+    </div>
   );
 }
 
