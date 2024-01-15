@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 function OurServices() {
   return (
-    <section id="services-list" className="services-list">
+    <section id="services-list" className="services-list container-md">
       <div className="container">
         <div className="section-header d-flex justify-content-center mb-5 mt-5">
           <h2>제공 서비스</h2>

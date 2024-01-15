@@ -43,7 +43,7 @@ function UpdatePasswordModal(props) {
       const sendData = { ...data, id: id };
 
       // 서버 전송
-      const resp = await axios.post(`http://localhost:8001/mypage/${id}/password`, sendData);
+      const resp = await axios.post(`/mypage/${id}/password`, sendData);
       // console.log(resp);
 
       // 기존 비밀번호가 매칭되지 않는 경우 500번 코드 전송. 500번이 전송되면 강제로 current 필으에 에러가 발생시켜 에러 메시지가

@@ -23,7 +23,7 @@ function PersonalInfoUpdate() {
     ({ set }) =>
       async id => {
         try {
-          const resp = await axios.get('http://localhost:8001/mypage/' + id);
+          const resp = await axios.get('/mypage/' + id);
           set(userState, resp.data.data);
         } catch (error) {
           Swal.fire({

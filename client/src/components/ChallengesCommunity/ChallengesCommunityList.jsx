@@ -1,30 +1,46 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { challengesBoardListState, challengesListSelector } from '@recoils/challenge';
+import {
+  challengesBoardListState,
+  challengesListSelector,
+  challengesSearchKeywordState,
+  challengesParticipantsState,
+} from '@recoils/challenge';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
 import one from '../ChallengesCommunityDetail/Paging.module.css';
 import { loginState } from '@recoils/login';
-import { challengesSearchKeywordState } from '@recoils/challenge';
+import Swal from 'sweetalert2';
 
 function ChallengesCommunityList() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const boardList = useRecoilValue(challengesBoardListState);
-  const { getChallengeBoardList } = useRecoilValue(challengesListSelector);
+  const { getChallengeBoardList, getchallengeParticipants } = useRecoilValue(challengesListSelector);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const challengeParticipants = useRecoilValue(challengesParticipantsState);
 
   const searchKeyword = useRecoilValue(challengesSearchKeywordState);
 
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
+  // 도전 참가 확인 후 리다이렉트
+  if (Array.isArray(challengeParticipants) && !challengeParticipants.includes(loginUser.id)) {
+    Swal.fire({
+      title: '도전 참가 후 접속하실 수 있습니다.',
+      text: ' ',
+      icon: 'error',
+    });
+    navigate(`/challenges/${id}`);
+  }
 
   const searchBoardList = boardList.filter(data => data?.title.toLowerCase().includes(searchKeyword.toLowerCase()));
   useEffect(() => {
     getChallengeBoardList(id);
-  }, [id, getChallengeBoardList]);
+    getchallengeParticipants(id);
+  }, [id, getChallengeBoardList, getchallengeParticipants]);
 
   const filteredBoardList = searchBoardList.filter(data => {
     return selectedCategory === 'all' || data?.category === selectedCategory;

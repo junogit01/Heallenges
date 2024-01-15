@@ -17,10 +17,10 @@ function Challenges() {
 
   useEffect(() => {
     getChallengeList(1, 5);
-  }, []);
+  }, [getChallengeList]);
 
   return (
-    <section id="recent-posts" className="recent-posts">
+    <section id="recent-posts" className="recent-posts container-md">
       <div className="container">
         <div className="section-header d-flex justify-content-center mb-5 mt-5">
           <h2>최근 개설된 도전</h2>
