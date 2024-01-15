@@ -38,11 +38,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 // 여기다가 라우터 추가하기
-app.use('/', indexRouter);
-app.use('/mypage', usersRouter);
-app.use('/rank', rankRouter);
-app.use('/community', communityRouter);
-app.use('/challenges', challengesRouter);
+app.use('/api', indexRouter);
+app.use('/api/mypage', usersRouter);
+app.use('/api/rank', rankRouter);
+app.use('/api/community', communityRouter);
+app.use('/api/challenges', challengesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

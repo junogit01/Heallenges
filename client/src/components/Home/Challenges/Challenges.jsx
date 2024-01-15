@@ -15,7 +15,7 @@ function Challenges() {
   const challengeList = useRecoilValue(challengesListState);
   const { getChallengeList } = useRecoilValue(challengesListSelector);
 
-  const challengeState = useEffect(() => {
+  useEffect(() => {
     getChallengeList(1, 5);
   }, []);
 
