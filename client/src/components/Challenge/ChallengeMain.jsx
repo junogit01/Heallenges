@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Board from './Board.jsx';
+import Board from './ChallengeMainBody.jsx';
 import ChallengeMainSidebar from './ChallengeMainSidebar.jsx';
 
 const ChallengeMain = () => {
