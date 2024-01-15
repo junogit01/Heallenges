@@ -34,7 +34,6 @@ function CommentInsertForm() {
         try {
           // 댓글 삽입 API 호출
           const resp = await axios.post(`/community/comment`, comment);
-          // const resp = await axios.post(`http://heallenges.cafe24app.com/community/comment`, comment);
 
           // 만약 댓글이 속한 게시물의 ID가 존재한다면 해당 게시물을 다시 가져오기
           if (resp.data.post_id !== undefined) {

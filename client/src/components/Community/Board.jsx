@@ -15,6 +15,7 @@ const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created
         return '공지';
       case 2:
         return '자유';
+      // 필요 시 추가 (아래는 예시)
       // case 3:
       //   return '문의';
       default:

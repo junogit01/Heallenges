@@ -6,12 +6,6 @@ const translateToKorean = name => {
   switch (name) {
     case 'community':
       return '커뮤니티';
-    case 'free':
-      return '자유';
-    case 'notice':
-      return '공지';
-    case 'qna':
-      return '질문';
     case 'write':
       return '글쓰기';
     case 'update':
@@ -30,17 +24,7 @@ function CommunityHeader() {
 
   // JSX 반환
   return (
-    // <nav className="navbar navbar-light bg-light">
-    //   <div className="container-fluid">
-    //     <div className="text-center mx-auto mb-4 " style={{ width: 'fit-content' }}>
-    //       <p className="navbar-brand " style={{ fontSize: '36px', justifyContent: 'center' }}>
-    //         커뮤니티
-    //       </p>
-    //     </div>
-    //   </div>
-    // </nav>
-
-    <div className="navbar navbar-light bg-light" style={{ height: '10.5rem' }}>
+    <div className="navbar navbar-light" style={{ height: '10.5rem' }}>
       <div className="container position-relative d-flex flex-column align-items-center">
         {/* 페이지 제목 */}
         <h2>커뮤니티</h2>

@@ -52,62 +52,7 @@ function CommunitySidebar() {
           </div>
         </div>
       </form>
-      {/* Categories widget */}
-      {/* 카테고리 관련 코드 (주석 처리되어 있음) */}
-      {/* <div className="card mb-4">
-        <div className="card-header">카테고리</div>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-sm-12">
-              <ul className="list-unstyled mb-0"> */}
-      {/* 라우터를 이용한 버튼 */}
-      {/* <li className="mb-2">
-                  <Link to="/community" className="btn btn-primary">
-                    전체게시판
-                  </Link>
-                </li>
-                <li className="mb-2">
-                  <Link to="/community/notice" className="btn btn-primary">
-                    공지게시판
-                  </Link>
-                </li>
-                <li className="mb-2">
-                  <Link to="/community/free" className="btn btn-primary">
-                    자유게시판
-                  </Link>
-                </li>
-                <li className="mb-2">
-                  <Link to="/community/qna" className="btn btn-primary">
-                    문의게시판
-                  </Link>
-                </li> */}
 
-      {/* 필터를 이용한 버튼() */}
-      {/* <li className="mb-2">
-                  <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange('all')}>
-                    전체게시판
-                  </button>
-                </li>
-                <li className="mb-2">
-                  <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(1)}>
-                    공지게시판
-                  </button>
-                </li>
-                <li className="mb-2">
-                  <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(2)}>
-                    자유게시판
-                  </button>
-                </li>
-                <li className="mb-2">
-                  <button className="btn btn-outline-secondary me-1" onClick={() => handleCategoryChange(3)}>
-                    문의게시판
-                  </button>
-                </li> */}
-      {/* </ul>
-            </div>
-          </div>
-        </div>
-      </div> */}
       {/* Write post widget */}
       <div className="card mb-4">
         <div className="card-header">글쓰기</div>

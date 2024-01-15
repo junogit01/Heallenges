@@ -75,16 +75,13 @@ router.delete('/:id', async (req, res) => {
 
 // 전체 또는 카테고리 게시물 리스트 조회
 router.get('/:id?', (req, res) => {
-  const categoryId = req.params.id || null; // 동적 라우팅 매개변수를 사용하여 카테고리 ID를 가져옵니다. 없으면 null로 설정합니다.
-
-  communityDAO.boardList(categoryId, (resp) => {
-    // communityDAO.boardList((resp) => {
+  communityDAO.boardList((resp) => {
     res.json(resp);
   });
 });
 
 // 게시물 상세 조회
-router.get('/community/:id', async (req, res, next) => {
+router.get('/community/:id/', async (req, res, next) => {
   const id = req.params.id;
   communityDAO.board(id, (resp) => {
     res.json(resp);
@@ -101,7 +98,7 @@ router.post('/comment', (req, res) => {
 
 // 댓글 삭제
 router.delete('/comment/:comment_id', async (req, res) => {
-  const comment_id = req.params.comment_id; // 수정된 부분: params 전체 객체 대신 comment_id만을 가져옴
+  const comment_id = req.params.comment_id;
 
   communityDAO.commentDelete(comment_id, (resp) => {
     res.json(resp);

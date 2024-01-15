@@ -34,35 +34,33 @@ function CommunityBoardDetail() {
   // 좋아요 이벤트 처리 함수
   const likeCommunityEvent = async () => {
     try {
-      const response = await fetch(`http://localhost:8001/api/community/like/${loginUser.id}/${id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // const response = await fetch(`http://heallenges.cafe24app.com/community/like/${loginUser.id}/${id}`, {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        body: JSON.stringify({
+      const response = await axios.post(
+        `/community/like/${loginUser.id}/${id}`,
+        JSON.stringify({
           post_id: id,
           user_id: loginUser.id,
         }),
-      });
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
 
-      if (!response.ok) {
-        const data = await response.json();
+      // resp.data => {message: 'OK', status: 200}
+      if (!response.data.message === 'OK') {
+        const data = await response.data;
         // 좋아요 오류 처리
         console.error(`좋아요 오류: ${data.message}`);
         return;
+      } else {
+        // 좋아요 상태를 로컬 스토리지에 저장
+        localStorage.setItem(`likeStatus_${id}`, 'liked');
+
+        // 좋아요 상태 갱신 및 게시물 정보 갱신
+        setLiked(true);
+        getCommunityPost();
       }
-
-      // 좋아요 상태를 로컬 스토리지에 저장
-      localStorage.setItem(`likeStatus_${id}`, 'liked');
-
-      // 좋아요 상태 갱신 및 게시물 정보 갱신
-      setLiked(true);
-      getCommunityPost();
     } catch (error) {
       // 좋아요 처리 중 오류 발생 시 처리
       console.error('좋아요 오류:', error);
@@ -72,35 +70,33 @@ function CommunityBoardDetail() {
   // 좋아요 취소 이벤트 처리 함수
   const dislikeCommunityEvent = async () => {
     try {
-      const response = await fetch(`http://localhost:8001/api/community/dislike/${loginUser.id}/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // const response = await fetch(`http://heallenges.cafe24app.com/community/dislike/${loginUser.id}/${id}`, {
-        //   method: 'DELETE',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        body: JSON.stringify({
+      const response = await axios.delete(
+        `/community/dislike/${loginUser.id}/${id}`,
+        JSON.stringify({
           post_id: id,
           user_id: loginUser.id,
         }),
-      });
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      );
 
-      if (!response.ok) {
-        const data = await response.json();
-        // 좋아요 취소 오류 처리
+      // resp.data => {message: 'OK', status: 200}
+      if (!response.data.message === 'OK') {
+        const data = await response.data;
+        // 좋아요 오류 처리
         console.error(`좋아요 취소 오류: ${data.message}`);
         return;
+      } else {
+        // 좋아요 취소에서 사용
+        localStorage.removeItem(`likeStatus_${id}`);
+
+        // 좋아요 상태 갱신 및 게시물 정보 갱신
+        setLiked(false);
+        getCommunityPost();
       }
-
-      // 좋아요 취소 상태를 로컬 스토리지에 저장
-      localStorage.setItem(`likeStatus_${id}`, 'disliked');
-
-      // 좋아요 상태 갱신 및 게시물 정보 갱신
-      setLiked(false);
-      getCommunityPost();
     } catch (error) {
       // 좋아요 취소 처리 중 오류 발생 시 처리
       console.error('좋아요 취소 오류:', error);
@@ -111,7 +107,6 @@ function CommunityBoardDetail() {
   const getCommunityPost = async () => {
     try {
       const response = await axios.get(`/community/community/${id}`);
-      // const response = await axios.get(`http://heallenges.cafe24app.com/community/community/${id}`);
 
       if (response.status !== 200) {
         const data = response.data;
@@ -146,7 +141,6 @@ function CommunityBoardDetail() {
   const deleteCommunityEvent = async () => {
     try {
       const response = await axios.delete(`/community/${id}`);
-      // const response = await axios.delete(`http://heallenges.cafe24app.com/community/${id}`);
 
       if (response.status !== 200) {
         console.error(`게시글 삭제 오류: ${response.data.message}`);
