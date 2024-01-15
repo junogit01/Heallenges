@@ -12,6 +12,10 @@ const sql = {
   getChallengeById: `SELECT * 
                      FROM challenges 
                      WHERE id = ?`,
+  // 챌린지 참여 확인
+  getchallengeParticipants: `SELECT user_id
+                             FROM challenge_participants p 
+                             WHERE challenge_id = ?`,
   // 커뮤니티 게시글 리스트 조회
   challengeBoardList: `SELECT m.title, m.view_cnt, u.name, u.nickname, m.id, m.category, DATE_FORMAT(m.created_at, '%Y-%m-%d %h-%i-%s') as created, m.image
                 FROM challenges c
@@ -49,12 +53,17 @@ const sql = {
 const challengesCommunityDAO = {
   // 도전별 게시판 리스트
   challengeBoardList: async (item, callback) => {
+    console.log(item);
     const no = Number(item.no) - 1 || 0;
     const size = Number(item.size) || 10;
+    const id = Number(item.id);
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속
       conn.beginTransaction();
+      // const check = await conn.query(sql.getchallengeParticipants, [id]);
+      // const participantsId = check[0].map((row) => row.user_id);
+      // if(participantsId.includes(item.id))
       const [data] = await conn.query(sql.challengeBoardList, [item.id, Number(no), Number(size)]);
       conn.commit();
       callback({
@@ -66,7 +75,28 @@ const challengesCommunityDAO = {
       });
     } catch (error) {
       conn.rollback();
-      callback({ status: 500, message: '불러오기 대실패', error: error });
+      callback({ status: 500, message: '불러오기 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+
+  // 도전별 참가자 조회
+  challengeParticipants: async (item, callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      await conn.query(sql.challengeBoardincCount, [item.id]);
+      const [data] = await conn.query(sql.getchallengeParticipants, [item.challengeId]);
+      const participantsId = data.map((row) => row.user_id);
+      console.log(participantsId);
+      callback({
+        status: 200,
+        message: '도전 참가자 불러오기 성공',
+        data: participantsId,
+      });
+    } catch (error) {
+      callback({ status: 500, message: '불러오기 실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
     }

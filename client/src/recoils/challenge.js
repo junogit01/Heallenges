@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { atom, selector } from 'recoil';
 import Swal from 'sweetalert2';
-// const baseURL = 'http://localhost:8001/challenges';
 // atom
 export const challengesListState = atom({
   key: 'challenges/challengesListState',
@@ -57,12 +56,21 @@ export const challengesSearchKeywordState = atom({
   default: [],
 });
 
+export const challengesParticipantsState = atom({
+  key: 'challenges/challengesParticipantsState',
+  default: [],
+});
+
 export const challengesListSelector = selector({
   key: 'challenges/challengesSelector',
   get: ({ get, getCallback }) => {
-    const getChallengeList = getCallback(({ set }) => async (no, size) => {
-      const resp = await axios.get(`/challenges`, { params: { no, size } });
+    const getChallengeList = getCallback(({ set }) => async (no, size, id) => {
+      const resp = await axios.get(`/challenges`, { params: { no, size, id } });
       set(challengesListState, resp.data);
+    });
+    const getchallengeParticipants = getCallback(({ set }) => async id => {
+      const resp = await axios.get(`/challenges/${id}/participants`);
+      set(challengesParticipantsState, resp.data);
     });
     const getChallengeDetail = getCallback(({ set }) => async id => {
       const resp = await axios.get(`/challenges/${id}`);
@@ -74,8 +82,6 @@ export const challengesListSelector = selector({
     });
 
     const insertChallenge = getCallback(({ set }) => async item => {
-      console.log('item before', item);
-
       const formData = new FormData();
       formData.append('profile', item.main_image);
       formData.append('data', JSON.stringify(item));
@@ -88,8 +94,6 @@ export const challengesListSelector = selector({
         headers: { 'Content-type': 'multipart/form-data' },
         data: formData,
       });
-
-      console.log('insert=> ', resp);
     });
 
     const deleteChallenge = getCallback(({ set }) => async id => {
@@ -103,7 +107,6 @@ export const challengesListSelector = selector({
 
     const getChallengeBoardDetail = getCallback(({ set }) => async (challengeId, postId) => {
       const resp = await axios.get(`/challenges/${challengeId}/board/${postId}`);
-      // console.log(resp.data.status);
       if (resp.data.status === 200) {
         set(challengesBoardState, resp.data.data);
         set(challengesBoardCommentState, resp.data.comment);
@@ -178,6 +181,7 @@ export const challengesListSelector = selector({
       insertChallenge,
       insertChallengeBoardComment,
       deleteChallengeBoardComment,
+      getchallengeParticipants,
     };
   },
 });
