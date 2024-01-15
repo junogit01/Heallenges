@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import BoardCard from './BoardCard';
+import BoardCard from './ChallengeMainCard';
 import axios from 'axios';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import Pagination from 'react-js-pagination';

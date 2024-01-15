@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import FormItem from '@components/Challenge/FormItem';
-// import RadioGroup from '@components/Challenge/RadioGroup';
-import CalendarInput from '@components/Challenge/CalendarInput';
-import ImageInput from '@components/Challenge/ImageInput';
+import FormItem from '@components/Challenge/ChallengeAddFormItem';
+import ImageInput from '@components/Challenge/ChallengeAddImageInput';
 import { challengesListSelector } from '@recoils/challenge';
 import { useRecoilState } from 'recoil';
 import { loginState } from '@recoils/login';
@@ -130,11 +128,11 @@ const ChallengeAdd = ({ isEdit }) => {
           formData.append('profile', data.main_image);
           formData.append('data', JSON.stringify(data));
 
-          const response = await axios.put(`http://localhost:8001/challenges/${data.id}`, formData);
+          const response = await axios.put(`/challenges/${data.id}`, formData);
           console.log(response);
           if (response.data.status === 200) {
             Swal.fire({
-              text: '수정하였습니다.',
+              text: '성공적으로 수정하였습니다.',
               icon: 'success',
             });
             navigate('/challenges');
@@ -148,7 +146,7 @@ const ChallengeAdd = ({ isEdit }) => {
           insertChallenge(data);
           Swal.fire({
             title: '도전 생성 성공', // Alert 제목
-            text: '도전 기간을 설정해주세요.', // Alert 내용
+            text: '도전이 성공적으로 생성되었습니다.', // Alert 내용
             icon: 'success', // Alert 타입
           });
           navigate('/challenges');
@@ -161,81 +159,140 @@ const ChallengeAdd = ({ isEdit }) => {
     setData(temp);
   };
 
+  const maxLength = 15;
+
+  const handleInputChange = e => {
+    const inputValue = e.target.value;
+
+    if (inputValue.length <= maxLength) {
+      updateValue({ oldData: data, propName: 'title', propValue: inputValue });
+    }
+  };
+
   return (
     <Wrapper>
       <Form>
         <Column>
-          <FormItem label="도전 제목">
-            <input
-              onChange={e => updateValue({ oldData: data, propName: 'title', propValue: e.target.value })}
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 제목</label>
+            <StyledInput
+              onChange={handleInputChange}
               defaultValue={isEdit && challengeDetail?.title}
               value={data.title}
             />
+            <MaxLengthIndicator>
+              {data.title.length}/{maxLength}
+            </MaxLengthIndicator>
           </FormItem>
-          <FormItem label="도전 설명">
-            <Textarea
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 설명</label>
+            <StyledTextarea
               onChange={e => updateValue({ oldData: data, propName: 'description', propValue: e.target.value })}
               defaultValue={isEdit && challengeDetail?.description}
               value={data.description}
             />
           </FormItem>
-          <FormItem label="도전 유형">
-            <select
-              name="type"
-              onChange={e => updateValue({ oldData: data, propName: 'type', propValue: e.target.value })}
-              value={isEdit ? data.type || challengeDetail?.type : data.type}>
-              <option value="">도전 유형을 선택해주세요.</option>
-              <option value="운동">운동</option>
-              <option value="영양">영양</option>
-              <option value="취미">취미</option>
-            </select>
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 유형</label>
+            <SelectContainer>
+              <StyledSelect
+                name="type"
+                onChange={e => updateValue({ oldData: data, propName: 'type', propValue: e.target.value })}
+                value={isEdit ? data.type || challengeDetail?.type : data.type}>
+                <option value="">도전 유형을 선택해주세요.</option>
+                <option value="운동">운동</option>
+                <option value="영양">영양</option>
+                <option value="취미">취미</option>
+              </StyledSelect>
+            </SelectContainer>
           </FormItem>
-          <FormItem label="참여자 총 수">
-            <input
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>참여자 총 수</label>
+            <StyledInput
               type="number"
+              style={{ padding: '0.5rem', width: '5rem' }}
               onChange={e => updateValue({ oldData: data, propName: 'total_participants', propValue: e.target.value })}
               defaultValue={isEdit && challengeDetail?.total_participants}
               value={data.total_participants}
             />
           </FormItem>
-          <FormItem label="도전 규칙">
-            <input
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 규칙</label>
+            <StyledInput
               type="text"
               onChange={e => updateValue({ oldData: data, propName: 'rules', propValue: e.target.value })}
               defaultValue={isEdit && challengeDetail?.rules}
               value={data.rules}
             />
           </FormItem>
-          <FormItem label="도전 기간">
-            <CalendarGroup>
-              {/* value={isEdit ? data.start_date || new Date(challengeDetail?.start_date) : data.start_date} */}
-              <CalendarInput
-                setData={setData}
-                data={data}
-                isStart={true}
-                defaultValue={challengeDetail?.start_date}
-                propName="start_date"
-              />
-              <CalendarInput
-                setData={setData}
-                data={data}
-                isStart={false}
-                defaultValue={challengeDetail?.end_date}
-                propName="end_date"
-              />
-            </CalendarGroup>
+          <FormItem label="" style={{ marginBottom: '20px' }}>
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 기간</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ position: 'relative', width: '150px' }}>
+                <input
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '5px',
+                    backgroundColor: '#fff',
+                    color: '#333',
+                    fontSize: '16px',
+                  }}
+                  onChange={e => setData({ ...data, start_date: e.target.value })}
+                  value={data.start_date}
+                  type="date"
+                />
+                <div
+                  style={{
+                    fontSize: '14px',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '10px',
+                    transform: 'translateY(-50%)',
+                  }}></div>
+              </div>
+              <p>~</p>
+              <div style={{ position: 'relative', width: '150px' }}>
+                <input
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    border: '1px solid #ddd',
+                    borderRadius: '5px',
+                    backgroundColor: '#fff',
+                    color: '#333',
+                    fontSize: '16px',
+                  }}
+                  onChange={e => setData({ ...data, end_date: e.target.value })}
+                  value={data.end_date}
+                  type="date"
+                />
+                <div
+                  style={{
+                    fontSize: '14px',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '10px',
+                    transform: 'translateY(-50%)',
+                  }}></div>
+              </div>
+            </div>
           </FormItem>
-        </Column>
-        <Column>
-          <FormItem label="보상 내용">
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>보상 포인트</label>
             <input
               type="number"
               onChange={e => updateValue({ oldData: data, propName: 'reward', propValue: e.target.value })}
               defaultValue={isEdit && challengeDetail.reward}
               value={data.reward}
+              style={{ width: '6rem', padding: '10px', border: '1px solid #ddd', borderRadius: '5px' }}
             />
           </FormItem>
-          <FormItem label="도전 이미지1">
+        </Column>
+        <Column>
+          <FormItem label="">
+            <label style={{ fontSize: '16px', fontWeight: 'bold', marginBottom: '5px' }}>도전 썸네일</label>
             <ImageInput
               setData={setData}
               data={data}
@@ -254,23 +311,15 @@ const ChallengeAdd = ({ isEdit }) => {
 
 export default ChallengeAdd;
 
-const Img = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-`;
-
-const Label = styled.label`
-  cursor: pointer;
-  width: 300px;
-  height: 200px;
-`;
-
 const Form = styled.form`
   display: flex;
   flex-direction: row;
   width: 1000px;
-  gap: 50px;
+  gap: 20px; /* 간격을 줄임 */
+  background-color: #f5f5f5; /* 배경색 추가 */
+  padding: 20px; /* 내부 여백 추가 */
+  border-radius: 10px; /* 테두리 둥글게 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 `;
 
 const Column = styled.div`
@@ -278,20 +327,11 @@ const Column = styled.div`
   flex-direction: column;
   flex: 1;
   gap: 20px;
-`;
-
-const RadioButtonGroup = styled.div`
-  display: flex;
-  gap: 6px;
-`;
-
-const CalendarGroup = styled.div`
-  display: flex;
-  gap: 6px;
-`;
-
-const Textarea = styled.textarea`
-  resize: none;
+  background-color: #ffffff; /* 배경색 추가 */
+  padding: 20px; /* 내부 여백 추가 */
+  border: 1px solid #dddddd; /* 테두리 추가 */
+  border-radius: 10px; /* 테두리 둥글게 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
 `;
 
 const Wrapper = styled.div`
@@ -317,4 +357,46 @@ const AddButton = styled.div`
   &:hover {
     background-color: rgba(#0d6efd, 0.8);
   }
+`;
+
+const StyledSelect = styled.select`
+  padding: 10px; /* 내부 여백 추가 */
+  border: 1px solid #ddd; /* 테두리 스타일 추가 */
+  border-radius: 5px; /* 테두리 둥글게 */
+  background-color: #fff; /* 배경색 설정 */
+  color: #333; /* 텍스트 색상 설정 */
+  font-size: 16px; /* 폰트 크기 설정 */
+`;
+
+const SelectContainer = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const StyledTextarea = styled.textarea`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+  resize: vertical; /* 수직 리사이즈 가능 */
+  min-height: 100px; /* 최소 높이 지정 */
+`;
+
+const StyledInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  font-size: 16px;
+`;
+
+const MaxLengthIndicator = styled.div`
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
 `;
