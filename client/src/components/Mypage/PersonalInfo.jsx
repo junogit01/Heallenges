@@ -65,7 +65,7 @@ function PersonalInfo() {
       if (result.isConfirmed) {
         // 만약 모달창에서 confirm 버튼을 눌렀다면
         try {
-          const resp = await axios.delete('http://localhost:8001/mypage/' + id);
+          const resp = await axios.delete('/mypage/' + id);
           if (resp.data.status === 200) {
             Swal.fire('회원탈퇴가 완료되었습니다.', '그동안 감사했습니다.', 'success');
             setLoginUser({ name: '', email: '', id: '' });
@@ -83,7 +83,10 @@ function PersonalInfo() {
   }, [id, navigate, setLoginUser]);
 
   useEffect(() => {
-    getUserRecoild(id);
+    async function fetchData() {
+      await getUserRecoild(id);
+    }
+    fetchData();
   }, [getUserRecoild, id]);
 
   return (
@@ -158,7 +161,7 @@ function PersonalInfo() {
                 </tr>
               </thead>
               <tbody>
-                {user?.challenge.length ? (
+                {user?.challenge?.length ? (
                   user?.challenge?.map(challenge => (
                     <tr key={challenge?.id}>
                       <th className="text-center">{challenge?.id}</th>

@@ -222,8 +222,7 @@ function ChallengesCommunityDetailComment() {
     async data => {
       try {
         const newComment = await insertChallengeBoardComment(challengeId, id, data);
-        setComments(prevComments => [...prevComments, newComment]);
-        // 페이지 이동은 필요 없습니다.
+        window.location.reload([true]);
       } catch (error) {
         Swal.fire({
           title: '댓글 작성 중 에러 발생',
@@ -239,7 +238,7 @@ function ChallengesCommunityDetailComment() {
     async commentId => {
       try {
         await deleteChallengeBoardComment(challengeId, id, commentId);
-        navigate(`/challenges/${challengeId}/board/${id}`);
+        window.location.reload([true]);
       } catch (error) {
         Swal.fire({
           title: '댓글 삭제 중 에러 발생',
