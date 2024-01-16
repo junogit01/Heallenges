@@ -5,22 +5,42 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ChallengesCommunityDetailComment from './ChallengesCommunityDetailComment';
 import { loginState } from '@recoils/login';
 import ChallengesCommunityDetailBtn from './ChallengesCommunityDetailBtn';
+import Swal from 'sweetalert2';
 
 function ChallengesCommunityDetailPost() {
   const { challengeId, postId } = useParams();
   const challengesBoardDetail = useRecoilValue(challengesBoardState);
   const { getChallengeBoardDetail } = useRecoilValue(challengesListSelector);
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       await getChallengeBoardDetail(challengeId, postId);
+      if (!challengesBoardDetail) {
+        Swal.fire({
+          title: '데이터 불러오기 실패',
+          text: '다시 접속해주세요',
+          icon: 'error',
+        });
+        navigate(`/challenges/${challengeId}/board/${postId}`);
+      }
+      setIsLoading(false);
     }
     fetchData();
   }, [challengeId, postId]);
+
+  if (isLoading) {
+    return (
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    ); // 로딩 인디케이터 표시
+  }
 
   // 조건부 렌더링을 통해 challengesBoardDetail이 존재하는 경우에만 내용을 표시합니다.
   return (

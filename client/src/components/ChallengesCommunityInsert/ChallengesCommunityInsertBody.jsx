@@ -9,7 +9,7 @@ import { loginState } from '@recoils/login';
 
 function ChallengesCommunityInsertBody() {
   // url에서 파라미터 수집
-  const { challengeId, id } = useParams();
+  const { challengeId } = useParams();
   const navigate = useNavigate();
 
   // Recoil을 통해 상태 가져오기
