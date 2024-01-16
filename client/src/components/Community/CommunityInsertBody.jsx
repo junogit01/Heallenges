@@ -52,6 +52,19 @@ function CommunityInsert() {
         return;
       }
 
+      // 사용자 아이디 확인
+      if (!loginUser.id) {
+        // 유저 아이디가 없는 경우
+        Swal.fire({
+          title: '로그인 필요',
+          text: '글을 작성하려면 로그인이 필요합니다.',
+          icon: 'info',
+        });
+        navigate('/login');
+
+        return;
+      }
+
       // 사용자가 공지 게시판에 글을 작성할 권한이 있는지 확인
       if (data.category === '공지 게시판' && loginUser.email !== 'admin@naver.com') {
         Swal.fire({

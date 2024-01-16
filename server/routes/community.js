@@ -7,8 +7,8 @@ const path = require('path');
 
 const communityDAO = require('../models/communityDAO');
 
-const imageUploadPath = 'http://localhost:8001/images/community/';
-// const imageUploadPath = 'http://heallenges.cafe24app.com/images/community/';
+// const imageUploadPath = 'http://localhost:8001/images/community/';
+const imageUploadPath = 'http://heallenges.cafe24app.com/images/community/';
 
 const uploadName = multer({
   storage: multer.diskStorage({

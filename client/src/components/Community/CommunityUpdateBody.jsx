@@ -18,7 +18,7 @@ function CommunityUpdate() {
 
   // 로그인이 안되면 로그인 페이지로 이동
   const loginUser = useRecoilValue(loginState);
-  if (!loginUser.id && !loginUser.email) navigate('/login');
+  // if (!loginUser.id && !loginUser.email) navigate('/login');
 
   // React Hook Form의 useForm 사용
   const {
@@ -86,6 +86,19 @@ function CommunityUpdate() {
           text: '제목과 내용은 필수 입력 사항입니다.',
           icon: 'error',
         });
+        return;
+      }
+
+      // 사용자 아이디 확인
+      if (!loginUser.id) {
+        // 유저 아이디가 없는 경우
+        Swal.fire({
+          title: '로그인 필요',
+          text: '글을 수정하려면 로그인이 필요합니다.',
+          icon: 'info',
+        });
+        navigate('/login');
+
         return;
       }
 
