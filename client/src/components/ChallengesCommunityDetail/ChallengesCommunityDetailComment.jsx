@@ -34,22 +34,13 @@ function ChallengesCommunityDetailComment() {
     },
   });
 
-  // const submitEvent = useCallback(
-  //   async data => {
-  //     try {
-  //       await insertChallengeBoardComment(challengeId, id, data);
-  //       navigate(`/challenges/${challengeId}/board/${id}`);
-  //     } catch (error) {
-  //       navigate(`/challenges/${challengeId}/board/${id}`);
-  //     }
-  //   },
-  //   [challengeId, id, insertChallengeBoardComment, navigate],
-  // );
   const submitEvent = useCallback(
     async data => {
       try {
-        const newComment = await insertChallengeBoardComment(challengeId, id, data);
-        window.location.reload([true]);
+        await insertChallengeBoardComment(challengeId, id, data);
+        setTimeout(() => {
+          window.location.replace(`/challenges/${challengeId}/board/${id}`);
+        }, 1000);
       } catch (error) {
         Swal.fire({
           title: '댓글 작성 중 에러 발생',
@@ -65,7 +56,9 @@ function ChallengesCommunityDetailComment() {
     async commentId => {
       try {
         await deleteChallengeBoardComment(challengeId, id, commentId);
-        window.location.reload([true]);
+        setTimeout(() => {
+          window.location.replace(`/challenges/${challengeId}/board/${id}`);
+        }, 1000);
       } catch (error) {
         Swal.fire({
           title: '댓글 삭제 중 에러 발생',
@@ -74,7 +67,7 @@ function ChallengesCommunityDetailComment() {
         });
       }
     },
-    [challengeId, id, deleteChallengeBoardComment, navigate],
+    [challengeId, id, deleteChallengeBoardComment],
   );
 
   useEffect(() => {

@@ -18,10 +18,6 @@ const PORT = 8001;
 app.set('views', __dirname + '/views');
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, '/build/index.html')); // index.html 파일 경로
-});
-
 app.set('view engine', 'ejs');
 // app.get('/', (req, res) => {
 //   res.render('index');
@@ -44,6 +40,14 @@ app.use('/api/mypage', usersRouter);
 app.use('/api/rank', rankRouter);
 app.use('/api/community', communityRouter);
 app.use('/api/challenges', challengesRouter);
+
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, '/build/index.html')); // index.html 파일 경로
+});
+
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html')); // index.html 파일 경로
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
