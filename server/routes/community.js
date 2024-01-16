@@ -116,7 +116,7 @@ router.post('/like/:user_id/:post_id', (req, res) => {
 });
 
 // 좋아요 취소
-router.delete('/dislike/:user_id/:post_id', (req, res) => {
+router.delete('/like/:user_id/:post_id', (req, res) => {
   const { user_id, post_id } = req.params;
   const data = { user_id, post_id };
 

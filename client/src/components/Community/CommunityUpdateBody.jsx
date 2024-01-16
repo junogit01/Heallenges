@@ -30,6 +30,7 @@ function CommunityUpdate() {
 
   // communityState로 기존 게시물에 작성된 값을 가져오기 위해 사용
   const [community] = useRecoilState(communityState(id));
+  console.log(community);
 
   // 폼 초기값 설정
   useEffect(() => {

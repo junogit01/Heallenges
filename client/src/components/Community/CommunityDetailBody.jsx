@@ -71,7 +71,7 @@ function CommunityBoardDetail() {
   const dislikeCommunityEvent = async () => {
     try {
       const response = await axios.delete(
-        `/community/dislike/${loginUser.id}/${id}`,
+        `/community/like/${loginUser.id}/${id}`,
         JSON.stringify({
           post_id: id,
           user_id: loginUser.id,
@@ -172,6 +172,19 @@ function CommunityBoardDetail() {
   if (!communityPost) {
     // console.log('게시글을 찾을 수 없음:', id);
     return <div>게시글을 찾을 수 없습니다.</div>;
+  }
+
+  // 게시물이 존재하지 않을 경우 화면에 표시
+  if (!communityPost.board) {
+    // 게시글을 찾을 수 없거나, user_id가 없는 경우
+    Swal.fire({
+      title: '알림',
+      text: '해당 게시물을 확인할 수 없습니다.',
+      icon: 'info',
+      confirmButtonText: '확인',
+    });
+    navigate('/community');
+    return null; // 리다이렉션 후, 아무것도 렌더링하지 않도록 null을 반환
   }
 
   // 현재 로그인한 사용자가 게시물 작성자인지 확인 후 수정 및 삭제 버튼 활성화 여부 결정
