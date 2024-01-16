@@ -104,16 +104,18 @@ function ChallengesCommunityDetailComment() {
         {/* Comments display */}
         <div className="d-flex align-items-start flex-column">
           {currentComments?.map(data => (
-            <div className="flex-shrink-0 d-flex flex-row" style={{ width: '650px' }} key={data?.id}>
+            <div className="flex-shrink-0 d-flex flex-row" style={{ width: '750px' }} key={data?.id}>
               <img
                 className="rounded-circle"
                 src={data?.profile_image}
                 alt="사진"
                 style={{ maxHeight: '50px', maxWidth: '50px', marginRight: '1rem' }}
               />
-              <div className="ms-3">
+              <div className="ms-3" style={{ maxWidth: '100%' }}>
                 <div className="fw-bold">{data?.nickname || '사용자 없음'}</div>
-                <p style={{ whiteSpace: 'pre-wrap' }}>{data?.contents}</p>
+                <p style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', wordBreak: 'keep-all' }}>
+                  {data?.contents}
+                </p>
                 <div className="mt-3 d-flex flex-row">
                   <p>{data?.created}</p>
                   {loginUser.id === data.user_id && (
