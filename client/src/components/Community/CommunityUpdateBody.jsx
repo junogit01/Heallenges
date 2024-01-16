@@ -18,7 +18,7 @@ function CommunityUpdate() {
 
   // 로그인이 안되면 로그인 페이지로 이동
   const loginUser = useRecoilValue(loginState);
-  // if (!loginUser.id && !loginUser.email) navigate('/login');
+  if (!loginUser.id && !loginUser.email) navigate('/login');
 
   // React Hook Form의 useForm 사용
   const {
