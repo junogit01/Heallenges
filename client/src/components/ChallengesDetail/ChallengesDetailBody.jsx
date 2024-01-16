@@ -40,7 +40,7 @@ function ChallengesDetailBody({ data, title, id }) {
   useEffect(() => {
     // 사용자가 이미 참여한 도전인지 확인
     const alreadyParticipated = participatedChallenges.some(
-      challenge => challenge?.challengeId === data?.id && challenge?.userId === user.id,
+      challenge => challenge?.challengeId === data?.id && challenge?.userId === user?.id,
     );
     setIsAttended(alreadyParticipated);
     if (alreadyParticipated) {

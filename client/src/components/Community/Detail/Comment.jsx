@@ -1,3 +1,6 @@
+// Comment
+// 댓글 삭제
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
@@ -94,10 +97,19 @@ const Comment = ({ comments }) => {
                   style={{ maxHeight: '50px', maxWidth: '50px', marginRight: '1rem' }}
                 />
               </div>
-              <div className="ms-3">
+              <div className="ms-3" style={{ maxWidth: '85%' }}>
                 {/* 댓글 작성자 정보 및 내용 */}
                 <div className="fw-bold">{comment.nickname || '사용자 없음'}</div>
-                <p style={{ whiteSpace: 'pre' }}>{comment.contents}</p>
+                <div>
+                  <p
+                    style={{
+                      whiteSpace: 'pre-wrap',
+                      wordWrap: 'break-word',
+                      wordBreak: 'keep-all',
+                    }}>
+                    {comment.contents}
+                  </p>
+                </div>
 
                 {/* 댓글 작성일 및 삭제 버튼 */}
                 <div className="mt-3">
