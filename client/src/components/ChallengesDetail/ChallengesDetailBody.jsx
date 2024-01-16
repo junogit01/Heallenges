@@ -135,8 +135,15 @@ function ChallengesDetailBody({ data, title, id }) {
   // 도전 삭제 버튼
   const handleDelete = async e => {
     e.preventDefault();
-    const prompt = window.confirm('정말로 삭제 하시겠습니까?');
-    if (prompt) {
+    const { value: confirmResult } = await Swal.fire({
+      title: '정말로 삭제 하시겠습니까?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+    });
+
+    if (confirmResult) {
       try {
         const result = await axios.delete(`/challenges/${data.id}`);
         Swal.fire({
