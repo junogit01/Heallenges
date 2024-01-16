@@ -76,7 +76,6 @@ export const challengesListSelector = selector({
 
     const getMainChallengeList = getCallback(({ set }) => async () => {
       const resp = await axios.get(`/main`);
-      console.log(resp.data);
       set(challengesMain, resp.data);
     });
     const getchallengeParticipants = getCallback(({ set }) => async id => {

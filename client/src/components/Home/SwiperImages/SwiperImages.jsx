@@ -29,13 +29,19 @@ function SwiperImages() {
           modules={[Autoplay, Navigation, Pagination]}
           className="mySwiper">
           <SwiperSlide>
-            <img src="images/Heallenges-logo-black.png" alt="" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="images/main1.png" alt="" />
-          </SwiperSlide>
-          <SwiperSlide>
             <img src="images/main2.png" alt="" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="images/1.jpg" alt="" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="images/2.jpg" alt="" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="images/3.jpg" alt="" />
+          </SwiperSlide>
+          <SwiperSlide>
+            <img src="images/4.jpg" alt="" />
           </SwiperSlide>
         </Swiper>
         <div className="swiper-pagination"></div>
