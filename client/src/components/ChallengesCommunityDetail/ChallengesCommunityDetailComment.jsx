@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { challengesListSelector, challengesBoardCommentState, challengesBoardState } from '@recoils/challenge';
 import Pagination from 'react-js-pagination';
-import one from './Paging.module.css';
 import { loginState } from '@recoils/login';
 
 function ChallengesCommunityDetailComment() {
@@ -80,7 +79,7 @@ function ChallengesCommunityDetailComment() {
 
   return (
     <div className="card bg-light">
-      <div className="card-body">
+      <div className="card-body container">
         {/* Comment form */}
         <form
           className="mb-4"
@@ -102,16 +101,16 @@ function ChallengesCommunityDetailComment() {
         </form>
 
         {/* Comments display */}
-        <div className="d-flex align-items-start flex-column">
+        <div className="d-flex align-items-start flex-column container">
           {currentComments?.map(data => (
-            <div className="flex-shrink-0 d-flex flex-row" style={{ width: '750px' }} key={data?.id}>
+            <div className="flex-shrink-0 d-flex flex-row container" key={data?.id}>
               <img
                 className="rounded-circle"
                 src={data?.profile_image}
                 alt="사진"
                 style={{ maxHeight: '50px', maxWidth: '50px', marginRight: '1rem' }}
               />
-              <div className="ms-3" style={{ maxWidth: '100%' }}>
+              <div className="ms-3 container" style={{ maxWidth: '80%' }}>
                 <div className="fw-bold">{data?.nickname || '사용자 없음'}</div>
                 <p style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', wordBreak: 'keep-all' }}>
                   {data?.contents}
@@ -143,7 +142,8 @@ function ChallengesCommunityDetailComment() {
             prevPageText="‹"
             nextPageText="›"
             onChange={handlePageChange}
-            innerClass={one.pagination}
+            itemClass="page-item"
+            linkClass="page-link"
           />
         </div>
       </div>

@@ -2,6 +2,7 @@ const express = require('express');
 // eslint-disable-next-line new-cap
 const router = express.Router();
 const indexDAO = require('./../models/indexDAO');
+const challengesCommunityDAO = require('./../models/challengesCommunityDAO');
 const multer = require('multer');
 const path = require('path');
 
@@ -43,14 +44,6 @@ router.post('/signup', uploadName.single('profile'), async (req, res, next) => {
   }
 });
 
-// 이미지 업로드
-// router.post('/signup/upload', upload.single('image'), function (req, res, next) {
-//   const data = req.body;
-//   indexDAO.insertImage(data, (resp) => {
-//     res.json(resp);
-//   });
-// });
-
 // 로그인
 router.post('/login', function (req, res, next) {
   const data = req.body;
@@ -62,6 +55,13 @@ router.post('/login', function (req, res, next) {
 // 로그아웃
 router.get('/logout', function (req, res, next) {
   res.json('로그아웃');
+});
+
+// 메인 도전 목록 조회
+router.get('/main', function (req, res, next) {
+  challengesCommunityDAO.getChallenges((resp) => {
+    res.json(resp);
+  });
 });
 
 module.exports = router;

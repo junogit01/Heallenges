@@ -60,17 +60,17 @@ function Footer() {
 
               <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
                 <h6 className="text-uppercase fw-bold mb-4">찾아오시는 길</h6>
-                <p>
-                  <i className="bi bi-house me-2"></i> 서울특별시 광진구 능동로 195-16 6층
+                <p className="align-items-center">
+                  <i className="bi bi-house me-2 d-inline align-items-center"></i>서울특별시 광진구 능동로 195-16 6층
                 </p>
-                <p>
-                  <i className="bi bi-envelope me-2"></i> contact@heallenges.com
+                <p className="align-items-center">
+                  <i className="bi bi-envelope me-2 d-inline align-items-center"></i>contact@heallenges.com
                 </p>
-                <p>
-                  <i className="bi bi-phone me-2"></i> + 82 02 123 4567
+                <p className="align-items-center">
+                  <i className="bi bi-phone me-2 d-inline align-items-center"></i>+ 82 02 123 4567
                 </p>
-                <p>
-                  <i className="bi bi-printer me-2"></i> + 82 02 456 7891
+                <p className="align-items-center">
+                  <i className="bi bi-printer me-2 d-inline align-items-center"></i>+ 82 02 456 7891
                 </p>
               </div>
             </div>

@@ -61,12 +61,23 @@ export const challengesParticipantsState = atom({
   default: [],
 });
 
+export const challengesMain = atom({
+  key: 'challenges/mainChallengesState',
+  default: [],
+});
+
 export const challengesListSelector = selector({
   key: 'challenges/challengesSelector',
   get: ({ get, getCallback }) => {
     const getChallengeList = getCallback(({ set }) => async (no, size, id) => {
       const resp = await axios.get(`/challenges`, { params: { no, size, id } });
       set(challengesListState, resp.data);
+    });
+
+    const getMainChallengeList = getCallback(({ set }) => async () => {
+      const resp = await axios.get(`/main`);
+      console.log(resp.data);
+      set(challengesMain, resp.data);
     });
     const getchallengeParticipants = getCallback(({ set }) => async id => {
       const resp = await axios.get(`/challenges/${id}/participants`);
@@ -85,8 +96,6 @@ export const challengesListSelector = selector({
       const formData = new FormData();
       formData.append('profile', item.main_image);
       formData.append('data', JSON.stringify(item));
-
-      // console.log('image=> ', item.main_image[0])
 
       const resp = await axios({
         method: 'POST',
@@ -179,6 +188,7 @@ export const challengesListSelector = selector({
       updateChallenge,
       deleteChallenge,
       insertChallenge,
+      getMainChallengeList,
       insertChallengeBoardComment,
       deleteChallengeBoardComment,
       getchallengeParticipants,

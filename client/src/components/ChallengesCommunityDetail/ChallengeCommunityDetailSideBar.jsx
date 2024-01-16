@@ -25,7 +25,6 @@ function ChallengeCommunityDetailSideBar() {
   }, [setSearchKeyword]);
 
   const { challengeId, id } = useParams();
-  console.log(id);
   return (
     <div className="col-lg-3">
       {/* Search widget */}
