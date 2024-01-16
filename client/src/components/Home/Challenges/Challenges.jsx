@@ -43,18 +43,23 @@ function Challenges() {
           {challengeList?.data?.map(data => (
             <SwiperSlide key={data?.id}>
               <div className="card">
-                <img
-                  src={data?.main_image}
-                  className="card-img-top img-thumbnail"
-                  alt="..."
-                  style={{ height: '300px' }}
-                />
+                <Link to={`/challenges/${data?.id}`}>
+                  <img
+                    src={data?.main_image}
+                    className="card-img-top img-thumbnail"
+                    alt="..."
+                    style={{ height: '300px' }}
+                  />
+                </Link>
+
                 <div className="card-body">
                   <h5 className="card-title">
-                    {data?.title.length > 10 ? `${data?.title.slice(0, 15)}...` : data?.title}
+                    <Link to={`/challenges/${data?.id}`}>
+                      {data?.title.length > 10 ? `${data?.title.slice(0, 15)}...` : data?.title}
+                    </Link>
                   </h5>
                   <p className="card-text mb-3">
-                    {data?.description.length > 25 ? `${data?.description.slice(0, 25)}...` : data?.description}
+                    {data?.description.length > 35 ? `${data?.description.slice(0, 35)}...` : data?.description}
                   </p>
                 </div>
               </div>

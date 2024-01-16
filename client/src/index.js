@@ -28,7 +28,14 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <RecoilRoot>
-        <App />
+        <React.Suspense
+          fallback={
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          }>
+          <App />
+        </React.Suspense>
       </RecoilRoot>
     </BrowserRouter>
   </React.StrictMode>,
