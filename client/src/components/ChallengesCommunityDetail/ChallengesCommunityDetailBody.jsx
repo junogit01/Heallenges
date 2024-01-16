@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ChallengesDetailSideBar from '../ChallengesDetail/ChallengeDetailSideBar';
 import ChallengesCommunityDetailPost from './ChallengesCommunityDetailPost';
-import ChallengesCommunityDetailComment from './ChallengesCommunityDetailComment';
-import ChallengesCommunityDetailBtn from './ChallengesCommunityDetailBtn';
 
-// import ChallengesCommunityList from './ChallengesCommunityList';
+import ChallengeCommunityDetailSideBar from './ChallengeCommunityDetailSideBar';
 
 function ChallengesCommunityDetailBody() {
   return (
@@ -20,7 +17,7 @@ function ChallengesCommunityDetailBody() {
                   </div>
                 </div>
               </div>
-              <ChallengesDetailSideBar />
+              <ChallengeCommunityDetailSideBar />
             </div>
           </div>
         </section>
