@@ -19,16 +19,23 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { RecoilRoot } from 'recoil';
 
-// axios.defaults.baseURL = 'http://heallenges.cafe24app.com/api';
+axios.defaults.baseURL = 'http://heallenges.cafe24app.com/api';
 
-axios.defaults.baseURL = 'http://localhost:8001/api';
+// axios.defaults.baseURL = 'http://localhost:8001/api';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <RecoilRoot>
-        <App />
+        <React.Suspense
+          fallback={
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          }>
+          <App />
+        </React.Suspense>
       </RecoilRoot>
     </BrowserRouter>
   </React.StrictMode>,

@@ -2,19 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ChallengesDetailSideBar from '../ChallengesDetail/ChallengeDetailSideBar';
 import ChallengesCommunityList from './ChallengesCommunityList';
 
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { challengesBoardListState, challengesListSelector } from '@recoils/challenge';
-import { useParams } from 'react-router-dom';
-
 function ChallengesCommunityBody() {
-  const { id } = useParams();
-  const boardList = useRecoilValue(challengesBoardListState);
-  const { getChallengeBoardList } = useRecoilValue(challengesListSelector);
-
-  useEffect(() => {
-    getChallengeBoardList(id);
-  }, [id]);
-
   return (
     <div className="container-md">
       <main id="main" style={{ marginTop: '30px' }}>

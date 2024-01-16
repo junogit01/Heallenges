@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { challengesState, challengesListSelector, challengesBoardState } from '@recoils/challenge';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -6,9 +6,10 @@ import ChallengesCommunityDetailComment from './ChallengesCommunityDetailComment
 import { loginState } from '@recoils/login';
 import ChallengesCommunityDetailBtn from './ChallengesCommunityDetailBtn';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 function ChallengesCommunityDetailPost() {
-  const { challengeId, postId } = useParams();
+  const { challengeId, id } = useParams();
   const challengesBoardDetail = useRecoilValue(challengesBoardState);
   const { getChallengeBoardDetail } = useRecoilValue(challengesListSelector);
   const navigate = useNavigate();
@@ -17,22 +18,36 @@ function ChallengesCommunityDetailPost() {
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
-  useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      await getChallengeBoardDetail(challengeId, postId);
+  const getPost = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const resp = await getChallengeBoardDetail(challengeId, id);
       if (!challengesBoardDetail) {
         Swal.fire({
           title: '데이터 불러오기 실패',
-          text: '다시 접속해주세요',
+          text: '1초뒤 다시 접속합니다.',
           icon: 'error',
         });
-        navigate(`/challenges/${challengeId}/board/${postId}`);
+        setTimeout(() => {
+          window.location.replace(`/challenges/${challengeId}/board/${id}`);
+        }, 1000);
       }
-      setIsLoading(false);
+    } catch (error) {
+      Swal.fire({
+        title: '데이터 불러오기 실패',
+        text: '1초뒤 다시 접속합니다.',
+        icon: 'error',
+      });
+      setTimeout(() => {
+        window.location.replace(`/challenges/${challengeId}/board/${id}`);
+      }, 1000);
     }
-    fetchData();
-  }, [challengeId, postId]);
+    setIsLoading(false);
+  }, [getChallengeBoardDetail]);
+
+  useEffect(() => {
+    getPost();
+  }, []);
 
   if (isLoading) {
     return (

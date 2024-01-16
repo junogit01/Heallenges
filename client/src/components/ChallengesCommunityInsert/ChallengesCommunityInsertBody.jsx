@@ -48,6 +48,20 @@ function ChallengesCommunityInsertBody() {
           });
           return;
         }
+        if (data.category === '인증' && data.image.length > 0) {
+          Swal.fire({
+            title: '포인트가 적립되었습니다.',
+            text: '마이페이지에서 확인해주세요.',
+            icon: 'success',
+          });
+        } else if (data.category === '인증' && data.image.length === 0) {
+          Swal.fire({
+            title: '포인트가 적립되지 않았습니다.',
+            text: '인증샷을 첨부해주세요.',
+            icon: 'warning',
+          });
+          return;
+        }
         // 저는 파일 업로드를 위해 formData로 변경했습니다
         const formData = new FormData();
 
@@ -66,13 +80,13 @@ function ChallengesCommunityInsertBody() {
         });
         if (resp.data.status === 501) {
           Swal.fire({
-            title: '이메일 중복', // Alert 제목
-            text: '다른 이메일 계정을 입력해주십시오', // Alert 내용
+            title: '게시글 작성 오류', // Alert 제목
+            text: '다시 시도해주십시오.', // Alert 내용
             icon: 'error', // Alert 타입
           });
         } else if (resp.data.status === 502 || resp.data.status === 503) {
           Swal.fire({
-            title: '회원가입 처리 중 에러 발생', // Alert 제목
+            title: '게시글 처리 중 에러 발생', // Alert 제목
             text: '다시 입력해주십시오', // Alert 내용
             icon: 'error', // Alert 타입
           });

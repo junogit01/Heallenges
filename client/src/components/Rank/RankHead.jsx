@@ -39,7 +39,7 @@ function RankHead() {
               onChange={handleChange}
               style={{ width: '30rem' }}
             />
-            <i class="bi bi-search" style={{ fontSize: '2rem', marginLeft: '-4rem' }}></i>
+            <i className="bi bi-search" style={{ fontSize: '2rem', marginLeft: '-4rem' }}></i>
           </form>
         </div>
       </div>

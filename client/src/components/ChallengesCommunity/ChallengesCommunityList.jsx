@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import {
   challengesBoardListState,
@@ -29,33 +29,34 @@ function ChallengesCommunityList() {
 
   const searchBoardList = boardList.filter(data => data?.title.toLowerCase().includes(searchKeyword.toLowerCase()));
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        await getchallengeParticipants(id);
-        if (!challengeParticipants.data.includes(loginUser.id)) {
-          Swal.fire({
-            title: '도전 참가 후 접속하실 수 있습니다.',
-            text: ' ',
-            icon: 'error',
-          });
-          navigate(`/challenges/${id}`);
-        } else {
-          await getChallengeBoardList(id);
-        }
-      } catch (error) {
+  const getList = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      await getchallengeParticipants(id);
+      if (!challengeParticipants?.data?.includes(loginUser.id)) {
         Swal.fire({
-          title: '데이터 불러오기 실패.',
-          text: '다시 접속해주세요',
+          title: '도전 참가 후 접속하실 수 있습니다.',
+          text: ' ',
           icon: 'error',
         });
         navigate(`/challenges/${id}`);
+      } else {
+        await getChallengeBoardList(id);
       }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, [id, getChallengeBoardList, getchallengeParticipants]);
+    } catch (error) {
+      Swal.fire({
+        title: '데이터 불러오기 실패',
+        text: '다시 접속해주세요.',
+        icon: 'error',
+      });
+      navigate(`/challenges/${id}`);
+    }
+    setIsLoading(false);
+  }, [getChallengeBoardList]);
+
+  useEffect(() => {
+    getList();
+  }, [getList]);
 
   const filteredBoardList = searchBoardList.filter(data => {
     return selectedCategory === 'all' || data?.category === selectedCategory;
