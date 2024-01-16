@@ -46,6 +46,9 @@ const sql = {
   // 조회수 증가
   incCount: `UPDATE community SET view_cnt = view_cnt + 1 WHERE id = ?`,
 
+  // 조회수 감소
+  decCount: `UPDATE community SET view_cnt = view_cnt - 1 WHERE id = ?`,
+
   // 댓글 입력(여기부터 다시 시작)
   commentInsert: `INSERT INTO community_comment (post_id, user_id, contents)
                   VALUES (?, ?, ?)`,
@@ -229,7 +232,6 @@ const communityDAO = {
     } catch (error) {
       console.error('댓글 입력 실패:', error);
 
-      // 에러 처리를 추가하고 클라이언트에게 전달할 적절한 에러 메시지를 반환합니다.
       callback({
         status: 500,
         message: '댓글 입력 중에 오류가 발생했습니다.',
@@ -301,10 +303,10 @@ const communityDAO = {
     try {
       conn = await pool.getConnection();
       conn.beginTransaction();
-      // 좋아요 등록
+      // 좋아요 등록 및 게시물에 업데이트
       await conn.query(sql.like, [post_id, user_id]);
-      // 좋아요를 게시물에 업데이트
       await conn.query(sql.likeupdate, [post_id]);
+      await conn.query(sql.decCount, [post_id]);
       conn.commit();
       callback({ status: 200, message: 'OK', ok: true });
     } catch (error) {
@@ -322,10 +324,10 @@ const communityDAO = {
     try {
       conn = await pool.getConnection();
       conn.beginTransaction();
-      // 좋아요 취소
+      // 좋아요 취소 및 게시물에 업데이트
       await conn.query(sql.notlike, [post_id, user_id]);
-      // 좋아요 취솔를 게시물에 업데이트
       await conn.query(sql.notlikeupdate, [post_id]);
+      await conn.query(sql.decCount, [post_id]);
       conn.commit();
       callback({ status: 200, message: 'OK', ok: true });
     } catch (error) {
