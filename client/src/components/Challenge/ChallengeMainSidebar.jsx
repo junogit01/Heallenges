@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { loginState } from '@recoils/login';
 import { challengeSearchKeywordState } from '@recoils/challenge';
+import Swal from 'sweetalert2';
 
 const ChallengeMainSidebar = () => {
   const [user, setUser] = useRecoilState(loginState);
@@ -30,10 +31,13 @@ const ChallengeMainSidebar = () => {
 
   const handleLink = (user, id) => {
     if (!user?.email) {
-      alert('로그인이 필요한 서비스입니다.');
+      Swal.fire({
+        title: '로그인 확인', // Alert 제목
+        text: '로그인이 필요한 서비스 입니다.', // Alert 내용
+        icon: 'error', // Alert 타입
+      });
       navigate(`/login`);
-    } else navigate(`/challenges/add`); // ${id}가 왜 사용했는지 확인 요망
-    // navigate(`/challenges/${id}`);
+    } else navigate(`/challenges/add`);
   };
 
   return (

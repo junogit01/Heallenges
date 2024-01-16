@@ -57,7 +57,7 @@ const Board = () => {
 
   const searchFilteredPosts = list.filter(data => {
     // 타이틀에서 키워드 검색
-    const titleKeyword = data?.title.toLowerCase().includes(searchKeyword.toLowerCase());
+    const titleKeyword = data?.title.includes(searchKeyword);
     // 현재 페이지 범위에 속하는지 확인, 페이지네이션을 위함
     const isPageRange = list.indexOf(data) >= indexOfFirstItem && list.indexOf(data) < indexOfLastItem;
 

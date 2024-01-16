@@ -33,7 +33,7 @@ const BoardCard = ({ id, image, title, start, end, created, reward }) => {
       </div>
       <ul className="list-group list-group-flush">
         <li className="list-group mx-3" style={{ fontSize: '0.8rem', marginTop: '0.3rem' }}>
-          미션 기간
+          도전 기간
         </li>
         <li className="list-group-item" style={{ fontSize: '0.8rem' }}>
           {getTimeFromDate(start) + '~' + getTimeFromDate(end)}
