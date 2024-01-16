@@ -5,6 +5,7 @@ const sql = {
               name, reward_cnt, profile_image,
               (SELECT COUNT(*)+1 FROM user AS b WHERE b.reward_cnt > a.reward_cnt OR (b.reward_cnt = a.reward_cnt AND b.name < a.name)) AS rank
             FROM user AS a
+            WHERE a.id <> 68
             ORDER BY reward_cnt DESC, name
             LIMIT ? OFFSET ?`,
   totalCount: `SELECT COUNT(*) as reward_cnt FROM user`,
