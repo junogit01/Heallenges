@@ -16,6 +16,11 @@ const ChallengeAdd = ({ isEdit }) => {
   const current = useLocation();
   const [challengeDetail, setChallengeDetail] = useState([]);
   const boardId = useParams().id;
+  const navigate = useNavigate();
+
+  // 로그인이 안되면 로그인 페이지로 이동
+  const loginUser = useRecoilValue(loginState);
+  if (!loginUser.id && !loginUser.email) navigate('/login');
 
   useEffect(() => {
     const getDetailList = async () => {
@@ -50,8 +55,6 @@ const ChallengeAdd = ({ isEdit }) => {
   const [data, setData] = useState(dataType);
 
   // console.log(data);
-
-  const navigate = useNavigate();
 
   const handleClick = async evt => {
     evt.preventDefault();
