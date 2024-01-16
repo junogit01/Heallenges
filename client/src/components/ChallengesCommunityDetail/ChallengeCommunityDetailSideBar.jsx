@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { challengesSearchKeywordState } from '@recoils/challenge';
 
-function ChallengesDetailSideBar() {
+function ChallengeCommunityDetailSideBar() {
   const [searchKeyword, setSearchKeyword] = useRecoilState(challengesSearchKeywordState);
   const [inputsearchValue, setInputsearchValue] = useState('');
 
@@ -24,7 +24,7 @@ function ChallengesDetailSideBar() {
     };
   }, [setSearchKeyword]);
 
-  const { id } = useParams();
+  const { challengeId, id } = useParams();
   console.log(id);
   return (
     <div className="col-lg-3">
@@ -57,12 +57,12 @@ function ChallengesDetailSideBar() {
               <ul className="list-unstyled mb-0">
                 <li>
                   <h4>
-                    <Link to={`/challenges/${id}`}>도전</Link>
+                    <Link to={`/challenges/${challengeId}`}>도전</Link>
                   </h4>
                 </li>
                 <li>
                   <h4>
-                    <Link to={`/challenges/${id}/board`}>커뮤니티</Link>
+                    <Link to={`/challenges/${challengeId}/board`}>커뮤니티</Link>
                   </h4>
                 </li>
               </ul>
@@ -84,7 +84,7 @@ function ChallengesDetailSideBar() {
       <div className="card mb-4">
         <div className="card-header fs-3">글쓰기</div>
         <div className="card-body">
-          <Link to={`/challenges/${id}/board/insert`} className="btn btn-primary">
+          <Link to={`/challenges/${challengeId}/board/insert`} className="btn btn-primary">
             게시글 작성
           </Link>
         </div>
@@ -93,4 +93,4 @@ function ChallengesDetailSideBar() {
   );
 }
 
-export default ChallengesDetailSideBar;
+export default ChallengeCommunityDetailSideBar;
