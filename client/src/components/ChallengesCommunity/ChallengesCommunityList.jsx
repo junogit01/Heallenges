@@ -46,8 +46,8 @@ function ChallengesCommunityList() {
         }
       } catch (error) {
         Swal.fire({
-          title: '데이터 불러오기 실패.',
-          text: '다시 접속해주세요',
+          title: '데이터 불러오기 실패',
+          text: '다시 접속해주세요.',
           icon: 'error',
         });
         navigate(`/challenges/${id}`);
@@ -55,7 +55,7 @@ function ChallengesCommunityList() {
       setIsLoading(false);
     };
     fetchData();
-  }, [id, getChallengeBoardList, getchallengeParticipants]);
+  }, [id, getChallengeBoardList, getchallengeParticipants, loginUser.id]);
 
   const filteredBoardList = searchBoardList.filter(data => {
     return selectedCategory === 'all' || data?.category === selectedCategory;

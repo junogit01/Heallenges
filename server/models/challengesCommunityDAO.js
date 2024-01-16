@@ -48,6 +48,11 @@ const sql = {
   challengeInsertComment: `INSERT INTO challenge_comment(contents, user_id, post_id) VALUES(?, ?, ?)`,
   // 커뮤니티 댓글 삭제
   challengeDeleteComment: `DELETE FROM challenge_comment WHERE id = ?`,
+  // 메인용 도전 조회
+  getChallenges: `SELECT * 
+                     FROM challenges 
+                     ORDER BY created_at DESC 
+                     LIMIT 1, 10`,
 };
 
 const challengesCommunityDAO = {
@@ -76,6 +81,24 @@ const challengesCommunityDAO = {
     } catch (error) {
       conn.rollback();
       callback({ status: 500, message: '불러오기 실패', error: error });
+    } finally {
+      if (conn !== null) conn.release(); // db 접속 해제
+    }
+  },
+
+  // 메인용 도전 조회
+  getChallenges: async (callback) => {
+    let conn = null;
+    try {
+      conn = await pool.getConnection(); // db 접속
+      const [data] = await conn.query(sql.getChallenges);
+      callback({
+        status: 200,
+        message: '대회 목록 조회 성공',
+        data: data,
+      });
+    } catch (error) {
+      callback({ status: 500, message: '불러오기 대실패', error: error });
     } finally {
       if (conn !== null) conn.release(); // db 접속 해제
     }

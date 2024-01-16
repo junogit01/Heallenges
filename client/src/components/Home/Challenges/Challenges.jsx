@@ -9,15 +9,15 @@ import './Challenges.css';
 
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { useRecoilValue } from 'recoil';
-import { challengesListState, challengesListSelector, challengesState } from '@recoils/challenge';
+import { challengesMain, challengesListSelector } from '@recoils/challenge';
 
 function Challenges() {
-  const challengeList = useRecoilValue(challengesListState);
-  const { getChallengeList } = useRecoilValue(challengesListSelector);
+  const challengeList = useRecoilValue(challengesMain);
+  const { getMainChallengeList } = useRecoilValue(challengesListSelector);
 
   useEffect(() => {
-    getChallengeList(1, 5);
-  }, [getChallengeList]);
+    getMainChallengeList();
+  }, [getMainChallengeList]);
 
   return (
     <section id="recent-posts" className="recent-posts container-md">
@@ -40,18 +40,22 @@ function Challenges() {
           }}
           modules={[Autoplay, Navigation, Pagination]}
           className="mySwiper">
-          {challengeList?.data?.[0]?.map(data => (
+          {challengeList?.data?.map(data => (
             <SwiperSlide key={data?.id}>
               <div className="card">
                 <img
                   src={data?.main_image}
                   className="card-img-top img-thumbnail"
                   alt="..."
-                  style={{ height: '310px' }}
+                  style={{ height: '300px' }}
                 />
                 <div className="card-body">
-                  <h5 className="card-title">{data?.title}</h5>
-                  <p className="card-text">{data?.description}</p>
+                  <h5 className="card-title">
+                    {data?.title.length > 10 ? `${data?.title.slice(0, 15)}...` : data?.title}
+                  </h5>
+                  <p className="card-text mb-3">
+                    {data?.description.length > 25 ? `${data?.description.slice(0, 25)}...` : data?.description}
+                  </p>
                 </div>
               </div>
             </SwiperSlide>

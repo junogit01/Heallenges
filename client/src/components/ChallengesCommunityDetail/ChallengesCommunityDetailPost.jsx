@@ -20,14 +20,27 @@ function ChallengesCommunityDetailPost() {
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      await getChallengeBoardDetail(challengeId, postId);
-      if (!challengesBoardDetail) {
+      try {
+        await getChallengeBoardDetail(challengeId, postId);
+        if (!challengesBoardDetail) {
+          Swal.fire({
+            title: '데이터 불러오기 실패',
+            text: '1초뒤 다시 접속합니다.',
+            icon: 'error',
+          });
+          setTimeout(() => {
+            window.location.replace(`/challenges/${challengeId}/board/${postId}`);
+          }, 1000);
+        }
+      } catch (error) {
         Swal.fire({
           title: '데이터 불러오기 실패',
-          text: '다시 접속해주세요',
+          text: '1초뒤 다시 접속합니다.',
           icon: 'error',
         });
-        navigate(`/challenges/${challengeId}/board/${postId}`);
+        setTimeout(() => {
+          window.location.replace(`/challenges/${challengeId}/board/${postId}`);
+        }, 1000);
       }
       setIsLoading(false);
     }
