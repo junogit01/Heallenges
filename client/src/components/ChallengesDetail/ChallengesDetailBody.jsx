@@ -1,52 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import ChallengesDetailSideBar from './ChallengeDetailSideBar';
 import axios from 'axios';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { loginState } from '@recoils/login';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
-import { participatedChallengesState } from '@recoils/challenge';
 
-function ChallengesDetailBody({ data, title, id }) {
+function ChallengesDetailBody({ data, title, id, isParticipated }) {
   const user = useRecoilValue(loginState);
-  const [challengeUserInfo, setChallengeUserInfo] = useState([]);
   const navigate = useNavigate();
   // 참가 여부에 따른 버튼 활성화,비활성화 저장
-  const [isAttended, setIsAttended] = useState(false);
+  const [isAttended, setIsAttended] = useState(isParticipated);
   // 참가 여부에 따른 버튼 텍스트 변화
-  const [buttonText, setButtonText] = useState('도전 참여');
+  const [buttonText, setButtonText] = useState(isParticipated ? '이미 참가한 도전입니다.' : '도전 참여');
   // 참가한 챌린지 저장
-  const [participatedChallenges, setParticipatedChallenges] = useRecoilState(participatedChallengesState);
 
   useEffect(() => {
-    const getChallengeUserInfo = async () => {
-      try {
-        if (title) {
-          const result = await axios.get(`/challenges/participants?title=${title}`, {
-            params: {
-              challengeTitle: title,
-            },
-          });
-          setChallengeUserInfo(result.data);
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    getChallengeUserInfo();
-  }, [title]);
-
-  useEffect(() => {
-    // 사용자가 이미 참여한 도전인지 확인
-    const alreadyParticipated = participatedChallenges.some(
-      challenge => challenge?.challengeId === data?.id && challenge?.userId === user?.id,
-    );
-    setIsAttended(alreadyParticipated);
-    if (alreadyParticipated) {
-      setButtonText('이미 참가한 도전입니다.');
-    }
-  }, [data.id, participatedChallenges, user.id]);
+    // 부모 컴포넌트에서 받은 isParticipated 값을 사용하여 버튼 상태 업데이트
+    setIsAttended(isParticipated);
+    setButtonText(isParticipated ? '이미 참가한 도전입니다.' : '도전 참여');
+  }, [isParticipated]); // isParticipated 변화에 반응
 
   // 도전 참가 버튼
   const handleAttend = async e => {
@@ -59,13 +33,9 @@ function ChallengesDetailBody({ data, title, id }) {
         });
 
         if (result.data.status === 200) {
-          const updatedParticipatedChallenges = [...participatedChallenges, { challengeId: data.id, userId: user.id }];
           // 도전 참가 상태 저장
-          setParticipatedChallenges(updatedParticipatedChallenges);
           setIsAttended(true);
           setButtonText('참여 완료');
-          // 로컬 스토리지에도 저장
-          saveToLocalStorage(updatedParticipatedChallenges);
 
           Swal.fire({
             text: '참가 완료', // Alert 내용
@@ -101,16 +71,8 @@ function ChallengesDetailBody({ data, title, id }) {
         });
 
         if (result.data.status === 200) {
-          // 참가자 목록에서 제거
-          const updatedParticipatedChallenges = participatedChallenges.filter(
-            challenge => challenge.challengeId !== data.id || challenge.userId !== user.id,
-          );
-          // 도전 참가 상태 저장
-          setParticipatedChallenges(updatedParticipatedChallenges);
           setIsAttended(false);
           setButtonText('도전 참여');
-          // 로컬 스토리지에도 저장
-          saveToLocalStorage(updatedParticipatedChallenges);
           Swal.fire({
             text: '참가가 취소되었습니다.',
             icon: 'success',
@@ -135,8 +97,15 @@ function ChallengesDetailBody({ data, title, id }) {
   // 도전 삭제 버튼
   const handleDelete = async e => {
     e.preventDefault();
-    const prompt = window.confirm('정말로 삭제 하시겠습니까?');
-    if (prompt) {
+    const { value: confirmResult } = await Swal.fire({
+      title: '정말로 삭제 하시겠습니까?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
+    });
+
+    if (confirmResult) {
       try {
         const result = await axios.delete(`/challenges/${data.id}`);
         Swal.fire({
@@ -148,20 +117,6 @@ function ChallengesDetailBody({ data, title, id }) {
         console.error(e);
       }
     }
-  };
-
-  useEffect(() => {
-    // 로컬 스토리지에서 상태를 가져옴
-    const savedChallenges = JSON.parse(localStorage.getItem('participatedChallenges')) || [];
-    setParticipatedChallenges(savedChallenges);
-
-    // 현재 챌린지가 저장된 챌린지에 있는지 확인
-    setIsAttended(savedChallenges.some(challenge => challenge.challengeId === data.id && challenge.userId === user.id));
-  }, []);
-
-  // JSON 형태로 데이터를 직렬화 하여 로컬스토리지에 저장
-  const saveToLocalStorage = challenges => {
-    localStorage.setItem('participatedChallenges', JSON.stringify(challenges));
   };
 
   return (
