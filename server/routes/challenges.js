@@ -71,7 +71,12 @@ router.get('/category', async (req, res, next) => {
 });
 
 // 참가자 조회
-
+router.get('/check', async (req, res, next) => {
+  const { challengeId, userId } = req.query;
+  challengesDAO.participatedChallenge(challengeId, userId, (resp) => {
+    res.json(resp);
+  });
+});
 // 도전 목록 조회
 router.get('/', async (req, res, next) => {
   const query = req.query;

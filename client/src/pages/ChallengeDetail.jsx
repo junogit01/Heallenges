@@ -3,9 +3,14 @@ import ChallengesDetailBody from '@components/ChallengesDetail/ChallengesDetailB
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { loginState } from '@recoils/login';
 
 function ChallengesDetail() {
   const [challengeDetail, setChallengeDetail] = useState([]);
+  const [isParticipated, setIsParticipated] = useState('ture'); // 추가: 참가 여부 상태
+  const user = useRecoilValue(loginState);
+  const userId = user.id;
   const boardId = useParams().id;
 
   useEffect(() => {
@@ -13,6 +18,11 @@ function ChallengesDetail() {
       try {
         const { data } = await axios.get(`/challenges/${boardId}`);
         setChallengeDetail(data.data[0]);
+
+        // 추가: '/challenges/check' 라우트를 통해 참가 여부 확인
+        const checkResponse = await axios.get(`/challenges/check?userId=${userId}&challengeId=${boardId}`);
+        const checkData = checkResponse.data.data;
+        setIsParticipated(checkData > 0);
       } catch (e) {
         console.error(e);
       }
@@ -23,7 +33,12 @@ function ChallengesDetail() {
   return (
     <>
       <ChallengesDetailHead title={challengeDetail?.title} />
-      <ChallengesDetailBody data={challengeDetail} title={challengeDetail?.title} id={challengeDetail} />
+      <ChallengesDetailBody
+        data={challengeDetail}
+        title={challengeDetail?.title}
+        id={challengeDetail}
+        isParticipated={isParticipated}
+      />
     </>
   );
 }
