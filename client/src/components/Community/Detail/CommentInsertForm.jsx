@@ -58,11 +58,12 @@ function CommentInsertForm() {
     event.preventDefault();
 
     // 댓글 내용이 비어 있는지 확인
-    if (comment.contents.trim() === '') {
+    if (comment?.contents?.trim() === '') {
       await Swal.fire({
         title: '댓글 입력 실패',
         text: '댓글 내용을 입력해주세요.',
         icon: 'error',
+        timer: 1000, // 1초 후에 자동으로 창 닫기
       });
       return; // 댓글 내용이 비어 있으면 더 이상 진행하지 않음
     }
