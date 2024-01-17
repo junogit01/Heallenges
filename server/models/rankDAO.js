@@ -3,7 +3,10 @@ const pool = require('./pool');
 const sql = {
   rankList: `SELECT 
               name, reward_cnt, profile_image,
-              (SELECT COUNT(*)+1 FROM user AS b WHERE b.reward_cnt > a.reward_cnt OR (b.reward_cnt = a.reward_cnt AND b.name < a.name)) AS rank
+              (SELECT COUNT(*)+1 FROM user AS b 
+               WHERE b.id <> 68 AND 
+               (CASE WHEN b.id <> 68 THEN b.reward_cnt ELSE NULL END) > a.reward_cnt OR 
+               ((CASE WHEN b.id <> 68 THEN b.reward_cnt ELSE NULL END) = a.reward_cnt AND b.name < a.name)) AS rank
             FROM user AS a
             WHERE a.id <> 68
             ORDER BY reward_cnt DESC, name
