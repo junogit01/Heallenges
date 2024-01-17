@@ -80,7 +80,7 @@ export const challengesListSelector = selector({
     });
     const getchallengeParticipants = getCallback(({ set }) => async id => {
       const resp = await axios.get(`/challenges/${id}/participants`);
-      set(challengesParticipantsState, resp.data);
+      set(challengesParticipantsState, resp.data.data);
     });
     const getChallengeDetail = getCallback(({ set }) => async id => {
       const resp = await axios.get(`/challenges/${id}`);
