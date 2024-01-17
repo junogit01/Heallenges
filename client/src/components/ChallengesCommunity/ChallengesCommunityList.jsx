@@ -40,8 +40,15 @@ function ChallengesCommunityList() {
           icon: 'error',
         });
         navigate(`/challenges/${id}`);
-      } else {
+      } else if (challengeParticipants?.data?.includes(loginUser.id)) {
         await getChallengeBoardList(id);
+      } else {
+        Swal.fire({
+          title: '데이터 불러오기 실패',
+          text: '다시 접속해주세요.',
+          icon: 'error',
+        });
+        navigate(`/challenges/${id}`);
       }
     } catch (error) {
       Swal.fire({
