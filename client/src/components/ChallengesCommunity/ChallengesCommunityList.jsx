@@ -12,18 +12,17 @@ import Pagination from 'react-js-pagination';
 import one from '../ChallengesCommunityDetail/Paging.module.css';
 import { loginState } from '@recoils/login';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 
 function ChallengesCommunityList() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const boardList = useRecoilValue(challengesBoardListState);
-  const { getChallengeBoardList, getchallengeParticipants } = useRecoilValue(challengesListSelector);
+  const { getChallengeBoardList } = useRecoilValue(challengesListSelector);
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const challengeParticipants = useRecoilValue(challengesParticipantsState);
   const searchKeyword = useRecoilValue(challengesSearchKeywordState);
   const [isLoading, setIsLoading] = useState(true);
-
   const loginUser = useRecoilValue(loginState);
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
@@ -32,8 +31,9 @@ function ChallengesCommunityList() {
   const getList = useCallback(async () => {
     setIsLoading(true);
     try {
-      await getchallengeParticipants(id);
-      if (!challengeParticipants?.data?.includes(loginUser.id)) {
+      const participantsResponse = await axios.get(`/challenges/${id}/participants`);
+      const participantsData = participantsResponse?.data?.data;
+      if (!participantsData?.includes(loginUser.id)) {
         Swal.fire({
           title: '도전 참가 후 접속하실 수 있습니다.',
           text: ' ',
@@ -44,6 +44,7 @@ function ChallengesCommunityList() {
         await getChallengeBoardList(id);
       }
     } catch (error) {
+      console.log(error);
       Swal.fire({
         title: '데이터 불러오기 실패',
         text: '다시 접속해주세요.',
@@ -52,7 +53,7 @@ function ChallengesCommunityList() {
       navigate(`/challenges/${id}`);
     }
     setIsLoading(false);
-  }, [getChallengeBoardList]);
+  }, [getChallengeBoardList, id, loginUser.id]);
 
   useEffect(() => {
     getList();
