@@ -113,8 +113,6 @@ const ChallengeAdd = ({ isEdit }) => {
         icon: 'error', // Alert 타입
       });
     } else {
-      console.log('HELLO');
-      console.log(data);
       if (
         data.title &&
         data.description &&
@@ -132,7 +130,7 @@ const ChallengeAdd = ({ isEdit }) => {
           formData.append('data', JSON.stringify(data));
 
           const response = await axios.put(`/challenges/${data.id}`, formData);
-          console.log(response);
+
           if (response.data.status === 200) {
             Swal.fire({
               text: '성공적으로 수정하였습니다.',
