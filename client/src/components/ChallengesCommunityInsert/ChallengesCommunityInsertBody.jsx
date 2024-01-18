@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useParams, useNavigate } from 'react-router-dom';
 import { challengesListSelector, challengesBoardState, challengesState } from '@recoils/challenge';
@@ -11,6 +11,7 @@ function ChallengesCommunityInsertBody() {
   // url에서 파라미터 수집
   const { challengeId } = useParams();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
 
   // Recoil을 통해 상태 가져오기
   const challengesBoard = useRecoilValue(challengesState);
@@ -101,9 +102,45 @@ function ChallengesCommunityInsertBody() {
   );
   const errorEvent = error => console.error(error);
 
+  const getParticipants = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const participantsResponse = await axios.get(`/challenges/${challengeId}/participants`);
+      const participantsData = participantsResponse?.data?.data;
+      if (!participantsData?.includes(loginUser.id)) {
+        Swal.fire({
+          title: '도전 참가 후 작성하실 수 있습니다.',
+          text: ' ',
+          icon: 'error',
+        });
+        navigate(`/challenges/${challengeId}`);
+      }
+    } catch (error) {
+      Swal.fire({
+        title: '데이터 불러오기 실패',
+        text: '다시 접속해주세요.',
+        icon: 'error',
+      });
+      navigate(`/challenges/${challengeId}`);
+    }
+    setIsLoading(false);
+  }, [challengeId, loginUser.id]);
+
+  useEffect(() => {
+    getParticipants();
+  }, [getParticipants]);
+
   useEffect(() => {
     getChallengeDetail(challengeId);
   }, [challengeId]);
+
+  if (isLoading) {
+    return (
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    ); // 로딩 인디케이터 표시
+  }
 
   return (
     <section className="property-grid grid">

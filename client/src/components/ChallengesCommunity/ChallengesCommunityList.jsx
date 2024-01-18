@@ -44,7 +44,6 @@ function ChallengesCommunityList() {
         await getChallengeBoardList(id);
       }
     } catch (error) {
-      console.log(error);
       Swal.fire({
         title: '데이터 불러오기 실패',
         text: '다시 접속해주세요.',
