@@ -1,5 +1,5 @@
 // CommunityBoardDetail.jsx
-//  좋아요, 좋아요 취소, 게시물 상세 정보, 게시물 삭제
+// 좋아요, 좋아요 취소, 게시물 상세 정보, 게시물 삭제
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,14 +18,13 @@ function CommunityBoardDetail() {
   const { id } = useParams();
   // React Router의 navigate 함수를 이용하여 페이지 이동 관리
   const navigate = useNavigate();
-
   // Recoil을 사용하여 전역 상태인 loginUser 가져오기
   const loginUser = useRecoilValue(loginState);
 
   // 로그인이 되어 있지 않으면 로그인 페이지로 이동
   if (!loginUser.id && !loginUser.email) navigate('/login');
 
-  // 게시물 상태를 Recoil에서 가져오기
+  // Recoil을 사용하여 게시물 상태 가져오기
   const [communityPost, setCommunityPost] = useRecoilState(communityState(id));
 
   // 좋아요 상태를 관리하는 로컬 상태
@@ -48,14 +47,16 @@ function CommunityBoardDetail() {
       );
 
       // resp.data => {message: 'OK', status: 200}
-      if (!response.data.message === 'OK') {
+      if (response.data.message !== 'OK') {
         const data = await response.data;
         // 좋아요 오류 처리
         console.error(`좋아요 오류: ${data.message}`);
         return;
       } else {
         // 좋아요 상태를 로컬 스토리지에 저장
-        localStorage.setItem(`likeStatus_${id}`, 'liked');
+        const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || [];
+        likedPosts.push(id);
+        localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
 
         // 좋아요 상태 갱신 및 게시물 정보 갱신
         setLiked(true);
@@ -70,28 +71,27 @@ function CommunityBoardDetail() {
   // 좋아요 취소 이벤트 처리 함수
   const dislikeCommunityEvent = async () => {
     try {
-      const response = await axios.delete(
-        `/community/like/${loginUser.id}/${id}`,
-        JSON.stringify({
+      const response = await axios.delete(`/community/like/${loginUser.id}/${id}`, {
+        data: JSON.stringify({
           post_id: id,
           user_id: loginUser.id,
         }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+      });
 
       // resp.data => {message: 'OK', status: 200}
-      if (!response.data.message === 'OK') {
+      if (response.data.message !== 'OK') {
         const data = await response.data;
-        // 좋아요 오류 처리
+        // 좋아요 취소 오류 처리
         console.error(`좋아요 취소 오류: ${data.message}`);
         return;
       } else {
         // 좋아요 취소에서 사용
-        localStorage.removeItem(`likeStatus_${id}`);
+        const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || [];
+        const updatedLikedPosts = likedPosts.filter(postId => postId !== id);
+        localStorage.setItem('likedPosts', JSON.stringify(updatedLikedPosts));
 
         // 좋아요 상태 갱신 및 게시물 정보 갱신
         setLiked(false);
@@ -125,11 +125,11 @@ function CommunityBoardDetail() {
 
   // 페이지가 마운트 될 때와 게시물 아이디가 변경될 때 게시물 정보를 가져오기
   useEffect(() => {
-    const storedLikeStatus = localStorage.getItem(`likeStatus_${id}`);
+    const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || [];
 
     // 로컬 스토리지에서 좋아요 상태를 읽어와서 상태 설정
-    if (storedLikeStatus === 'liked' || storedLikeStatus === 'disliked') {
-      setLiked(storedLikeStatus === 'liked');
+    if (likedPosts.includes(id)) {
+      setLiked(true);
     }
 
     // 게시물 정보를 가져오는 함수 호출
@@ -204,6 +204,7 @@ function CommunityBoardDetail() {
                       <tr>
                         <td>
                           <div className="mb-3 d-flex">
+                            {/* 좋아요 좋아요 취소 버튼 */}
                             <button
                               type="button"
                               className={`btn ${liked ? 'btn-danger' : 'btn-primary'} btn-lg me-auto`}
@@ -211,9 +212,19 @@ function CommunityBoardDetail() {
                               onClick={liked ? dislikeCommunityEvent : likeCommunityEvent}>
                               {liked ? '좋아요 취소' : '좋아요'}
                             </button>
+                            {/* 게시판 리스트 목록으로 이동하는 버튼 */}
+                            <button
+                              type="button"
+                              className="btn btn-primary btn-lg"
+                              style={{ margin: '0 5px' }}
+                              onClick={() => navigate('/community')}>
+                              목록
+                            </button>
+
                             {/* 현재 로그인한 사용자가 게시물 작성자인 경우 수정 및 삭제 버튼 표시 */}
                             {isUserPostOwner && (
                               <>
+                                {/* 수정 버튼 */}
                                 <button
                                   type="button"
                                   className="btn btn-warning btn-lg"
@@ -221,6 +232,7 @@ function CommunityBoardDetail() {
                                   onClick={() => navigate(`/community/update/${id}`)}>
                                   수정
                                 </button>
+                                {/* 삭제 버튼 */}
                                 <button
                                   type="button"
                                   className="btn btn-danger btn-lg"

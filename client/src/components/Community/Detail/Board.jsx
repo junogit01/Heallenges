@@ -4,7 +4,6 @@
 import moment from 'moment';
 import React, { useEffect } from 'react';
 
-//
 const Board = ({ user_id, title, nickname, category, view_cnt, like_cnt, created_at, contents, Image }) => {
   useEffect(() => {
     // console.log('Board 컴포넌트가 마운트되었습니다.');
