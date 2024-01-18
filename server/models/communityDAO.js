@@ -37,12 +37,14 @@ const sql = {
             LEFT JOIN user cu ON c.user_id = cu.id
           WHERE b.id = ?
           GROUP BY b.id, u.nickname, b.title, b.contents, b.created_at, b.like_cnt, b.view_cnt`,
+
   // 댓글 목록 조회
   getComments: `SELECT c.comment_id, c.contents, c.create_date, u.nickname, u.profile_image, c.user_id
                 FROM community_comment c
                 LEFT JOIN user u ON c.user_id = u.id
                 WHERE c.post_id = ?
                 ORDER BY c.create_date DESC`,
+
   // 조회수 증가
   incCount: `UPDATE community SET view_cnt = view_cnt + 1 WHERE id = ?`,
 
