@@ -56,8 +56,8 @@ function RankBody() {
                 <td>
                   <img
                     style={{ maxHeight: '50px', maxWidth: '50px', marginRight: '20px' }}
-                    src={item.profile_image}
-                    alt={''}></img>
+                    src={item?.profile_image}
+                    alt={'프로필 사진'}></img>
                   {item.name}
                   {item.rank === 1 && (
                     <img src="/images/Rank-medal-1.png" style={{ width: '2rem', height: '2rem' }} alt="1등 메달" />

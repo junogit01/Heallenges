@@ -13,17 +13,17 @@ const sql = {
             LIMIT ? OFFSET ?`,
   totalCount: `SELECT COUNT(*) as reward_cnt FROM user`,
   rankSearch: `SELECT
-                name, reward_cnt, rank
+                name, reward_cnt, profile_image, rank
               FROM
                 (SELECT
-                  name, reward_cnt, (@rank:=@rank+1) AS rank
+                  name, profile_image, reward_cnt, (@rank:=@rank+1) AS rank
                 FROM
                   user AS a,
                   (SELECT @rank:=0) AS b
                 ORDER BY
                   a.reward_cnt DESC, a.name) AS ranked_users
               WHERE
-                name = ?`,
+                name LIKE CONCAT('%', ?, '%')`,
 };
 
 const rankDAO = {
@@ -59,6 +59,7 @@ const rankDAO = {
       callback({
         status: 200,
         message: '검색 성공',
+        total: data.length,
         data: data,
       });
     } catch (error) {
