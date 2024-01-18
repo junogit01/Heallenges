@@ -22,6 +22,7 @@ function NavHeader() {
     setLoginUser({ name: '', email: '', id: '' });
     localStorage.removeItem('login/loginState');
     localStorage.removeItem('user');
+    localStorage.removeItem('likedPosts');
     navigate('/');
   };
 

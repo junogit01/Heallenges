@@ -49,9 +49,9 @@ function CommunityBoardDetail() {
       // resp.data => {message: 'OK', status: 200}
       if (response.data.message !== 'OK') {
         const data = await response.data;
-        // 좋아요 오류 처리
-        console.error(`좋아요 오류: ${data.message}`);
-        return;
+        // 버튼 상태 갱신 및 게시물 정보 갱신
+        setLiked(true);
+        getCommunityPost();
       } else {
         // 좋아요 상태를 로컬 스토리지에 저장
         const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || [];
