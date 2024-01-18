@@ -30,7 +30,7 @@ function NavHeader() {
       <nav className="navbar navbar-expand-lg ">
         <div className="container-fluid">
           <Link className="navbar-brand" to="/">
-            <img src="images/ci_heallenges_02.png" alt="" style={{ width: '170px', height: '30px' }} />
+            <img src="/images/ci_heallenges_02.png" alt="" style={{ width: '170px', height: '30px' }} />
           </Link>
           <button
             className="navbar-toggler"

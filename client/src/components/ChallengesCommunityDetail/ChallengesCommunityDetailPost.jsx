@@ -6,7 +6,6 @@ import ChallengesCommunityDetailComment from './ChallengesCommunityDetailComment
 import { loginState } from '@recoils/login';
 import ChallengesCommunityDetailBtn from './ChallengesCommunityDetailBtn';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 
 function ChallengesCommunityDetailPost() {
   const { challengeId, id } = useParams();
