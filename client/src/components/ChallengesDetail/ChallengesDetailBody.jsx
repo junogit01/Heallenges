@@ -126,16 +126,15 @@ function ChallengesDetailBody({ data, title, id, isParticipated }) {
           <div className="container" data-aos="fade-up">
             <div className="row g-5">
               <div className="col-lg-9" data-aos="fade-up" data-aos-delay={200}>
-                <div
-                  className="mb-5"
+                <img
+                  src={data?.main_image}
+                  alt="도전 썸네일"
                   style={{
                     width: '100%',
-                    height: '300px',
-                    backgroundImage: `url(${data?.main_image})`,
-                    backgroundPosition: 'center',
-                    backgroundSize: 'cover', // 'contain' 대신 'cover'로 변경
-                    backgroundRepeat: 'no-repeat',
-                  }}></div>
+                    height: 'auto',
+                    objectFit: 'cover',
+                  }}
+                />
                 <Container className="mt-5">
                   <Row>
                     <Col>
