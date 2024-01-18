@@ -129,9 +129,8 @@ const CommunityBoard = () => {
               <td className="text-center">{getCategoryName(post.category)}</td>
               <td className="text-center">
                 {/* 게시물 제목에 링크 추가 */}
-                <Link to={`/community/${post.id}`}>
+                <Link to={`/community/${post.id}`} style={{ textDecorationLine: 'none' }}>
                   {/* 제목이 15자 이상인 경우 15자 뒤로 "..."으로 표시 */}
-                  {/* {post.title} */}
                   {post.title.length > 15 ? `${post.title.slice(0, 15)}...` : post.title}
                 </Link>
               </td>
