@@ -49,6 +49,13 @@ function ChallengesCommunityDetailBtn() {
 
   return (
     <div className="mb-3" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <button
+        type="button"
+        className="btn btn-primary btn-lg"
+        style={{ margin: '0 5px' }}
+        onClick={() => navigate(`/challenges/${challengeId}/board`)}>
+        목록
+      </button>
       {/* 유저아이디와 게시물의 유저 아이디가 같은지 확인 후 수정 삭제 버튼 활성화 여부 결정 */}
       {loginUser?.id === challengesBoardDetail[0]?.user_id ? (
         <>

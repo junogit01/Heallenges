@@ -25,7 +25,7 @@ const indexDAO = {
     const email = item;
     let conn = null;
     try {
-      conn = await poll.getConnection();
+      conn = await pool.getConnection();
       const resp = await conn.query(sql.checkEmail, [email]);
       if (resp[0]) {
         return callback({ status: 401, message: '이미 존재하는 이메일 입니다.', data: resp[0] });
@@ -116,25 +116,6 @@ const indexDAO = {
       callback({ status: 500, message: '로그인 실패', error: error.message });
     } finally {
       if (conn !== null) conn.release();
-    }
-  },
-  insertImage: async (item, callback) => {
-    let conn = null;
-    try {
-      conn = await pool.getConnection(); // db 접속
-      conn.beginTransaction();
-      const [data] = await conn.query(sql.insertImage, [item.profile_image]);
-      conn.commit();
-      callback({
-        status: 200,
-        message: '이미지 업로드 성공',
-        data: data,
-      });
-    } catch (error) {
-      conn.rollback();
-      callback({ status: 500, message: '업로드 실패', error: error });
-    } finally {
-      if (conn !== null) conn.release(); // db 접속 해제
     }
   },
 };

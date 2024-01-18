@@ -57,13 +57,12 @@ const userDAO = {
     }
   },
   updatePassword: async (item, callback) => {
-    console.log(item);
     let conn = null;
+    console.log(item);
     try {
       conn = await pool.getConnection();
       await conn.beginTransaction();
       const [data] = await conn.query(sql.mypage, [item.id]);
-      console.log(data[0]);
       const compare = await bcrypt.compare(item.current, data[0]?.password);
       console.log(compare);
       if (compare) {
@@ -89,8 +88,13 @@ const userDAO = {
       conn = await pool.getConnection(); // db 접속
       await conn.beginTransaction(); // 쿼리가 모두 성공하고 return ㄷ
       const [data, filedset] = await conn.query(sql.delete, [id]);
+      console.log(data.affectedRows);
       conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
-      callback({ status: 200, message: '유저 삭제 완료', data: data });
+      if (data?.affectedRows === 0) {
+        callback({ status: 401, message: '해당 유저가 존재하지 않습니다.', data: data });
+      } else {
+        callback({ status: 200, message: '유저 삭제 완료', data: data });
+      }
     } catch (error) {
       conn.rollback(); // 커밋 이전 상태로 돌려야한다.
       callback({ status: 500, message: '유저 삭제 실패', error: error });
@@ -107,9 +111,19 @@ const userDAO = {
       const [data, filedset] = await conn.query(sql.mypage, [item.id]);
       // 유저 참여 대회 정보 획득
       const [challenge] = await conn.query(sql.myChallenge, [item.id]);
-
-      conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
-      callback({ status: 200, message: '프로필 조회 완료', data: data, challenge: challenge });
+      console.log(`he`);
+      console.log(data.length);
+      if (data?.length === 0) {
+        callback({
+          status: 401,
+          message: '해당 사용자가 존재하지 않습니다.',
+          data: data,
+          challenge: challenge,
+        });
+      } else {
+        conn.commit(); // 위 모든 query를 반영한다는 것. 이로인해 위의 query 중 하나라도 실패하면 catch error로 가서 rollback 한다.
+        callback({ status: 200, message: '프로필 조회 완료', data: data, challenge: challenge });
+      }
     } catch (error) {
       conn.rollback(); // 커밋 이전 상태로 돌려야한다.
       callback({ status: 500, message: '프로필 조회 실패', error: error });
