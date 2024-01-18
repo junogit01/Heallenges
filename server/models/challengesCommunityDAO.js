@@ -52,7 +52,7 @@ const sql = {
   getChallenges: `SELECT * 
                      FROM challenges 
                      ORDER BY created_at DESC 
-                     LIMIT 1, 10`,
+                     LIMIT 0, 10`,
 };
 
 const challengesCommunityDAO = {
