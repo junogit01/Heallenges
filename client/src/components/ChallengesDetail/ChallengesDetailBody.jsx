@@ -118,11 +118,6 @@ function ChallengesDetailBody({ data, isParticipated, count, type }) {
       }
     }
   };
-  useEffect(() => {
-    // 부모 컴포넌트에서 받은 isParticipated 값을 사용하여 버튼 상태 업데이트
-    setIsAttended(isParticipated);
-    setButtonText(isParticipated ? '이미 참가한 도전입니다.' : '도전 참여');
-  }, [isParticipated]); // isParticipated 변화에 반응
 
   return (
     <>
