@@ -151,6 +151,7 @@ function PersonalInfoUpdate() {
                     accept="image/*"
                     {...register('profile')}
                   />
+                  <label>수정간 파일 미첨부시 기본 프로필 이미지로 변경됩니다.</label>
                 </div>
               </div>
               <div className="col-lg-8">
