@@ -141,14 +141,19 @@ const challengeDAO = {
       conn = await pool.getConnection(); // db 접속 구문
       // 특정 ID로 챌린지를 조회하는 쿼리를 실행한다.
       const result = await pool.query(sql.getChallengeById, [challengeId]);
-
+      const participantsCount = await pool.query(sql.getParticipantsCount, [challengeId]);
       // 조회된 챌린지가 있는지 확인
       if (result.length === 0) {
         // 챌린지가 데이터베이스에 존재하지 않는 경우, 콜백 함수를 호출하여 해당 메시지를 반환
         callback({ status: 404, message: '해당 ID의 챌린지를 찾을 수 없음' });
       } else {
         // 챌린지가 성공적으로 조회된 경우, 콜백 함수를 호출하여 챌린지 데이터를 반환
-        callback({ status: 200, message: '챌린지 검색됨', data: result[0] });
+        callback({
+          status: 200,
+          message: '챌린지 검색됨',
+          data: result[0],
+          count: participantsCount[0],
+        });
       }
     } catch (error) {
       // 쿼리 실행 중 오류가 발생한 경우, 오류 정보를 포함하여 콜백 함수를 호출
@@ -160,7 +165,6 @@ const challengeDAO = {
 
   // 챌린지 정보 수정
   updateChallenge: async (updatedChallengeData, callback) => {
-    console.log(updatedChallengeData);
     let conn = null;
     try {
       conn = await pool.getConnection(); // db 접속 구문

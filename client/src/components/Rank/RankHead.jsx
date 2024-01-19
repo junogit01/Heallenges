@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { searchKeywordState } from '@recoils/rank';
 
@@ -16,6 +16,13 @@ function RankHead() {
   const handleChange = e => {
     setInputValue(e.target.value);
   };
+
+  useEffect(() => {
+    return () => {
+      // 컴포넌트가 언마운트 될 때 검색어 초기화
+      setSearchKeyword('');
+    };
+  }, [setSearchKeyword]);
 
   return (
     <nav className="navbar navbar-light">
@@ -39,7 +46,7 @@ function RankHead() {
               onChange={handleChange}
               style={{ width: '30rem' }}
             />
-            <i className="bi bi-search" style={{ fontSize: '2rem', marginLeft: '-4rem' }}></i>
+            <i className="bi bi-search" style={{ fontSize: '2rem', marginLeft: '-4rem', marginTop: '0.5rem' }}></i>
           </form>
         </div>
       </div>

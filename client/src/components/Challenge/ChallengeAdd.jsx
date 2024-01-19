@@ -54,8 +54,6 @@ const ChallengeAdd = ({ isEdit }) => {
   };
   const [data, setData] = useState(dataType);
 
-  // console.log(data);
-
   const handleClick = async evt => {
     evt.preventDefault();
     if (data.title === '') {
@@ -298,7 +296,7 @@ const ChallengeAdd = ({ isEdit }) => {
               setData={setData}
               data={data}
               propName="main_image"
-              inputData={isEdit ? data.main_image || challengeDetail?.main_image : data.main_image}
+              inputData={isEdit ? data?.main_image || challengeDetail?.main_image : data.main_image}
             />
           </FormItem>
         </Column>
