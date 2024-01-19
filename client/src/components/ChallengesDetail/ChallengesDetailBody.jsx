@@ -7,7 +7,7 @@ import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 
-function ChallengesDetailBody({ data, title, id, isParticipated }) {
+function ChallengesDetailBody({ data, isParticipated, count, type }) {
   const user = useRecoilValue(loginState);
   const navigate = useNavigate();
   // 참가 여부에 따른 버튼 활성화,비활성화 저장
@@ -118,6 +118,11 @@ function ChallengesDetailBody({ data, title, id, isParticipated }) {
       }
     }
   };
+  useEffect(() => {
+    // 부모 컴포넌트에서 받은 isParticipated 값을 사용하여 버튼 상태 업데이트
+    setIsAttended(isParticipated);
+    setButtonText(isParticipated ? '이미 참가한 도전입니다.' : '도전 참여');
+  }, [isParticipated]); // isParticipated 변화에 반응
 
   return (
     <>
@@ -145,8 +150,14 @@ function ChallengesDetailBody({ data, title, id, isParticipated }) {
                             {data?.description}
                           </Card.Text>
                           <div className="d-flex align-items-center mb-3">
+                            <strong className="me-2">도전 유형:</strong>
+                            <span>{data?.type}</span>
+                          </div>
+                          <div className="d-flex align-items-center mb-3">
                             <strong className="me-2">도전 인원:</strong>
-                            <span>{data?.total_participants}명</span>
+                            <span>
+                              {data?.total_participants}명 / {count} 명 참가중
+                            </span>
                           </div>
                           <div className="d-flex align-items-center mb-3">
                             <strong className="me-2">도전 기간:</strong>

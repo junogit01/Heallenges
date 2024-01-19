@@ -6,6 +6,7 @@ const path = require('path');
 
 const imageUploadPath = 'http://heallenges.cafe24app.com/images/challenges/community/';
 const detailUploadPath = 'http://heallenges.cafe24app.com/images/challenges/detail/';
+
 const challengesDAO = require('./../models/challengesDAO');
 const challengesCommunityDAO = require('../models/challengesCommunityDAO');
 
@@ -92,7 +93,7 @@ router.post('/', detailUpload.single('profile'), async (req, res, next) => {
 
   const profileImageName = req.file
     ? `${detailUploadPath}${req.file.filename}`
-    : `${detailUploadPath}noimage.jpg`;
+    : `${detailUploadPath}no_image.jpg`;
   res.send('OK');
   const sendData = { ...data, main_image: profileImageName };
 
@@ -115,9 +116,8 @@ router.put('/:id', detailUpload.single('profile'), async (req, res, next) => {
 
   const profileImageName = req.file
     ? `${detailUploadPath}${req.file.filename}`
-    : `${detailUploadPath}noimage.jpg`;
+    : `${detailUploadPath}no_image.jpg`;
   const sendData = { ...data, main_image: profileImageName };
-  console.log(sendData);
   try {
     challengesDAO.updateChallenge(sendData, (resp) => {
       res.json(resp);
