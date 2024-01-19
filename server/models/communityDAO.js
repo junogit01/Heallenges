@@ -45,6 +45,11 @@ const sql = {
                 WHERE c.post_id = ?
                 ORDER BY c.create_date DESC`,
 
+  // 좋아요 유저 조회
+  getLike: `SELECT user_id
+            FROM community_likes
+            WHERE post_id = ?`,
+
   // 조회수 증가
   incCount: `UPDATE community SET view_cnt = view_cnt + 1 WHERE id = ?`,
 
@@ -104,7 +109,6 @@ const communityDAO = {
 
   // 게시물 수정
   update: async (item, callback) => {
-    console.log('dao', item);
     const { id, title, contents, Image, category } = item;
     let conn = null;
     try {
@@ -133,7 +137,6 @@ const communityDAO = {
 
   // 게시물 삭제
   delete: async (item, callback) => {
-    console.log(item);
     let conn = null;
     try {
       conn = await pool.getConnection();
@@ -176,6 +179,7 @@ const communityDAO = {
   },
 
   // 게시물 상세 조회(댓글도 표시)
+  // 게시물 상세 조회(댓글도 표시)
   board: async (post_id, callback) => {
     let conn = null;
     try {
@@ -191,6 +195,12 @@ const communityDAO = {
       // 댓글 목록 조회
       const [commentData] = await conn.query(sql.getComments, [post_id]);
 
+      // 좋아요 목록 조회
+      const [likeData] = await conn.query(sql.getLike, [post_id]);
+
+      // 좋아요 목록을 배열로 변환
+      const likes = likeData.map((item) => item.user_id);
+
       conn.commit();
 
       callback({
@@ -199,6 +209,7 @@ const communityDAO = {
         data: {
           board: boardData[0],
           comments: commentData,
+          likes: likes,
         },
       });
     } catch (error) {

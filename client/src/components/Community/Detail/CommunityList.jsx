@@ -38,6 +38,7 @@ const CommunityBoard = () => {
   const searchKeyword = useRecoilValue(CommunitysearchKeywordState);
   // 게시물 상태 관리
   const [allPosts, setAllPosts] = useState([]);
+
   // 선택된 카테고리 상태 관리
   const [selectedCategory, setSelectedCategory] = useState('all');
 

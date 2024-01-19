@@ -74,7 +74,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // 전체 또는 카테고리 게시물 리스트 조회
-router.get('/:id?', (req, res) => {
+router.get('/', (req, res) => {
   communityDAO.boardList((resp) => {
     res.json(resp);
   });
