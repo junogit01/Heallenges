@@ -49,15 +49,7 @@ function CommunityBoardDetail() {
       // resp.data => {message: 'OK', status: 200}
       if (response.data.message !== 'OK') {
         const data = await response.data;
-        // 버튼 상태 갱신 및 게시물 정보 갱신
-        setLiked(true);
-        getCommunityPost();
       } else {
-        // 좋아요 상태를 로컬 스토리지에 저장
-        const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || [];
-        likedPosts.push(id);
-        localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
-
         // 좋아요 상태 갱신 및 게시물 정보 갱신
         setLiked(true);
         getCommunityPost();
@@ -88,11 +80,6 @@ function CommunityBoardDetail() {
         console.error(`좋아요 취소 오류: ${data.message}`);
         return;
       } else {
-        // 좋아요 취소에서 사용
-        const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || [];
-        const updatedLikedPosts = likedPosts.filter(postId => postId !== id);
-        localStorage.setItem('likedPosts', JSON.stringify(updatedLikedPosts));
-
         // 좋아요 상태 갱신 및 게시물 정보 갱신
         setLiked(false);
         getCommunityPost();
@@ -125,17 +112,19 @@ function CommunityBoardDetail() {
 
   // 페이지가 마운트 될 때와 게시물 아이디가 변경될 때 게시물 정보를 가져오기
   useEffect(() => {
-    const likedPosts = JSON.parse(localStorage.getItem('likedPosts')) || [];
-
-    // 로컬 스토리지에서 좋아요 상태를 읽어와서 상태 설정
-    if (likedPosts.includes(id)) {
-      setLiked(true);
-    }
-
     // 게시물 정보를 가져오는 함수 호출
     getCommunityPost();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, setCommunityPost]);
+
+  // useEffect를 하나 더 추가해서 communityPost.likes가 정의되어 있을 때만 setLiked를 호출.
+  useEffect(() => {
+    if (communityPost.likes) {
+      // 현재 로그인한 사용자의 아이디와 게시물 좋아요 목록을 비교하여 좋아요 상태 갱신
+      const userLiked = communityPost.likes.includes(loginUser.id);
+      setLiked(userLiked);
+    }
+  }, [communityPost.likes, loginUser.id]);
 
   // 게시물 삭제 이벤트 처리 함수
   const deleteCommunityEvent = async () => {
