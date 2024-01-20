@@ -7,7 +7,7 @@
 <br>
 
 ## 🕰️ 개발 기간
-* 23.12.26일 - 22.05.24일
+* 23.12.26일 - 24.01.19일
 
 ### 🧑‍🤝‍🧑 맴버구성
  - 팀장  : 이준호 - 회원가입 및 로그인, 도전 별 커뮤니티 Front, Back 개발, 도전 Recoil 설정, Back express 기초 설정, DB관리, 배포 및 Github 관리, Read Me 작성, 전체 프로젝트 관리, PPT제작 및 발표
@@ -19,16 +19,19 @@
 ### ⚙️ 개발 환경
 - **IDE** : VSCODE
 - **Framework** : React(18.2)
-- 
-- **Database** : MySQL(5.1.62)
+- **Server** : express(4.18.2)
+- **Database** : MySQL(5.1.61)
+- **Deploy** : cafe24
 
 ## 📌 주요 기능
 #### 로그인 
 - DB값 검증
 - 로그인 시 Recoil Persist를 활용한 로컬 스토리지 생성
+  
 #### 회원가입
 - 주소 API 연동
 - ID 중복 체크
+  
 #### 마이 페이지
 - 주소 API 연동
 - 회원정보 변경
