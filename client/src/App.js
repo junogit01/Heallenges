@@ -22,6 +22,7 @@ import ChallengeAdd from '@components/Challenge/ChallengeAdd';
 
 import NotFound from '@pages/NotFound';
 import './App.css';
+
 function App() {
   return (
     <Routes>
@@ -50,6 +51,8 @@ function App() {
         <Route path="/challenges/:challengeId/board/:id" element={<ChallengeCommunityDetail />} />
         <Route path="/challenges/:challengeId/board/insert" element={<ChallengeCommunityInsert />} />
         <Route path="/challenges/:challengeId/board/:id/update" element={<ChallengeCommunityUpdate />} />
+
+        {/* 404 Not Found */}
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
