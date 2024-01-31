@@ -63,7 +63,7 @@ function ChallengesCommunityInsertBody() {
           });
           return;
         }
-        // 저는 파일 업로드를 위해 formData로 변경했습니다
+        // 파일 업로드를 위해 formData로 변경
         const formData = new FormData();
 
         // 파일 업로드를 위한 file 필드는 react-hook-form 이 값을 객체로 가져오기 때문에 업로드 파일 처리를 할 수 없어 따로 추출함
