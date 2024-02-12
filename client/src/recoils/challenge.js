@@ -118,7 +118,7 @@ export const challengesListSelector = selector({
     });
 
     const deleteChallenge = getCallback(({ set }) => async id => {
-      const resp = await axios.delete(`/challenges/${id}`);
+      await axios.delete(`/challenges/${id}`);
     });
 
     const getChallengeBoardList = getCallback(({ set }) => async (id, no, size) => {
