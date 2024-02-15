@@ -79,6 +79,7 @@ export const challengesMain = atom({
 });
 
 
+// 비동기처리를 위한 Selector
 export const challengesListSelector = selector({
   key: 'challenges/challengesSelector',
   get: ({ get, getCallback }) => {
